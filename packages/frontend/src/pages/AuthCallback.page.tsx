@@ -8,7 +8,7 @@ export const AuthCallback: FC = () => {
   return (
     <Casdoor
       sdk={CasdoorSDK}
-      serverUrl={config.casdoor.serverUrl}
+      serverUrl={config.backendURL}
       saveTokenFromResponse={(res) => {
         // @ts-ignore
         // save token
@@ -18,7 +18,6 @@ export const AuthCallback: FC = () => {
         // @ts-ignore
         // according to the data returned by the server,
         // determine whether the `token` is successfully obtained through `code` and `state`.
-        console.log(res);
         return res.success === true;
       }}
     />

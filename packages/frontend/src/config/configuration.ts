@@ -1,6 +1,6 @@
 export const config = {
   casdoor: {
-    loginURL: import.meta.env.VITE_LOGIN_URL,
+    loginURL: import.meta.env.VITE_CASDOOR_LOGIN_URL,
     serverUrl: import.meta.env.VITE_CASDOOR_SERVER,
     clientId: import.meta.env.VITE_CASDOOR_CLIENT_ID,
     appName: import.meta.env.VITE_CASDOOR_APP_NAME,
