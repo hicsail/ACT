@@ -18,7 +18,7 @@ export const Theme: FC<ThemeProps> = ({ children }) => {
         fontSize: '30px'
       },
       h3: {
-        fontSize: '15px'
+        fontSize: '20px'
       }
     }
 
