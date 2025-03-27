@@ -7,5 +7,6 @@ export const config = {
     organizationName: import.meta.env.VITE_ORGANIZATION_NAME,
     redirectPath: import.meta.env.VITE_CASDOOR_REDIRECT_PATH,
     signinPath: import.meta.env.VITE_CASDOOR_SIGNIN_PATH
-  }
+  },
+  backendURL: import.meta.env.VITE_BACKEND_URL
 };
