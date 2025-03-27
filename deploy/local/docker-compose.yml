@@ -1,0 +1,30 @@
+services:
+  act-casdoor:
+    image: casbin/casdoor:latest
+    container_name: act-casdoor
+    entrypoint: /bin/sh -c './server --createDatabase=true'
+    ports:
+      - "8000:8000"
+    depends_on:
+      act-db:
+        condition: service_healthy
+    environment:
+      RUNNING_IN_DOCKER: "true"
+    volumes:
+      - ./config/casdoor/:/conf/
+  act-db:
+    image: mysql:8.0.25
+    container_name: act-db
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    volumes:
+      - act-mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+volumes:
+  act-mysql-data:
