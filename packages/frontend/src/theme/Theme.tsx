@@ -14,6 +14,9 @@ export const Theme: FC<ThemeProps> = ({ children }) => {
       }
     },
     typography: {
+      h1: {
+        fontSize: '3rem'
+      },
       h2: {
         fontSize: '30px'
       },
@@ -21,7 +24,6 @@ export const Theme: FC<ThemeProps> = ({ children }) => {
         fontSize: '20px'
       }
     }
-
   });
 
   return (
