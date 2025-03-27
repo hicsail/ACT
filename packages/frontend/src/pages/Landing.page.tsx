@@ -1,7 +1,11 @@
 import { Button, Stack, Typography } from "@mui/material";
 import { FC } from "react";
+import { config } from '../config/configuration';
+import { useNavigate } from "react-router";
 
 export const Landing: FC = () => {
+  const navigate = useNavigate();
+
   return (
     <Stack spacing={3} alignItems="center">
       <Typography variant="h1">
@@ -11,7 +15,7 @@ export const Landing: FC = () => {
         When you are ready, please login below
       </Typography>
 
-      <Button variant="contained">Login</Button>
+      <Button variant="contained" href={config.loginURL}>Login</Button>
 
       <Typography variant="body1">
         Please reach out to the SimSE Research Team, if you have any questions
