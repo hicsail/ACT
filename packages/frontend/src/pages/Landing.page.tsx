@@ -1,10 +1,32 @@
 import { Button, Stack, Typography } from "@mui/material";
 import { FC } from "react";
 import { config } from '../config/configuration';
-import { useNavigate } from "react-router";
+import { isSilentSigninRequired, SilentSignin } from "casdoor-react-sdk";
+import { CasdoorSDK } from "../services/casdoor.service";
 
 export const Landing: FC = () => {
-  const navigate = useNavigate();
+  const isLoggedIn = () => {
+    return localStorage.getItem("token") !== null;
+  };
+
+  console.log(isSilentSigninRequired());
+
+  if (isSilentSigninRequired()) {
+    return (
+      <SilentSignin
+        sdk={CasdoorSDK}
+        isLoggedIn={isLoggedIn}
+        handleReceivedSilentSigninSuccessEvent={() => {
+          // jump to the home page here and clear silentSignin parameter
+          window.location.href = "/";
+        }}
+        handleReceivedSilentSigninFailureEvent={() => {
+          // prompt the user to log in failed here
+          alert("login failed");
+        }}
+      />
+    );
+  }
 
   return (
     <Stack spacing={3} alignItems="center">
@@ -15,7 +37,7 @@ export const Landing: FC = () => {
         When you are ready, please login below
       </Typography>
 
-      <Button variant="contained" href={config.loginURL}>Login</Button>
+      <Button variant="contained" href={config.casdoor.loginURL}>Login</Button>
 
       <Typography variant="body1">
         Please reach out to the SimSE Research Team, if you have any questions
