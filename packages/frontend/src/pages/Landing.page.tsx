@@ -1,6 +1,6 @@
 import { Button, Stack, Typography } from "@mui/material";
 import { FC } from "react";
-import { config } from '../config/configuration';
+import { config } from "../config/configuration";
 import { isSilentSigninRequired, SilentSignin } from "casdoor-react-sdk";
 import { CasdoorSDK } from "../services/casdoor.service";
 
@@ -37,7 +37,9 @@ export const Landing: FC = () => {
         When you are ready, please login below
       </Typography>
 
-      <Button variant="contained" href={config.casdoor.loginURL}>Login</Button>
+      <Button variant="contained" href={config.casdoor.loginURL}>
+        Login
+      </Button>
 
       <Typography variant="body1">
         Please reach out to the SimSE Research Team, if you have any questions

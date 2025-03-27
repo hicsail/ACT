@@ -1,8 +1,7 @@
-import { FC } from 'react';
+import { FC } from "react";
 import { AuthCallback as Casdoor } from "casdoor-react-sdk";
-import { CasdoorSDK } from '../services/casdoor.service';
-import { config } from '../config/configuration';
-
+import { CasdoorSDK } from "../services/casdoor.service";
+import { config } from "../config/configuration";
 
 export const AuthCallback: FC = () => {
   return (
