@@ -1,20 +1,22 @@
 import { Button, Stack } from "@mui/material";
-import { FC, useEffect, useRef } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { StatusMessages, useReactMediaRecorder } from "react-media-recorder";
 import { useSnackbar } from "../contexts/Snackbar.context";
+import { CountDownTimer, CountDownState } from "./CountDownTimer.component";
 
 export interface VideoRecordProps {
   downloadRecording: boolean;
   onRecordingStop?: (mediaBlobUrl: string) => void;
+  timeLimit: number;
 }
 
 export const VideoRecord: FC<VideoRecordProps> = (props) => {
   const { pushSnackbarMessage } = useSnackbar();
-
   const recorder = useReactMediaRecorder({
     video: true,
     onStop: (mediaBlobUrl, _blob) => handleCompletion(mediaBlobUrl)
   });
+  const [countDownState, setCountDownState] = useState<CountDownState>('paused');
 
   const handleCompletion = (blobURL: string) => {
     if (props.downloadRecording) {
@@ -46,6 +48,16 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
     }
   }, [recorder.status, recorder.previewStream, recorder.mediaBlobUrl]);
 
+  // Handle starting the counter
+  useEffect(() => {
+    if (recorder.status == 'recording') {
+      setCountDownState('running');
+      setTimeout(() => {
+        recorder.stopRecording();
+      }, props.timeLimit * 1000);
+    }
+  }, [recorder.status]);
+
   // Error message handling
   useEffect(() => {
     switch (recorder.error) {
@@ -65,6 +77,7 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
         handleStartRecording={recorder.startRecording}
         handleStopRecording={recorder.stopRecording}
       />
+      <CountDownTimer seconds={props.timeLimit} status={countDownState} />
       <video src={recorder.mediaBlobUrl} controls autoPlay loop ref={videoRef} />
     </Stack>
   );
