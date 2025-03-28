@@ -1,6 +1,6 @@
-import { createContext, FC, useContext } from 'react';
-import Sdk from 'casdoor-js-sdk';
-import { config } from '../config/configuration';
+import { createContext, FC, useContext } from "react";
+import Sdk from "casdoor-js-sdk";
+import { config } from "../config/configuration";
 
 const CasdoorContext = createContext<Sdk>({} as Sdk);
 
@@ -10,11 +10,13 @@ export interface CasdoorProviderProps {
 
 export const CasdoorProvider: FC<CasdoorProviderProps> = ({ children }) => {
   const CasdoorSDK = new Sdk({
-    ...config.casdoor
+    ...config.casdoor,
   });
 
   return (
-    <CasdoorContext.Provider value={CasdoorSDK}>{children}</CasdoorContext.Provider>
+    <CasdoorContext.Provider value={CasdoorSDK}>
+      {children}
+    </CasdoorContext.Provider>
   );
 };
 

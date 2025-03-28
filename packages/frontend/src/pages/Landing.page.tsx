@@ -13,7 +13,7 @@ export const Landing: FC = () => {
         Welcome to the Performance Task Site!
       </Typography>
 
-      {user ?  <UserContent /> : <LoginContent />}
+      {user ? <UserContent /> : <LoginContent />}
 
       <Typography variant="body1">
         Please reach out to the SimSE Research Team, if you have any questions
@@ -33,7 +33,7 @@ export const Landing: FC = () => {
 
 // Content shown to a person that needs to login
 const LoginContent: FC = () => {
-  const [loginURL, setLoginURL] = useState<string| null>(null);
+  const [loginURL, setLoginURL] = useState<string | null>(null);
 
   const getAuthURL = async () => {
     const result = await fetch(`${config.backendURL}/casdoor/redirect`);
@@ -51,9 +51,13 @@ const LoginContent: FC = () => {
         When you are ready, please login below
       </Typography>
 
-      {loginURL && <Button variant="contained" href={loginURL}>Login</Button>}
+      {loginURL && (
+        <Button variant="contained" href={loginURL}>
+          Login
+        </Button>
+      )}
     </>
-  )
+  );
 };
 
 // Content shown to someone who is already logged in
@@ -66,7 +70,9 @@ const UserContent: FC = () => {
         When you are ready, please click the link below
       </Typography>
 
-      <Button variant="contained" onClick={() => navigate('/home')}>Home</Button>
+      <Button variant="contained" onClick={() => navigate("/home")}>
+        Home
+      </Button>
     </>
-  )
+  );
 };

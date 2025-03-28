@@ -1,14 +1,14 @@
 import { createContext, FC, useContext, useEffect, useState } from "react";
 
-export const TOKEN_KEY = 'CASDOOR_JWT';
+export const TOKEN_KEY = "CASDOOR_JWT";
 
 export interface UserInfo {
   token: string;
 }
 
 export interface UserContextPayload {
-  user?: UserInfo,
-  login: (token:  string) => void;
+  user?: UserInfo;
+  login: (token: string) => void;
 }
 
 const UserContext = createContext<UserContextPayload>({} as UserContextPayload);
@@ -18,9 +18,9 @@ export interface UserProviderProps {
 }
 
 const hasJWTExpired = (token: string): boolean => {
-  const expiry = JSON.parse(window.atob(token.split('.')[1])).exp;
+  const expiry = JSON.parse(window.atob(token.split(".")[1])).exp;
   return Math.floor(new Date().getTime() / 1000) >= expiry;
-}
+};
 
 export const UserContextProvider: FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<UserInfo | undefined>(undefined);
@@ -41,7 +41,9 @@ export const UserContextProvider: FC<UserProviderProps> = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ user, login: handleLogin }}>{children}</UserContext.Provider>
+    <UserContext.Provider value={{ user, login: handleLogin }}>
+      {children}
+    </UserContext.Provider>
   );
 };
 
