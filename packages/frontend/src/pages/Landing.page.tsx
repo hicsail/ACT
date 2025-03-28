@@ -1,37 +1,13 @@
 import { Button, Stack, Typography } from "@mui/material";
 import { FC, useEffect, useState } from "react";
 import { config } from "../config/configuration";
-import { isSilentSigninRequired, SilentSignin } from "casdoor-react-sdk";
-import { CasdoorSDK } from "../services/casdoor.service";
 
 export const Landing: FC = () => {
   const [loginURL, setLoginURL] = useState<string| null>(null);
 
-  const isLoggedIn = () => {
-    return localStorage.getItem("token") !== null;
-  };
-
-  if (isSilentSigninRequired()) {
-    return (
-      <SilentSignin
-        sdk={CasdoorSDK}
-        isLoggedIn={isLoggedIn}
-        handleReceivedSilentSigninSuccessEvent={() => {
-          // jump to the home page here and clear silentSignin parameter
-          window.location.href = "/";
-        }}
-        handleReceivedSilentSigninFailureEvent={() => {
-          // prompt the user to log in failed here
-          alert("login failed");
-        }}
-      />
-    );
-  }
-
   const getAuthURL = async () => {
     const result = await fetch(`${config.backendURL}/casdoor/redirect`);
     const body = await result.json();
-    console.log(body);
     setLoginURL(body.url);
   };
 
