@@ -17,15 +17,21 @@ export interface UserProviderProps {
   children: React.ReactNode;
 }
 
+const hasJWTExpired = (token: string): boolean => {
+  const expiry = JSON.parse(window.atob(token.split('.')[1])).exp;
+  return Math.floor(new Date().getTime() / 1000) >= expiry;
+}
+
 export const UserContextProvider: FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<UserInfo | undefined>(undefined);
 
   // Handle if an existing JWT is found
-  // TODO: Handle expired JWT
   useEffect(() => {
     const existingToken = localStorage.getItem(TOKEN_KEY);
-    if (existingToken) {
+    if (existingToken && !hasJWTExpired(existingToken)) {
       setUser({ token: existingToken });
+    } else {
+      setUser(undefined);
     }
   }, []);
 
