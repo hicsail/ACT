@@ -1,45 +1,19 @@
 import { Button, Stack, Typography } from "@mui/material";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { config } from "../config/configuration";
-import { isSilentSigninRequired, SilentSignin } from "casdoor-react-sdk";
-import { CasdoorSDK } from "../services/casdoor.service";
+import { useNavigate } from "react-router";
+import { useUser } from "../contexts/User.context";
 
 export const Landing: FC = () => {
-  const isLoggedIn = () => {
-    return localStorage.getItem("token") !== null;
-  };
-
-  console.log(isSilentSigninRequired());
-
-  if (isSilentSigninRequired()) {
-    return (
-      <SilentSignin
-        sdk={CasdoorSDK}
-        isLoggedIn={isLoggedIn}
-        handleReceivedSilentSigninSuccessEvent={() => {
-          // jump to the home page here and clear silentSignin parameter
-          window.location.href = "/";
-        }}
-        handleReceivedSilentSigninFailureEvent={() => {
-          // prompt the user to log in failed here
-          alert("login failed");
-        }}
-      />
-    );
-  }
+  const { user } = useUser();
 
   return (
     <Stack spacing={3} alignItems="center">
       <Typography variant="h1">
         Welcome to the Performance Task Site!
       </Typography>
-      <Typography variant="body1">
-        When you are ready, please login below
-      </Typography>
 
-      <Button variant="contained" href={config.casdoor.loginURL}>
-        Login
-      </Button>
+      {user ? <UserContent /> : <LoginContent />}
 
       <Typography variant="body1">
         Please reach out to the SimSE Research Team, if you have any questions
@@ -54,5 +28,51 @@ export const Landing: FC = () => {
         from University of Delaware and James Madison University.
       </Typography>
     </Stack>
+  );
+};
+
+// Content shown to a person that needs to login
+const LoginContent: FC = () => {
+  const [loginURL, setLoginURL] = useState<string | null>(null);
+
+  const getAuthURL = async () => {
+    const result = await fetch(`${config.backendURL}/casdoor/redirect`);
+    const body = await result.json();
+    setLoginURL(body.url);
+  };
+
+  useEffect(() => {
+    getAuthURL();
+  }, []);
+
+  return (
+    <>
+      <Typography variant="body1">
+        When you are ready, please login below
+      </Typography>
+
+      {loginURL && (
+        <Button variant="contained" href={loginURL}>
+          Login
+        </Button>
+      )}
+    </>
+  );
+};
+
+// Content shown to someone who is already logged in
+const UserContent: FC = () => {
+  const navigate = useNavigate();
+
+  return (
+    <>
+      <Typography variant="body1">
+        When you are ready, please click the link below
+      </Typography>
+
+      <Button variant="contained" onClick={() => navigate("/home")}>
+        Home
+      </Button>
+    </>
   );
 };

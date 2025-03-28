@@ -1,24 +1,39 @@
-import { FC } from "react";
-import { AuthCallback as Casdoor } from "casdoor-react-sdk";
-import { CasdoorSDK } from "../services/casdoor.service";
+import { FC, useEffect } from "react";
 import { config } from "../config/configuration";
+import { useNavigate, useSearchParams } from "react-router";
+import { useUser } from "../contexts/User.context";
 
 export const AuthCallback: FC = () => {
-  return (
-    <Casdoor
-      sdk={CasdoorSDK}
-      serverUrl={config.backendURL}
-      saveTokenFromResponse={(res) => {
-        // @ts-ignore
-        // save token
-        localStorage.setItem("token", res.data.accessToken);
-      }}
-      isGetTokenSuccessful={(res) => {
-        // @ts-ignore
-        // according to the data returned by the server,
-        // determine whether the `token` is successfully obtained through `code` and `state`.
-        return res.success === true;
-      }}
-    />
-  );
+  const [searchParams, _setSearchParams] = useSearchParams();
+  const { login } = useUser();
+  const navigate = useNavigate();
+
+  const handleLogin = async (code: string) => {
+    // Fetch the JWT
+    const loginResponse = await fetch(
+      `${config.backendURL}/casdoor/signin?code=${code}`,
+      {
+        method: "POST",
+      },
+    );
+
+    // Pull out the token
+    const token = (await loginResponse.json()).token;
+
+    // Handle login
+    login(token);
+
+    // Redirect to home page
+    navigate("/home");
+  };
+
+  useEffect(() => {
+    const code = searchParams.get("code");
+
+    if (code) {
+      handleLogin(code);
+    }
+  }, [searchParams]);
+
+  return <p>One moment please</p>;
 };
