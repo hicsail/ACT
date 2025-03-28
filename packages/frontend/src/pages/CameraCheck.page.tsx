@@ -5,7 +5,7 @@ import { VideoRecord } from "../components/VideoRecord.component";
 export const CameraCheck: FC = () => {
   return (
     <Stack spacing={3}>
-      <VideoRecord />
+      <VideoRecord downloadRecording={true} />
 
       <Typography variant="body2">
         Please do not use wireless headphones in the recording of these tasks,

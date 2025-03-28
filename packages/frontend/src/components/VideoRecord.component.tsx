@@ -3,30 +3,52 @@ import { FC, useEffect, useRef } from "react";
 import { StatusMessages, useReactMediaRecorder } from "react-media-recorder";
 import { useSnackbar } from "../contexts/Snackbar.context";
 
-export const VideoRecord: FC = () => {
+export interface VideoRecordProps {
+  downloadRecording: boolean;
+  onRecordingStop?: (mediaBlobUrl: string) => void;
+}
+
+export const VideoRecord: FC<VideoRecordProps> = (props) => {
   const { pushSnackbarMessage } = useSnackbar();
 
-  const { status, startRecording, stopRecording, mediaBlobUrl, previewStream, error } =
-    useReactMediaRecorder({ video: true });
+  const recorder = useReactMediaRecorder({
+    video: true,
+    onStop: (mediaBlobUrl, _blob) => handleCompletion(mediaBlobUrl)
+  });
+
+  const handleCompletion = (blobURL: string) => {
+    if (props.downloadRecording) {
+      const link = document.createElement("a");
+      link.href = blobURL;
+      link.download = 'teacher_tutorial.webm';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    if (props.onRecordingStop) {
+      props.onRecordingStop(blobURL);
+    }
+  };
 
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Handles switching between live preview and video playback
   useEffect(() => {
     // If in recording mode, show the user the preview
-    if (videoRef.current && previewStream && status == "recording") {
-      videoRef.current.srcObject = previewStream;
+    if (videoRef.current && recorder.previewStream && recorder.status == "recording") {
+      videoRef.current.srcObject = recorder.previewStream;
     }
     // Otherwise, show the user the recording video
-    else if (videoRef.current && mediaBlobUrl) {
-      videoRef.current.src = mediaBlobUrl;
+    else if (videoRef.current && recorder.mediaBlobUrl) {
+      videoRef.current.src = recorder.mediaBlobUrl;
       videoRef.current.srcObject = null;
     }
-  }, [status, previewStream, mediaBlobUrl]);
+  }, [recorder.status, recorder.previewStream, recorder.mediaBlobUrl]);
 
   // Error message handling
   useEffect(() => {
-    switch (error) {
+    switch (recorder.error) {
       case 'permission_denied':
         pushSnackbarMessage('You have denied camera or microphone permissions to this site. You must enable permissions to record your video successfully', 'error');
         break;
@@ -34,20 +56,16 @@ export const VideoRecord: FC = () => {
         pushSnackbarMessage('Your camera or microphone is already in use. You must close other apps accessing them in order to record your video successfully', 'error');
         break;
     }
-  }, [error]);
-
-  useEffect(() => {
-    // console.log(error);
-  }, [error])
+  }, [recorder.error]);
 
   return (
     <Stack padding={3} spacing={3}>
       <ControlButtons
-        status={status}
-        handleStartRecording={startRecording}
-        handleStopRecording={stopRecording}
+        status={recorder.status}
+        handleStartRecording={recorder.startRecording}
+        handleStopRecording={recorder.stopRecording}
       />
-      <video src={mediaBlobUrl} controls autoPlay loop ref={videoRef} />
+      <video src={recorder.mediaBlobUrl} controls autoPlay loop ref={videoRef} />
     </Stack>
   );
 };
