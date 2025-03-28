@@ -12,7 +12,7 @@ export class CasdoorController {
   }
 
   @Post('/signin')
-  async handleSignin(@Query('code') code: string): Promise<string> {
+  async handleSignin(@Query('code') code: string): Promise<{token: string}> {
     return this.casdoorService.handleSignup(code);
   }
 }

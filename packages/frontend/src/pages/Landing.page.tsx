@@ -31,6 +31,7 @@ export const Landing: FC = () => {
   const getAuthURL = async () => {
     const result = await fetch(`${config.backendURL}/casdoor/redirect`);
     const body = await result.json();
+    console.log(body);
     setLoginURL(body.url);
   };
 

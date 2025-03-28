@@ -20,9 +20,11 @@ export class CasdoorService {
     }
   }
 
-  async handleSignup(code: string): Promise<string> {
+  async handleSignup(code: string): Promise<{token: string}> {
     const token = await this.casdoor.getAuthToken(code);
-    return token.access_token;
+    return {
+      token: token.access_token
+    }
   }
 
 }

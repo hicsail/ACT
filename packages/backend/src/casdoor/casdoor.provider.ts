@@ -13,7 +13,8 @@ export const casdoorProvider: Provider<SDK> = {
       clientId: configService.getOrThrow<string>('casdoor.clientId'),
       clientSecret: configService.getOrThrow<string>('casdoor.clientSecret'),
       certificate: configService.getOrThrow<string>('casdoor.certificate'),
-      orgName: configService.getOrThrow<string>('casdoor.orgName')
+      orgName: configService.getOrThrow<string>('casdoor.orgName'),
+      appName: configService.getOrThrow<string>('casdoor.appName')
     });
   }
 };

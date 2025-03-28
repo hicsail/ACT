@@ -1,24 +1,30 @@
-import { FC } from "react";
-import { AuthCallback as Casdoor } from "casdoor-react-sdk";
-import { CasdoorSDK } from "../services/casdoor.service";
-import { config } from "../config/configuration";
+import { FC, useEffect } from 'react';
+import { config } from '../config/configuration';
+import { useSearchParams } from 'react-router';
 
 export const AuthCallback: FC = () => {
+  const [searchParams, _setSearchParams] = useSearchParams();
+
+  const handleLogin  = async (code: string) => {
+    const loginResponse = await fetch(`${config.backendURL}/casdoor/signin?code=${code}`, {
+      method: 'POST'
+    })
+    const token = (await loginResponse.json()).token;
+    console.log(token);
+  };
+
+  useEffect(() => {
+    const code = searchParams.get('code');
+
+    if (code) {
+      handleLogin(code);
+    }
+
+
+    console.log(code);
+  }, [searchParams]);
+
   return (
-    <Casdoor
-      sdk={CasdoorSDK}
-      serverUrl={config.backendURL}
-      saveTokenFromResponse={(res) => {
-        // @ts-ignore
-        // save token
-        localStorage.setItem("token", res.data.accessToken);
-      }}
-      isGetTokenSuccessful={(res) => {
-        // @ts-ignore
-        // according to the data returned by the server,
-        // determine whether the `token` is successfully obtained through `code` and `state`.
-        return res.success === true;
-      }}
-    />
+    <p>One moment please</p>
   );
 };
