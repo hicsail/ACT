@@ -9,9 +9,9 @@ import configuration from './config/configuration';
   imports: [
     ConfigModule.forRoot({
       load: [configuration],
-      isGlobal: true
+      isGlobal: true,
     }),
-    CasdoorModule
+    CasdoorModule,
   ],
   controllers: [AppController],
   providers: [AppService],

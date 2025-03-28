@@ -5,6 +5,6 @@ import { CasdoorService } from './casdoor.service';
 
 @Module({
   controllers: [CasdoorController],
-  providers: [casdoorProvider, CasdoorService]
+  providers: [casdoorProvider, CasdoorService],
 })
 export class CasdoorModule {}

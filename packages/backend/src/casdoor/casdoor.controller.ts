@@ -3,7 +3,6 @@ import { CasdoorService } from './casdoor.service';
 
 @Controller('casdoor')
 export class CasdoorController {
-
   constructor(private readonly casdoorService: CasdoorService) {}
 
   @Get('/redirect')
@@ -12,7 +11,7 @@ export class CasdoorController {
   }
 
   @Post('/signin')
-  async handleSignin(@Query('code') code: string): Promise<{token: string}> {
+  async handleSignin(@Query('code') code: string): Promise<{ token: string }> {
     return this.casdoorService.handleSignup(code);
   }
 }

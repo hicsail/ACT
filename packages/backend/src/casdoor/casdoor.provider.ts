@@ -1,4 +1,4 @@
-import { SDK } from 'casdoor-nodejs-sdk'
+import { SDK } from 'casdoor-nodejs-sdk';
 import { Provider } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
@@ -14,7 +14,7 @@ export const casdoorProvider: Provider<SDK> = {
       clientSecret: configService.getOrThrow<string>('casdoor.clientSecret'),
       certificate: configService.getOrThrow<string>('casdoor.certificate'),
       orgName: configService.getOrThrow<string>('casdoor.orgName'),
-      appName: configService.getOrThrow<string>('casdoor.appName')
+      appName: configService.getOrThrow<string>('casdoor.appName'),
     });
-  }
+  },
 };
