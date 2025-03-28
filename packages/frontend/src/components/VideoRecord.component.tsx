@@ -1,20 +1,30 @@
 import { Button, Stack } from '@mui/material';
-import { FC, useRef } from 'react';
-import { ReactMediaRecorder, StatusMessages } from 'react-media-recorder';
-
+import { FC, useEffect, useRef } from 'react';
+import { StatusMessages, useReactMediaRecorder } from 'react-media-recorder';
 
 export const VideoRecord: FC = () => {
-  return (
-    <ReactMediaRecorder
-      video
-      render={({ status, startRecording, stopRecording, mediaBlobUrl }) => (
-        <Stack padding={3}>
-          <ControlButtons status={status} handleStartRecording={startRecording} handleStopRecording={stopRecording} />
+  const { status, startRecording, stopRecording, mediaBlobUrl, previewStream } =
+    useReactMediaRecorder({ video: true });
 
-          <video src={mediaBlobUrl} controls autoPlay loop />
-        </Stack>
-      )}
-    />
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    // If in recording mode, show the user the preview
+    if (videoRef.current && previewStream && status == 'recording') {
+      videoRef.current.srcObject = previewStream;
+    }
+    // Otherwise, show the user the recording video
+    else if(videoRef.current && mediaBlobUrl) {
+      videoRef.current.src = mediaBlobUrl;
+      videoRef.current.srcObject = null;
+    }
+  }, [status, previewStream, mediaBlobUrl]);
+
+  return (
+    <Stack padding={3} spacing={3}>
+      <ControlButtons status={status} handleStartRecording={startRecording} handleStopRecording={stopRecording} />
+      <video src={mediaBlobUrl} controls autoPlay loop ref={videoRef} />
+    </Stack>
   )
 };
 
