@@ -1,12 +1,13 @@
 import { FC } from 'react';
-import { Button, Grid, Stack, Typography, Box } from '@mui/material';
-import { AccessTime } from '@mui/icons-material';
+import { Button, Grid, Stack, Typography } from '@mui/material';
+import { AccessTime, CheckBoxOutlineBlank, CheckBoxOutlined } from '@mui/icons-material';
 
 export interface ActivityCardProps {
   previewImage: string;
   activityTitle: string;
   activityDescription: string;
   activityEstimatedTime: string;
+  activityComplete: boolean;
 }
 
 export const ActivityCard: FC<ActivityCardProps> = (props) => {
@@ -26,10 +27,30 @@ export const ActivityCard: FC<ActivityCardProps> = (props) => {
               <AccessTime />
               <Typography variant='body1'>{props.activityEstimatedTime}</Typography>
             </Stack>
-            <Button variant='contained'>Start</Button>
+            <Button variant='contained'>{props.activityComplete ? 'Retake' : 'Start'}</Button>
           </Stack>
+
+          {props.activityComplete ? <CompleteStatus /> : <IncompleteStatus />}
         </Stack>
       </Grid>
     </Grid>
   );
+};
+
+const CompleteStatus: FC = () => {
+  return (
+    <Stack direction='row' alignItems='center' gap={1}>
+      <CheckBoxOutlined />
+      <Typography variant='body1'>Completed</Typography>
+    </Stack>
+  );
+};
+
+const IncompleteStatus: FC = () => {
+  return (
+    <Stack direction='row' alignItems='center' gap={1}>
+      <CheckBoxOutlineBlank />
+      <Typography variant='body1'>Not Completed</Typography>
+    </Stack>
+  )
 };
