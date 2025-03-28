@@ -8,6 +8,7 @@ export interface ActivityCardProps {
   activityDescription: string;
   activityEstimatedTime: string;
   activityComplete: boolean;
+  onSelectionAction: () => void;
 }
 
 export const ActivityCard: FC<ActivityCardProps> = (props) => {
@@ -27,7 +28,7 @@ export const ActivityCard: FC<ActivityCardProps> = (props) => {
               <AccessTime />
               <Typography variant='body1'>{props.activityEstimatedTime}</Typography>
             </Stack>
-            <Button variant='contained'>{props.activityComplete ? 'Retake' : 'Start'}</Button>
+            <Button variant='contained' onClick={props.onSelectionAction}>{props.activityComplete ? 'Retake' : 'Start'}</Button>
           </Stack>
 
           {props.activityComplete ? <CompleteStatus /> : <IncompleteStatus />}

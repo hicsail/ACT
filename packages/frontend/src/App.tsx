@@ -10,6 +10,7 @@ import { AuthCallback } from "./pages/AuthCallback.page";
 import { CasdoorProvider } from "./contexts/Casdoor.context";
 import { Home } from "./pages/Home.page";
 import { UserContextProvider } from "./contexts/User.context";
+import { CameraCheck } from "./pages/CameraCheck.page";
 
 const App: FC = () => {
   return (
@@ -23,6 +24,7 @@ const App: FC = () => {
                 <Route index path="/" element={<Landing />} />
                 <Route path="/callback" element={<AuthCallback />} />
                 <Route path="/home" element={<Home />} />
+                <Route path="/cam-check" element={<CameraCheck />} />
               </Routes>
             </BrowserRouter>
           </Container>
