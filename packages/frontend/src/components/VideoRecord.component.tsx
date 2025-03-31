@@ -32,7 +32,6 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
       props.onRecordingStop(blobURL);
     }
 
-    console.log('here');
     setCountDownState('restart');
   };
 
