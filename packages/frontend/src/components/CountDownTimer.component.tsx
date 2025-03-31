@@ -1,11 +1,11 @@
 import { Typography } from "@mui/material";
 import { FC, useState, useEffect } from "react";
 
-export type CountDownState = 'running' | 'paused' | 'idle';
+export type CountDownState = 'running' | 'paused' | 'restart';
 
 export interface CountDownTimerProps {
   seconds: number;
-  status: 'running' | 'paused' | 'idle';
+  status: CountDownState;
 }
 
 export const CountDownTimer: FC<CountDownTimerProps> = ({ seconds, status }) => {
@@ -22,20 +22,24 @@ export const CountDownTimer: FC<CountDownTimerProps> = ({ seconds, status }) => 
     setTimeString(`${minutesString}:${secondsString}`);
   };
 
-  const tick = () => {
-    console.log(timeRemaining);
-    if (timeRemaining <= 0 || status == 'paused') {
-      return;
-    }
-
-    if (status == 'idle') {
+  useEffect(() => {
+    if (status == 'restart') {
       setTimeRemaining(seconds);
+      updateTimeString(seconds);
+      return;
+    }
+  }, [status]);
+
+  const tick = () => {
+    if (timeRemaining <= 0 || status != 'running') {
       return;
     }
 
-    const newRemaining = timeRemaining - 1;
-    updateTimeString(newRemaining);
-    setTimeRemaining(newRemaining);
+    if (status == 'running') {
+      const newRemaining = timeRemaining - 1;
+      updateTimeString(newRemaining);
+      setTimeRemaining(newRemaining);
+    }
   };
 
   useEffect(() => {
@@ -48,7 +52,7 @@ export const CountDownTimer: FC<CountDownTimerProps> = ({ seconds, status }) => 
   }, []);
 
   return (
-      <Typography variant="body1">{timeString}</Typography>
+    <Typography variant="body1">{timeString}</Typography>
   );
 };
 

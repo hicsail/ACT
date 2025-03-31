@@ -1,6 +1,6 @@
-import { Button, Stack } from "@mui/material";
+import { Button, Grid, Stack, Typography } from "@mui/material";
 import { FC, useEffect, useRef, useState } from "react";
-import { StatusMessages, useReactMediaRecorder } from "react-media-recorder";
+import { useReactMediaRecorder } from "react-media-recorder";
 import { useSnackbar } from "../contexts/Snackbar.context";
 import { CountDownTimer, CountDownState } from "./CountDownTimer.component";
 
@@ -30,6 +30,17 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
 
     if (props.onRecordingStop) {
       props.onRecordingStop(blobURL);
+    }
+
+    console.log('here');
+    setCountDownState('restart');
+  };
+
+  const handleRecordClick = () => {
+    if (recorder.status == 'recording') {
+      recorder.stopRecording();
+    } else {
+      recorder.startRecording();
     }
   };
 
@@ -72,38 +83,27 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
 
   return (
     <Stack padding={3} spacing={3}>
-      <ControlButtons
-        status={recorder.status}
-        handleStartRecording={recorder.startRecording}
-        handleStopRecording={recorder.stopRecording}
-      />
-      <CountDownTimer seconds={props.timeLimit} status={countDownState} />
+      <Grid container>
+        <Grid size={6}>
+          <Typography variant="body1">Camera Status</Typography>
+        </Grid>
+
+        <Grid size={6}>
+          <CountDownTimer seconds={props.timeLimit} status={countDownState} />
+        </Grid>
+
+        <Grid size={6}>
+          <Button variant="contained" onClick={handleRecordClick}>
+            {recorder.status == 'recording' ? "Stop Recording" : "Start Recording"}
+          </Button>
+        </Grid>
+
+        <Grid size={6}>
+          <Button variant="contained">Submit Recording</Button>
+        </Grid>
+
+      </Grid>
       <video src={recorder.mediaBlobUrl} controls autoPlay loop ref={videoRef} />
-    </Stack>
-  );
-};
-
-interface ControlButtonsProps {
-  status: StatusMessages;
-  handleStartRecording: () => void;
-  handleStopRecording: () => void;
-}
-
-const ControlButtons: FC<ControlButtonsProps> = (props) => {
-  const handleRecordingPress = () => {
-    if (props.status == "recording") {
-      props.handleStopRecording();
-    } else {
-      props.handleStartRecording();
-    }
-  };
-
-  return (
-    <Stack direction="row" justifyContent="space-around">
-      <Button variant="contained" onClick={handleRecordingPress}>
-        {props.status == "recording" ? "Stop Recording" : "Start Recording"}
-      </Button>
-      <Button variant="contained">Submit Recording</Button>
     </Stack>
   );
 };
