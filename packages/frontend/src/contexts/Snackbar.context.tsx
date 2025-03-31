@@ -1,13 +1,15 @@
-import { Alert, Snackbar, Stack } from '@mui/material';
-import { createContext, FC, useState, useContext } from 'react';
+import { Alert, Snackbar, Stack } from "@mui/material";
+import { createContext, FC, useState, useContext } from "react";
 
-type SnackbarType = 'success' | 'error' | 'warning' | 'info';
+type SnackbarType = "success" | "error" | "warning" | "info";
 
 export interface SnackbarContextProps {
   pushSnackbarMessage: (message: string, type?: SnackbarType) => void;
 }
 
-const SnackbarContext = createContext<SnackbarContextProps>({} as SnackbarContextProps);
+const SnackbarContext = createContext<SnackbarContextProps>(
+  {} as SnackbarContextProps,
+);
 
 export interface SnackbarProviderProps {
   children: React.ReactNode;
@@ -19,22 +21,28 @@ export interface SnackbarMessage {
   type: SnackbarType;
 }
 
-export const SnackbarProvider: FC<SnackbarProviderProps> = ({ children, ...props }) => {
+export const SnackbarProvider: FC<SnackbarProviderProps> = ({
+  children,
+  ...props
+}) => {
   const [messages, setMessages] = useState<SnackbarMessage[]>([]);
 
-  const pushSnackbarMessage = (message: string, type: SnackbarType = 'error') => {
+  const pushSnackbarMessage = (
+    message: string,
+    type: SnackbarType = "error",
+  ) => {
     setMessages([
       ...messages,
       {
         message,
         type,
-        id: Math.random().toString(36)
-      }
+        id: Math.random().toString(36),
+      },
     ]);
   };
 
   const handleClose = (id: string, reason?: string) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
     setMessages(messages.filter((message) => message.id !== id));
@@ -49,14 +57,14 @@ export const SnackbarProvider: FC<SnackbarProviderProps> = ({ children, ...props
             key={message.id}
             open={true}
             autoHideDuration={5000}
-            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
             onClose={() => handleClose(message.id)}
           >
             <Alert
               variant="filled"
               severity={message.type}
               onClose={() => handleClose(message.id)}
-              sx={{ width: '100%' }}
+              sx={{ width: "100%" }}
             >
               {message.message}
             </Alert>

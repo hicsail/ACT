@@ -14,15 +14,16 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
   const { pushSnackbarMessage } = useSnackbar();
   const recorder = useReactMediaRecorder({
     video: true,
-    onStop: (mediaBlobUrl, _blob) => handleCompletion(mediaBlobUrl)
+    onStop: (mediaBlobUrl, _blob) => handleCompletion(mediaBlobUrl),
   });
-  const [countDownState, setCountDownState] = useState<CountDownState>('paused');
+  const [countDownState, setCountDownState] =
+    useState<CountDownState>("paused");
 
   const handleCompletion = (blobURL: string) => {
     if (props.downloadRecording) {
       const link = document.createElement("a");
       link.href = blobURL;
-      link.download = 'teacher_tutorial.webm';
+      link.download = "teacher_tutorial.webm";
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -32,11 +33,11 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
       props.onRecordingStop(blobURL);
     }
 
-    setCountDownState('restart');
+    setCountDownState("restart");
   };
 
   const handleRecordClick = () => {
-    if (recorder.status == 'recording') {
+    if (recorder.status == "recording") {
       recorder.stopRecording();
     } else {
       recorder.startRecording();
@@ -48,7 +49,11 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
   // Handles switching between live preview and video playback
   useEffect(() => {
     // If in recording mode, show the user the preview
-    if (videoRef.current && recorder.previewStream && recorder.status == "recording") {
+    if (
+      videoRef.current &&
+      recorder.previewStream &&
+      recorder.status == "recording"
+    ) {
       videoRef.current.srcObject = recorder.previewStream;
     }
     // Otherwise, show the user the recording video
@@ -60,8 +65,8 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
 
   // Handle starting the counter
   useEffect(() => {
-    if (recorder.status == 'recording') {
-      setCountDownState('running');
+    if (recorder.status == "recording") {
+      setCountDownState("running");
       setTimeout(() => {
         recorder.stopRecording();
       }, props.timeLimit * 1000);
@@ -71,11 +76,17 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
   // Error message handling
   useEffect(() => {
     switch (recorder.error) {
-      case 'permission_denied':
-        pushSnackbarMessage('You have denied camera or microphone permissions to this site. You must enable permissions to record your video successfully', 'error');
+      case "permission_denied":
+        pushSnackbarMessage(
+          "You have denied camera or microphone permissions to this site. You must enable permissions to record your video successfully",
+          "error",
+        );
         break;
-      case 'media_in_use':
-        pushSnackbarMessage('Your camera or microphone is already in use. You must close other apps accessing them in order to record your video successfully', 'error');
+      case "media_in_use":
+        pushSnackbarMessage(
+          "Your camera or microphone is already in use. You must close other apps accessing them in order to record your video successfully",
+          "error",
+        );
         break;
     }
   }, [recorder.error]);
@@ -93,16 +104,23 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
 
         <Grid size={6}>
           <Button variant="contained" onClick={handleRecordClick}>
-            {recorder.status == 'recording' ? "Stop Recording" : "Start Recording"}
+            {recorder.status == "recording"
+              ? "Stop Recording"
+              : "Start Recording"}
           </Button>
         </Grid>
 
         <Grid size={6}>
           <Button variant="contained">Submit Recording</Button>
         </Grid>
-
       </Grid>
-      <video src={recorder.mediaBlobUrl} controls autoPlay loop ref={videoRef} />
+      <video
+        src={recorder.mediaBlobUrl}
+        controls
+        autoPlay
+        loop
+        ref={videoRef}
+      />
     </Stack>
   );
 };

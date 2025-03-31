@@ -1,17 +1,30 @@
-import { FormControl, FormControlLabel, RadioGroup, Stack, Typography, Radio, Button, Link } from '@mui/material';
-import { FC, useState } from 'react';
-import { VideoRecord } from '../components/VideoRecord.component';
-import { config } from '../config/configuration';
-import { useNavigate } from 'react-router';
+import {
+  FormControl,
+  FormControlLabel,
+  RadioGroup,
+  Stack,
+  Typography,
+  Radio,
+  Button,
+  Link,
+} from "@mui/material";
+import { FC, useState } from "react";
+import { VideoRecord } from "../components/VideoRecord.component";
+import { config } from "../config/configuration";
+import { useNavigate } from "react-router";
 
 export const CameraCheck: FC = () => {
   const [isComplete, setIsComplete] = useState<boolean>(false);
 
   return (
     <Stack spacing={3}>
-      <VideoRecord downloadRecording={true} onRecordingStop={(_blobURL) => setIsComplete(true)} timeLimit={5} />
+      <VideoRecord
+        downloadRecording={true}
+        onRecordingStop={(_blobURL) => setIsComplete(true)}
+        timeLimit={5}
+      />
 
-      <Typography variant='body2'>
+      <Typography variant="body2">
         Please do not use wireless headphones in the recording of these tasks,
         as they cause audio delays. If you experience audio delays for other
         reasons, but are still able to complete the tasks, we will accept those
@@ -27,37 +40,40 @@ const CompletionForm: FC = () => {
   const [issueFound, setIssueFound] = useState<boolean>(false);
   const navigate = useNavigate();
 
-
   const handleFinishClick = () => {
     if (issueFound) {
       window.location.reload();
     } else {
       // TODO: Save results
-      navigate('/home');
+      navigate("/home");
     }
-  }
+  };
 
   return (
     <Stack>
       <FormControl>
-        <RadioGroup value={issueFound} onChange={(_, checked) => setIssueFound(checked as any)}>
+        <RadioGroup
+          value={issueFound}
+          onChange={(_, checked) => setIssueFound(checked as any)}
+        >
           <FormControlLabel
             value={false}
             control={<Radio />}
-            label='By checking this box I confirm that I watched my downloaded video and there are no issues: my video captured my image and the audio. '
+            label="By checking this box I confirm that I watched my downloaded video and there are no issues: my video captured my image and the audio. "
           />
           <FormControlLabel
             value={true}
             control={<Radio />}
-            label='There were issues with my video and/or audio that I could not solve.'
+            label="There were issues with my video and/or audio that I could not solve."
           />
         </RadioGroup>
       </FormControl>
 
-      <Button variant='contained' onClick={handleFinishClick}>{issueFound ? 'Refresh and Retake' : 'Finish'}</Button>
+      <Button variant="contained" onClick={handleFinishClick}>
+        {issueFound ? "Refresh and Retake" : "Finish"}
+      </Button>
 
       {issueFound && <ResolvePermissionError />}
-
     </Stack>
   );
 };
@@ -106,4 +122,4 @@ const ResolvePermissionError: FC = () => {
       </Typography>
     </Stack>
   );
-}
+};
