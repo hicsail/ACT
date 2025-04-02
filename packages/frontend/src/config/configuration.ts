@@ -8,5 +8,6 @@ export const config = {
     redirectPath: import.meta.env.VITE_CASDOOR_REDIRECT_PATH,
     signinPath: import.meta.env.VITE_CASDOOR_SIGNIN_PATH
   },
-  backendURL: import.meta.env.VITE_BACKEND_URL
+  backendURL: import.meta.env.VITE_BACKEND_URL,
+  googleFormURL: import.meta.env.VITE_GOOGLE_FORM_URL
 };
