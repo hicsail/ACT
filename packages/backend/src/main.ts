@@ -5,6 +5,9 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
+  app.enableCors({
+    exposedHeaders: ['Content-Range']
+  })
 
   const config = new DocumentBuilder()
     .setTitle('ACT Backend')
