@@ -16,7 +16,7 @@ export class TasksService {
   }
 
   async findAll(pagination: PaginationDTO): Promise<Task[]> {
-    console.log(pagination.sort);
+    console.log(pagination);
     return this.prismaService.task.findMany();
   }
 
