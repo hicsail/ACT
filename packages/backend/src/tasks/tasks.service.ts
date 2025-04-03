@@ -10,7 +10,7 @@ export class TasksService {
 
   async create(createTaskDto: CreateTaskDto): Promise<Task> {
     return this.prismaService.task.create({
-      data: createTaskDto
+      data: createTaskDto,
     });
   }
 
@@ -20,20 +20,20 @@ export class TasksService {
 
   async findOne(id: string): Promise<Task | null> {
     return this.prismaService.task.findUnique({
-      where: { id }
+      where: { id },
     });
   }
 
   async update(id: string, updateTaskDto: UpdateTaskDto): Promise<Task | null> {
     return this.prismaService.task.update({
       where: { id },
-      data: updateTaskDto
+      data: updateTaskDto,
     });
   }
 
   async remove(id: string): Promise<void> {
     await this.prismaService.task.delete({
-      where: { id }
+      where: { id },
     });
   }
 }

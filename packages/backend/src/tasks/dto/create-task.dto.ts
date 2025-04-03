@@ -1,6 +1,6 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Task } from "@prisma/client";
-import { IsNumber, IsString } from "class-validator";
+import { ApiProperty } from '@nestjs/swagger';
+import { Task } from '@prisma/client';
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreateTaskDto implements Omit<Task, 'id'> {
   @ApiProperty({ description: 'Category the task falls under' })
@@ -11,7 +11,7 @@ export class CreateTaskDto implements Omit<Task, 'id'> {
   @IsString()
   title: string;
 
-  @ApiProperty({ description: 'Preview text describing the task '})
+  @ApiProperty({ description: 'Preview text describing the task ' })
   @IsString()
   preview: string;
 
