@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CasdoorModule } from './casdoor/casdoor.module';
 import { ConfigModule } from '@nestjs/config';
+import { PrismaModule } from './prisma/prisma.module';
 import { TasksModule } from './tasks/tasks.module';
 import configuration from './config/configuration';
 
@@ -13,6 +14,7 @@ import configuration from './config/configuration';
       isGlobal: true,
     }),
     CasdoorModule,
+    PrismaModule,
     TasksModule,
   ],
   controllers: [AppController],
