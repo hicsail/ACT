@@ -5,6 +5,9 @@ export class TaskEntity implements Task {
   @ApiProperty({ description: 'Unique ID of the task' })
   id: string;
 
+  @ApiProperty({ description: 'The ID of the set the task belongs to' })
+  taskSetId: string;
+
   @ApiProperty({ description: 'Category the task falls under' })
   category: string;
 

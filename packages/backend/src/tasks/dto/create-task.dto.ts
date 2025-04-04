@@ -7,6 +7,10 @@ export class CreateTaskDto implements Omit<Task, 'id'> {
   @IsString()
   category: string;
 
+  @ApiProperty({ description: 'The set the task should belong to' })
+  @IsString()
+  taskSetId: string;
+
   @ApiProperty({ description: 'Title of the task' })
   @IsString()
   title: string;
