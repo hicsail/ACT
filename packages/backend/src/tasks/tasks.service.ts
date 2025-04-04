@@ -4,10 +4,14 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Task } from '@prisma/client';
 import { PaginationDTO } from '../pagination/pagination.dto';
+import { TaskSetService } from './taskset.service';
 
 @Injectable()
 export class TasksService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly taskSetService: TaskSetService,
+  ) {}
 
   async create(createTaskDto: CreateTaskDto): Promise<Task> {
     return this.prismaService.task.create({
@@ -49,5 +53,16 @@ export class TasksService {
 
   async count(): Promise<number> {
     return this.prismaService.task.count();
+  }
+
+  async getActiveTasks(): Promise<Task[]> {
+    const activeSet = await this.taskSetService.getActive();
+    if (!activeSet) {
+      return [];
+    }
+
+    return this.prismaService.task.findMany({
+      where: { taskSetId: activeSet.id },
+    });
   }
 }
