@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { TasksModule } from './tasks/tasks.module';
 import { PaginationModule } from './pagination/pagination.module';
+import { TaskCompletionsModule } from './taskcompletions/taskcompletions.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -18,6 +19,7 @@ import configuration from './config/configuration';
     PrismaModule,
     TasksModule,
     PaginationModule,
+    TaskCompletionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
