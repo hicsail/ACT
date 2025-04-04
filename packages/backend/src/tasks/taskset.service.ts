@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTaskSetDto } from './dto/create-taskset.dto';
-import { TaskSet } from '@prisma/client';
+import { Task, TaskSet } from '@prisma/client';
 import { PaginationDTO } from 'src/pagination/pagination.dto';
 import { UpdateTaskSetDto } from './dto/update-taskset.dto';
 
@@ -12,7 +12,10 @@ export class TaskSetService {
 
   async create(createTaskSetDto: CreateTaskSetDto): Promise<TaskSet> {
     return this.prismaService.taskSet.create({
-      data: createTaskSetDto
+      data: {
+        ...createTaskSetDto,
+        active: false
+      }
     });
   }
 
@@ -50,5 +53,22 @@ export class TaskSetService {
 
   async count(): Promise<number> {
     return this.prismaService.taskSet.count();
+  }
+
+  async setActive(id: string): Promise<TaskSet> {
+    // First mark all others as inactive
+    await this.prismaService.taskSet.updateMany({
+      data: {
+        active: false
+      }
+    });
+
+    // Now mark the single task set as active
+    return this.prismaService.taskSet.update({
+      where: { id },
+      data: {
+        active: true
+      }
+    })
   }
 }

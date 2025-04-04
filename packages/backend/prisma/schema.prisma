@@ -18,6 +18,7 @@ model TaskSet {
   name               String
   description        String
   tasks              Task[]
+  active             Boolean
 }
 
 model Task {

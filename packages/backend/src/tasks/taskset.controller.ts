@@ -1,10 +1,11 @@
-import { Body, Controller, Post, Get, Patch, Delete, Query, Response, Param, NotFoundException } from '@nestjs/common';
+import { Body, Controller, Post, Get, Patch, Delete, Query, Response, Param, NotFoundException, Put } from '@nestjs/common';
 import { TaskSetService } from './taskset.service';
 import { CreateTaskSetDto } from './dto/create-taskset.dto';
 import { UpdateTaskSetDto } from './dto/update-taskset.dto';
 import { TaskSetEntity } from './entities/taskset.entity';
 import { PaginationDTO, makeContentRange } from 'src/pagination/pagination.dto';
 import { Response as Res } from 'express';
+import { TaskSet } from '@prisma/client';
 
 @Controller('sets')
 export class TaskSetController {
@@ -53,5 +54,10 @@ export class TaskSetController {
   @Delete(':id')
   async remove(@Param('id') id: string): Promise<void> {
     await this.taskSetService.remove(id);
+  }
+
+  @Put('/active/:id')
+  async setActive(@Param('id') id: string): Promise<TaskSet> {
+    return this.taskSetService.setActive(id);
   }
 }
