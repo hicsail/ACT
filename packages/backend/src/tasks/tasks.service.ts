@@ -19,7 +19,8 @@ export class TasksService {
     return this.prismaService.task.findMany({
       where: pagination.filter,
       take: pagination.range ? pagination.range.end - pagination.range.start : undefined,
-      skip: pagination.range ? pagination.range.start : undefined
+      skip: pagination.range ? pagination.range.start : undefined,
+      orderBy: pagination.sort ? { [pagination.sort.field]: pagination.sort.direction }: undefined
     });
   }
 
