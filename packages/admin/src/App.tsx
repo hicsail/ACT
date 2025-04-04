@@ -1,6 +1,6 @@
-import { Admin, ListGuesser, Resource } from 'react-admin'
-import { config } from './config/configuration';
-import simpleRestProvider from 'ra-data-simple-rest';
+import { Admin, ListGuesser, Resource } from "react-admin";
+import { config } from "./config/configuration";
+import simpleRestProvider from "ra-data-simple-rest";
 
 function App() {
   const dataSource = simpleRestProvider(config.backendURL);
@@ -9,7 +9,7 @@ function App() {
     <Admin dataProvider={dataSource}>
       <Resource name="tasks" list={ListGuesser} />
     </Admin>
-  )
+  );
 }
 
-export default App
+export default App;
