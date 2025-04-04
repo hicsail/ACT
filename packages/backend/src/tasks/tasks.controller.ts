@@ -16,17 +16,20 @@ import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskEntity } from './entities/task.entity';
 import { Response as Res } from 'express';
 import { makeContentRange, PaginationDTO } from '../pagination/pagination.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post()
+  @ApiResponse({ type: TaskEntity })
   create(@Body() createTaskDto: CreateTaskDto): Promise<TaskEntity> {
     return this.tasksService.create(createTaskDto);
   }
 
   @Get()
+  @ApiResponse({ type: [TaskEntity] })
   async findAll(
     @Query() pagination: PaginationDTO,
     @Response() res: Res,
@@ -44,6 +47,7 @@ export class TasksController {
   }
 
   @Get(':id')
+  @ApiResponse({ type: TaskEntity })
   async findOne(@Param('id') id: string): Promise<TaskEntity> {
     const found = await this.tasksService.findOne(id);
     if (!found) {
@@ -53,6 +57,7 @@ export class TasksController {
   }
 
   @Patch(':id')
+  @ApiResponse({ type: TaskEntity })
   async update(
     @Param('id') id: string,
     @Body() updateTaskDto: UpdateTaskDto,
@@ -70,6 +75,7 @@ export class TasksController {
   }
 
   @Get('/active/tasks')
+  @ApiResponse({ type: [TaskEntity] })
   async getActiveTasks(): Promise<TaskEntity[]> {
     return this.tasksService.getActiveTasks();
   }
