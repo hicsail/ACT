@@ -6,7 +6,7 @@ import { TaskSetEntity } from './entities/taskset.entity';
 import { PaginationDTO, makeContentRange } from 'src/pagination/pagination.dto';
 import { Response as Res } from 'express';
 
-@Controller('set')
+@Controller('sets')
 export class TaskSetController {
   constructor(private readonly taskSetService: TaskSetService) {}
 
