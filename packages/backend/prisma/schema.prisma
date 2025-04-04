@@ -13,8 +13,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model TaskSet {
+  id                 String    @id @default(uuid())
+  name               String
+  description        String
+  tasks              Task[]
+}
+
 model Task {
   id                 String    @id @default(uuid())
+  taskSet            TaskSet   @relation(fields: [taskSetId], references: [id])
+  taskSetId          String
   category           String
   title              String
   preview            String
