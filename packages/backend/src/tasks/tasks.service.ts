@@ -42,4 +42,8 @@ export class TasksService {
       where: { id }
     });
   }
+
+  async count(): Promise<number> {
+    return this.prismaService.task.count();
+  }
 }

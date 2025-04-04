@@ -15,7 +15,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskEntity } from './entities/task.entity';
 import { Response as Res } from 'express';
-import { PaginationDTO } from '../pagination/pagination.dto';
+import { makeContentRange, PaginationDTO } from '../pagination/pagination.dto';
 
 @Controller('tasks')
 export class TasksController {
@@ -29,7 +29,11 @@ export class TasksController {
   @Get()
   async findAll(@Query() pagination: PaginationDTO, @Response() res: Res): Promise<any> {
     const result = await this.tasksService.findAll(pagination);
-    res.setHeader('Content-Range', `tasks ${0}-${2}/2`);
+
+    // Determine content-range header
+    const total = await this.tasksService.count();
+    res.setHeader('Content-Range', makeContentRange('tasks', pagination, total));
+
     return res.json(result);
   }
 

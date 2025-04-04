@@ -111,7 +111,6 @@ const filterTransform = (params: TransformFnParams): FilterField => {
   return raw;
 }
 
-
 export class PaginationDTO {
   @IsOptional()
   @Transform(sortTransform)
@@ -124,4 +123,11 @@ export class PaginationDTO {
   @IsOptional()
   @Transform(filterTransform)
   filter?: FilterField;
+}
+
+export const makeContentRange = (name: string, pagination: PaginationDTO, total: number): string => {
+  if (pagination.range) {
+    return `${name} ${pagination.range.start}-${pagination.range.end > total ? total - 1 : pagination.range.end}/${total}`;
+  }
+  return `${name} ${0}-${total - 1}/${total}`;
 }
