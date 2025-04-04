@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTaskSetDto } from './dto/create-taskset.dto';
-import { Task, TaskSet } from '@prisma/client';
+import { TaskSet } from '@prisma/client';
 import { PaginationDTO } from 'src/pagination/pagination.dto';
 import { UpdateTaskSetDto } from './dto/update-taskset.dto';
 
@@ -70,5 +70,11 @@ export class TaskSetService {
         active: true
       }
     })
+  }
+
+  async getActive(): Promise<TaskSet | null> {
+    return this.prismaService.taskSet.findFirst({
+      where: { active: true }
+    });
   }
 }

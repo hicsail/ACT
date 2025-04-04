@@ -68,4 +68,9 @@ export class TasksController {
   async remove(@Param('id') id: string): Promise<void> {
     await this.tasksService.remove(id);
   }
+
+  @Get('/active/tasks')
+  async getActiveTasks(): Promise<TaskEntity[]> {
+    return this.tasksService.getActiveTasks();
+  }
 }
