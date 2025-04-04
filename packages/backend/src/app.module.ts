@@ -5,6 +5,7 @@ import { CasdoorModule } from './casdoor/casdoor.module';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { TasksModule } from './tasks/tasks.module';
+import { PaginationModule } from './pagination/pagination.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -16,6 +17,7 @@ import configuration from './config/configuration';
     CasdoorModule,
     PrismaModule,
     TasksModule,
+    PaginationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -3,6 +3,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Task } from '@prisma/client';
+import { PaginationDTO } from '../pagination/pagination.dto';
 
 @Injectable()
 export class TasksService {
@@ -14,8 +15,17 @@ export class TasksService {
     });
   }
 
-  async findAll(): Promise<Task[]> {
-    return this.prismaService.task.findMany();
+  async findAll(pagination: PaginationDTO): Promise<Task[]> {
+    return this.prismaService.task.findMany({
+      where: pagination.filter,
+      take: pagination.range
+        ? pagination.range.end - pagination.range.start
+        : undefined,
+      skip: pagination.range ? pagination.range.start : undefined,
+      orderBy: pagination.sort
+        ? { [pagination.sort.field]: pagination.sort.direction }
+        : undefined,
+    });
   }
 
   async findOne(id: string): Promise<Task | null> {
@@ -35,5 +45,9 @@ export class TasksService {
     await this.prismaService.task.delete({
       where: { id },
     });
+  }
+
+  async count(): Promise<number> {
+    return this.prismaService.task.count();
   }
 }

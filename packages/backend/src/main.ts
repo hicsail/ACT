@@ -5,6 +5,9 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
+  app.enableCors({
+    exposedHeaders: ['Content-Range'],
+  });
 
   const config = new DocumentBuilder()
     .setTitle('ACT Backend')
@@ -15,7 +18,7 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   await app.listen(process.env.PORT ?? 3001);
 }
