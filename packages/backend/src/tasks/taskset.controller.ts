@@ -1,4 +1,16 @@
-import { Body, Controller, Post, Get, Patch, Delete, Query, Response, Param, NotFoundException, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  Patch,
+  Delete,
+  Query,
+  Response,
+  Param,
+  NotFoundException,
+  Put,
+} from '@nestjs/common';
 import { TaskSetService } from './taskset.service';
 import { CreateTaskSetDto } from './dto/create-taskset.dto';
 import { UpdateTaskSetDto } from './dto/update-taskset.dto';
@@ -19,7 +31,10 @@ export class TaskSetController {
 
   @Get()
   @ApiResponse({ type: [TaskSetEntity] })
-  async findAll(@Query() pagination: PaginationDTO, @Response() res: Res): Promise<any> {
+  async findAll(
+    @Query() pagination: PaginationDTO,
+    @Response() res: Res,
+  ): Promise<any> {
     const result = await this.taskSetService.findAll(pagination);
 
     // Determine content-range header

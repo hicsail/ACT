@@ -5,7 +5,6 @@ import { TaskSet } from '@prisma/client';
 import { PaginationDTO } from 'src/pagination/pagination.dto';
 import { UpdateTaskSetDto } from './dto/update-taskset.dto';
 
-
 @Injectable()
 export class TaskSetService {
   constructor(private readonly prismaService: PrismaService) {}
@@ -14,8 +13,8 @@ export class TaskSetService {
     return this.prismaService.taskSet.create({
       data: {
         ...createTaskSetDto,
-        active: false
-      }
+        active: false,
+      },
     });
   }
 
@@ -34,20 +33,23 @@ export class TaskSetService {
 
   async findOne(id: string): Promise<TaskSet | null> {
     return this.prismaService.taskSet.findUnique({
-      where: { id }
+      where: { id },
     });
   }
 
-  async update(id: string, updateTaskSetDto: UpdateTaskSetDto): Promise<TaskSet | null> {
+  async update(
+    id: string,
+    updateTaskSetDto: UpdateTaskSetDto,
+  ): Promise<TaskSet | null> {
     return this.prismaService.taskSet.update({
       where: { id },
-      data: updateTaskSetDto
+      data: updateTaskSetDto,
     });
   }
 
   async remove(id: string): Promise<void> {
     await this.prismaService.taskSet.delete({
-      where: { id }
+      where: { id },
     });
   }
 
@@ -59,22 +61,22 @@ export class TaskSetService {
     // First mark all others as inactive
     await this.prismaService.taskSet.updateMany({
       data: {
-        active: false
-      }
+        active: false,
+      },
     });
 
     // Now mark the single task set as active
     return this.prismaService.taskSet.update({
       where: { id },
       data: {
-        active: true
-      }
-    })
+        active: true,
+      },
+    });
   }
 
   async getActive(): Promise<TaskSet | null> {
     return this.prismaService.taskSet.findFirst({
-      where: { active: true }
+      where: { active: true },
     });
   }
 }

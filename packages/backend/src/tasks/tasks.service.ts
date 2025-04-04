@@ -10,7 +10,7 @@ import { TaskSetService } from './taskset.service';
 export class TasksService {
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly taskSetService: TaskSetService
+    private readonly taskSetService: TaskSetService,
   ) {}
 
   async create(createTaskDto: CreateTaskDto): Promise<Task> {
@@ -62,7 +62,7 @@ export class TasksService {
     }
 
     return this.prismaService.task.findMany({
-      where: { taskSetId: activeSet.id }
+      where: { taskSetId: activeSet.id },
     });
   }
 }
