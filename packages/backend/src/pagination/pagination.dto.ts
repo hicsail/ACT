@@ -12,6 +12,10 @@ export interface RangeField {
   end: number;
 }
 
+export interface FilterField {
+  [field: string]: string;
+}
+
 const sortTransform = (params: TransformFnParams): SortField => {
   let raw: any;
   try {
@@ -87,16 +91,37 @@ const rangeTransform = (params: TransformFnParams): RangeField => {
     start,
     end
   };
-
 };
+
+const filterTransform = (params: TransformFnParams): FilterField => {
+  let raw: any;
+  try {
+    // Try to parse the field as JSON
+    raw = JSON.parse(params.value);
+  } catch(error) {
+    console.log(error);
+    throw new BadRequestException(`Failed to parse range field: ${params.value}`)
+  }
+
+  // Check if the result is an array
+  if (typeof raw !== 'object' || Array.isArray(raw)) {
+    throw new BadRequestException(`Expected an object to be passed in`);
+  }
+
+  return raw;
+}
 
 
 export class PaginationDTO {
   @IsOptional()
   @Transform(sortTransform)
-  sort: SortField;
+  sort?: SortField;
 
   @IsOptional()
   @Transform(rangeTransform)
-  range: RangeField;
+  range?: RangeField;
+
+  @IsOptional()
+  @Transform(filterTransform)
+  filter?: FilterField;
 }
