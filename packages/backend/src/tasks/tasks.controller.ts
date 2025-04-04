@@ -8,7 +8,7 @@ import {
   Delete,
   NotFoundException,
   Query,
-  Response
+  Response,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -27,12 +27,18 @@ export class TasksController {
   }
 
   @Get()
-  async findAll(@Query() pagination: PaginationDTO, @Response() res: Res): Promise<any> {
+  async findAll(
+    @Query() pagination: PaginationDTO,
+    @Response() res: Res,
+  ): Promise<any> {
     const result = await this.tasksService.findAll(pagination);
 
     // Determine content-range header
     const total = await this.tasksService.count();
-    res.setHeader('Content-Range', makeContentRange('tasks', pagination, total));
+    res.setHeader(
+      'Content-Range',
+      makeContentRange('tasks', pagination, total),
+    );
 
     return res.json(result);
   }

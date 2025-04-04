@@ -18,9 +18,13 @@ export class TasksService {
   async findAll(pagination: PaginationDTO): Promise<Task[]> {
     return this.prismaService.task.findMany({
       where: pagination.filter,
-      take: pagination.range ? pagination.range.end - pagination.range.start : undefined,
+      take: pagination.range
+        ? pagination.range.end - pagination.range.start
+        : undefined,
       skip: pagination.range ? pagination.range.start : undefined,
-      orderBy: pagination.sort ? { [pagination.sort.field]: pagination.sort.direction }: undefined
+      orderBy: pagination.sort
+        ? { [pagination.sort.field]: pagination.sort.direction }
+        : undefined,
     });
   }
 
@@ -39,7 +43,7 @@ export class TasksService {
 
   async remove(id: string): Promise<void> {
     await this.prismaService.task.delete({
-      where: { id }
+      where: { id },
     });
   }
 
