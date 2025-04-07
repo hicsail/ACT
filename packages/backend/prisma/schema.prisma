@@ -30,4 +30,14 @@ model Task {
   preview            String
   previewImage       String
   timeSeconds        Int
+  taskCompletions    TaskCompletion[]
+}
+
+model TaskCompletion {
+  id                 String    @id @default(uuid())
+  task               Task      @relation(fields: [taskId], references: [id])
+  taskId             String
+  complete           Boolean
+  video              String
+  user               String
 }

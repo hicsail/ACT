@@ -9,5 +9,6 @@ import { TaskSetService } from './taskset.service';
   imports: [PrismaModule],
   controllers: [TasksController, TaskSetController],
   providers: [TasksService, TaskSetService],
+  exports: [TasksService],
 })
 export class TasksModule {}
