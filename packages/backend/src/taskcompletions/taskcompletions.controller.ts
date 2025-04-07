@@ -5,8 +5,9 @@ import { UpdateTaskCompletionDto } from './dto/update-taskcompletion.dto';
 import { TaskCompletionEntity } from './entities/taskcompletion.entity';
 import { PaginationDTO, makeContentRange } from 'src/pagination/pagination.dto';
 import { Response as Res } from 'express';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { FindByUserTask } from './dto/find-by-user-task.dto';
+import { FindByTask } from './dto/find-by-task.dto';
 
 @Controller('taskCompletions')
 export class TaskCompletionsController {
@@ -58,8 +59,20 @@ export class TaskCompletionsController {
     return this.taskCompletionsService.remove(id);
   }
 
-  @Get('/by-user/completions')
-  async findOrCreateByUserTask(@Query() findQuery: FindByUserTask) {
+  @Get('/by-user/query')
+  @ApiOperation({ description: 'Get a task completion by providing the user and task' })
+  @ApiResponse({ type: TaskCompletionEntity })
+  async findOrCreateByUserTask(@Query() findQuery: FindByUserTask): Promise<TaskCompletionEntity> {
     return this.taskCompletionsService.findOrCreateByUserTask(findQuery);
+  }
+
+  @Get('/by-user/header')
+  @ApiOperation({ description: 'Get a task completion by inferring the user from the JWT and the task from the query'})
+  @ApiResponse({ type: TaskCompletionEntity })
+  async findOrCreateByTask(@Query() findQuery: FindByTask): Promise<TaskCompletionEntity> {
+    return this.findOrCreateByUserTask({
+      task: findQuery.task,
+      user: 'temp'
+    })
   }
 }
