@@ -21,7 +21,7 @@ export class TaskCompletionsController {
   @Get()
   @ApiResponse({ type: [TaskCompletionEntity] })
   async findAll(@Query() pagination: PaginationDTO, @Response() res: Res): Promise<any> {
-    const result =  this.taskCompletionsService.findAll(pagination);
+    const result = await this.taskCompletionsService.findAll(pagination);
 
     // Determine content-range header
     const total = await this.taskCompletionsService.count();
