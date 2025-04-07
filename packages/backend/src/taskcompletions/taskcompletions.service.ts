@@ -9,14 +9,16 @@ import { FindByUserTask } from './dto/find-by-user-task.dto';
 
 @Injectable()
 export class TaskCompletionsService {
-  constructor (
+  constructor(
     private readonly prismaService: PrismaService,
-    private readonly taskService: TasksService
+    private readonly taskService: TasksService,
   ) {}
 
-  create(createTaskCompletionDto: CreateTaskCompletionDto): Promise<TaskCompletion> {
+  create(
+    createTaskCompletionDto: CreateTaskCompletionDto,
+  ): Promise<TaskCompletion> {
     return this.prismaService.taskCompletion.create({
-      data: createTaskCompletionDto
+      data: createTaskCompletionDto,
     });
   }
 
@@ -35,11 +37,14 @@ export class TaskCompletionsService {
 
   findOne(id: string): Promise<TaskCompletion | null> {
     return this.prismaService.taskCompletion.findUnique({
-      where: { id }
+      where: { id },
     });
   }
 
-  update(id: string, updateTaskCompletionDto: UpdateTaskCompletionDto): Promise<TaskCompletion | null> {
+  update(
+    id: string,
+    updateTaskCompletionDto: UpdateTaskCompletionDto,
+  ): Promise<TaskCompletion | null> {
     return this.prismaService.taskCompletion.update({
       where: { id },
       data: updateTaskCompletionDto,
@@ -48,7 +53,7 @@ export class TaskCompletionsService {
 
   async remove(id: string): Promise<void> {
     await this.prismaService.taskCompletion.delete({
-      where: { id }
+      where: { id },
     });
   }
 
@@ -56,10 +61,12 @@ export class TaskCompletionsService {
     return this.prismaService.taskCompletion.count();
   }
 
-  async findOrCreateByUserTask(findQuery: FindByUserTask): Promise<TaskCompletion> {
+  async findOrCreateByUserTask(
+    findQuery: FindByUserTask,
+  ): Promise<TaskCompletion> {
     // Check if one exists
     const existing = await this.prismaService.taskCompletion.findFirst({
-      where: { user: findQuery.user, taskId: findQuery.task }
+      where: { user: findQuery.user, taskId: findQuery.task },
     });
 
     // If an existing task completion is found, return it
@@ -70,7 +77,9 @@ export class TaskCompletionsService {
     // Make sure the task exists
     const task = await this.taskService.findOne(findQuery.task);
     if (!task) {
-      throw new BadRequestException(`Cannot find or create task completion for non-existant task: ${findQuery.task}`);
+      throw new BadRequestException(
+        `Cannot find or create task completion for non-existant task: ${findQuery.task}`,
+      );
     }
 
     // Create the task completion
@@ -78,7 +87,7 @@ export class TaskCompletionsService {
       taskId: findQuery.task,
       complete: false,
       video: '',
-      user: findQuery.user
+      user: findQuery.user,
     });
   }
 }

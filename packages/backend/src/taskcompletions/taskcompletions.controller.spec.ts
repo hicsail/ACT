@@ -11,7 +11,9 @@ describe('TaskcompletionsController', () => {
       providers: [TaskcompletionsService],
     }).compile();
 
-    controller = module.get<TaskcompletionsController>(TaskcompletionsController);
+    controller = module.get<TaskcompletionsController>(
+      TaskcompletionsController,
+    );
   });
 
   it('should be defined', () => {
