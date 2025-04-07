@@ -6,6 +6,7 @@ import { TaskCompletionEntity } from './entities/taskcompletion.entity';
 import { PaginationDTO, makeContentRange } from 'src/pagination/pagination.dto';
 import { Response as Res } from 'express';
 import { ApiResponse } from '@nestjs/swagger';
+import { FindByUserTask } from './dto/find-by-user-task.dto';
 
 @Controller('taskCompletions')
 export class TaskCompletionsController {
@@ -55,5 +56,10 @@ export class TaskCompletionsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.taskCompletionsService.remove(id);
+  }
+
+  @Get('/by-user/completions')
+  async findOrCreateByUserTask(@Query() findQuery: FindByUserTask) {
+    return this.taskCompletionsService.findOrCreateByUserTask(findQuery);
   }
 }

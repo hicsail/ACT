@@ -1,13 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateTaskCompletionDto } from './dto/create-taskcompletion.dto';
 import { UpdateTaskCompletionDto } from './dto/update-taskcompletion.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { TaskCompletion } from '@prisma/client';
-import { PaginationDTO } from 'src/pagination/pagination.dto';
+import { PaginationDTO } from '../pagination/pagination.dto';
+import { TasksService } from '../tasks/tasks.service';
+import { FindByUserTask } from './dto/find-by-user-task.dto';
 
 @Injectable()
 export class TaskCompletionsService {
-  constructor (private readonly prismaService: PrismaService) {}
+  constructor (
+    private readonly prismaService: PrismaService,
+    private readonly taskService: TasksService
+  ) {}
 
   create(createTaskCompletionDto: CreateTaskCompletionDto): Promise<TaskCompletion> {
     return this.prismaService.taskCompletion.create({
@@ -49,5 +54,31 @@ export class TaskCompletionsService {
 
   async count(): Promise<number> {
     return this.prismaService.taskCompletion.count();
+  }
+
+  async findOrCreateByUserTask(findQuery: FindByUserTask): Promise<TaskCompletion> {
+    // Check if one exists
+    const existing = await this.prismaService.taskCompletion.findFirst({
+      where: { user: findQuery.user, taskId: findQuery.task }
+    });
+
+    // If an existing task completion is found, return it
+    if (existing) {
+      return existing;
+    }
+
+    // Make sure the task exists
+    const task = await this.taskService.findOne(findQuery.task);
+    if (!task) {
+      throw new BadRequestException(`Cannot find or create task completion for non-existant task: ${findQuery.task}`);
+    }
+
+    // Create the task completion
+    return await this.create({
+      taskId: findQuery.task,
+      complete: false,
+      video: '',
+      user: findQuery.user
+    });
   }
 }
