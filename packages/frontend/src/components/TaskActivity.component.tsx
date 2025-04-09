@@ -2,6 +2,7 @@ import { ActivityCard } from './ActivityCard.component';
 import { useState, FC, useEffect } from 'react';
 import { TaskEntity, TaskCompletionEntity, taskCompletionsControllerFindOrCreateByTask } from '../client';
 import taskPreviewImage from '../assets/TaskPreviewImage.png';
+import { useNavigate } from 'react-router';
 
 export interface TaskActivityProps {
   task: TaskEntity;
@@ -9,6 +10,7 @@ export interface TaskActivityProps {
 
 export const TaskActivity: FC<TaskActivityProps> = ({ task }) => {
   const [taskCompletion, setTaskCompletion] = useState<TaskCompletionEntity | null>(null);
+  const navigate = useNavigate();
 
   const getTaskCompletion = async () => {
     const taskCompletionResult = await taskCompletionsControllerFindOrCreateByTask({
@@ -29,6 +31,13 @@ export const TaskActivity: FC<TaskActivityProps> = ({ task }) => {
     getTaskCompletion();
   }, []);
 
+  const handleNavigate = () => {
+    if (!taskCompletion) {
+      throw new Error(`Cannot navigate to the task completion, no task prescent`);
+    }
+    navigate(`/taskcompletion/${taskCompletion.id}`);
+  };
+
   return (
     <ActivityCard
       previewImage={taskPreviewImage}
@@ -36,7 +45,7 @@ export const TaskActivity: FC<TaskActivityProps> = ({ task }) => {
       activityDescription={task.preview}
       activityEstimatedTimeSeconds={task.timeSeconds}
       activityComplete={taskCompletion ? taskCompletion.complete : false}
-      onSelectionAction={() => console.log('hi :)')}
+      onSelectionAction={() => handleNavigate()}
     />
   );
 };
