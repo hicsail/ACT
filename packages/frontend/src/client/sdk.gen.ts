@@ -197,6 +197,12 @@ export const taskCompletionsControllerFindOrCreateByUserTask = <ThrowOnError ext
  */
 export const taskCompletionsControllerFindOrCreateByTask = <ThrowOnError extends boolean = false>(options: Options<TaskCompletionsControllerFindOrCreateByTaskData, ThrowOnError>) => {
     return (options.client ?? _heyApiClient).get<TaskCompletionsControllerFindOrCreateByTaskResponse, unknown, ThrowOnError>({
+        security: [
+            {
+                scheme: 'bearer',
+                type: 'http'
+            }
+        ],
         url: '/taskCompletions/by-user/header',
         ...options
     });

@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { Button, Grid, Stack, Typography } from "@mui/material";
 import {
   AccessTime,
@@ -7,8 +7,9 @@ import {
 } from "@mui/icons-material";
 import cameraCheckImage from "../assets/TutorialPreviewImage.png";
 import { useNavigate } from "react-router";
-import { TaskEntity } from "../client";
+import { taskCompletionsControllerFindOrCreateByTask, TaskEntity } from "../client";
 import taskPreviewImage from '../assets/TaskPreviewImage.png';
+import { TaskCompletionEntity } from "../client";
 
 export interface ActivityCardProps {
   previewImage: string;
@@ -89,8 +90,26 @@ export interface TaskActivityProps {
 }
 
 export const TaskActivity: FC<TaskActivityProps> = ({ task }) => {
+  const [taskCompletion, setTaskCompletion] = useState<TaskCompletionEntity | null>(null);
 
-  const
+  const getTaskCompletion = async () => {
+    const taskCompletionResult = await taskCompletionsControllerFindOrCreateByTask({
+      query: {
+        task: task.id
+      }
+    });
+
+    if (taskCompletionResult.error || !taskCompletionResult.data) {
+      // TODO: Handle error
+      return;
+    }
+
+    setTaskCompletion(taskCompletionResult.data);
+  };
+
+  useEffect(() => {
+    getTaskCompletion();
+  }, []);
 
   return (
     <ActivityCard
@@ -98,7 +117,7 @@ export const TaskActivity: FC<TaskActivityProps> = ({ task }) => {
       activityTitle={task.title}
       activityDescription={task.preview}
       activityEstimatedTime={task.timeSeconds + ''}
-      activityComplete={false}
+      activityComplete={taskCompletion ? taskCompletion.complete : false}
       onSelectionAction={() => console.log('hi :)')}
     />
   );

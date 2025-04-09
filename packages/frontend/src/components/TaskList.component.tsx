@@ -24,7 +24,7 @@ export const TaskList: FC = () => {
   return (
     <Stack>
       {taskList.map((task) => (
-        <TaskActivity task={task} />
+        <TaskActivity task={task} key={task.id} />
       ))}
     </Stack>
   );

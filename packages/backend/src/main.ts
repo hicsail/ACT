@@ -14,6 +14,7 @@ async function bootstrap() {
     .setDescription('ACT Backend connection')
     .setVersion('1.0')
     .addTag('ACT')
+    .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);

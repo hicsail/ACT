@@ -17,7 +17,7 @@ import { UpdateTaskCompletionDto } from './dto/update-taskcompletion.dto';
 import { TaskCompletionEntity } from './entities/taskcompletion.entity';
 import { PaginationDTO, makeContentRange } from 'src/pagination/pagination.dto';
 import { Response as Res } from 'express';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { FindByUserTask } from './dto/find-by-user-task.dto';
 import { FindByTask } from './dto/find-by-task.dto';
 import { CasdoorGuard } from 'src/casdoor/casdoor.guard';
@@ -105,6 +105,7 @@ export class TaskCompletionsController {
       'Get a task completion by inferring the user from the JWT and the task from the query',
   })
   @ApiResponse({ type: TaskCompletionEntity })
+  @ApiBearerAuth()
   async findOrCreateByTask(
     @Query() findQuery: FindByTask,
     @UserCtx() user: User,
