@@ -3,6 +3,7 @@ import { FC } from "react";
 import { ActivityCard } from "../components/ActivityCard.component";
 import cameraCheckImage from "../assets/TutorialPreviewImage.png";
 import { useNavigate } from "react-router";
+import { TaskList } from "../components/TaskList.component";
 
 export const Home: FC = () => {
   const navigate = useNavigate();
@@ -52,6 +53,8 @@ export const Home: FC = () => {
           activityComplete={false}
           onSelectionAction={() => navigate("/cam-check")}
         />
+
+        <TaskList />
       </Stack>
     </>
   );
