@@ -15,7 +15,12 @@ export class CasdoorGuard implements CanActivate {
     }
 
     try {
-      this.casdoorService.parseJWT(token);
+      // Try to get the user from the token
+      const user = this.casdoorService.parseJWT(token);
+
+      // Add the user to the context
+      request['user'] = user;
+
       return true;
     } catch (error) {
       return false;

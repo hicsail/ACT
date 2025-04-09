@@ -21,6 +21,8 @@ import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { FindByUserTask } from './dto/find-by-user-task.dto';
 import { FindByTask } from './dto/find-by-task.dto';
 import { CasdoorGuard } from 'src/casdoor/casdoor.guard';
+import { UserCtx } from '../casdoor/user.context';
+import { User } from 'casdoor-nodejs-sdk/lib/cjs/user';
 
 @Controller('taskCompletions')
 export class TaskCompletionsController {
@@ -105,10 +107,11 @@ export class TaskCompletionsController {
   @ApiResponse({ type: TaskCompletionEntity })
   async findOrCreateByTask(
     @Query() findQuery: FindByTask,
+    @UserCtx() user: User
   ): Promise<TaskCompletionEntity> {
     return this.findOrCreateByUserTask({
       task: findQuery.task,
-      user: 'temp',
+      user: user.id!,
     });
   }
 }
