@@ -1,16 +1,11 @@
 import { Divider, Stack, Typography } from "@mui/material";
 import { FC } from "react";
 import {
-  ActivityCard,
   CameraCheckActivity,
 } from "../components/ActivityCard.component";
-import cameraCheckImage from "../assets/TutorialPreviewImage.png";
-import { useNavigate } from "react-router";
 import { TaskList } from "../components/TaskList.component";
 
 export const Home: FC = () => {
-  const navigate = useNavigate();
-
   return (
     <>
       <Stack spacing={3} sx={{ textAlign: "center", padding: 3 }}>
