@@ -9,6 +9,7 @@ import {
   Query,
   Response,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
 import { TaskCompletionsService } from './taskcompletions.service';
 import { CreateTaskCompletionDto } from './dto/create-taskcompletion.dto';
@@ -19,6 +20,7 @@ import { Response as Res } from 'express';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { FindByUserTask } from './dto/find-by-user-task.dto';
 import { FindByTask } from './dto/find-by-task.dto';
+import { CasdoorGuard } from 'src/casdoor/casdoor.guard';
 
 @Controller('taskCompletions')
 export class TaskCompletionsController {
@@ -95,6 +97,7 @@ export class TaskCompletionsController {
   }
 
   @Get('/by-user/header')
+  @UseGuards(CasdoorGuard)
   @ApiOperation({
     description:
       'Get a task completion by inferring the user from the JWT and the task from the query',

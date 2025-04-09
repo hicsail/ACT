@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CASDOOR_PROVIDER } from './casdoor.provider';
 import { SDK as CasdoorSDK } from 'casdoor-nodejs-sdk';
 import { ConfigService } from '@nestjs/config';
+import { User } from 'casdoor-nodejs-sdk/lib/cjs/user';
 
 @Injectable()
 export class CasdoorService {
@@ -27,5 +28,9 @@ export class CasdoorService {
     return {
       token: token.access_token,
     };
+  }
+
+  async parseJWT(jwt: string): Promise<User> {
+    return this.casdoor.parseJwtToken(jwt);
   }
 }
