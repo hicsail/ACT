@@ -1,13 +1,12 @@
 import { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { TaskCompletionEntity, taskCompletionsControllerFindOne, TaskEntity, tasksControllerFindOne } from '../client';
-import { Stack, Typography } from '@mui/material';
+import { TaskInstructions } from '../components/TaskInstructions.component';
 
 export const TaskRecording: FC = () => {
   const { taskCompletionId } = useParams();
   const [taskCompletion, setTaskCompletion] = useState<TaskCompletionEntity | null>(null);
   const [task, setTask] = useState<TaskEntity | null>(null);
-
 
   const loadTaskDetails = async (taskCompletionId: string) => {
     // First get the task completion object
@@ -55,18 +54,7 @@ export const TaskRecording: FC = () => {
 
   return (
     <>
-      {taskCompletion && task && (
-        <Stack>
-          <Typography variant='h1'>{task.title}</Typography>
-          <Typography variant='body1'>TODO: Task description</Typography>
-          <Typography variant='h3'>The problem you have chosen is:</Typography>
-          <Typography variant='body1'>TODO: Add problem description</Typography>
-          <Typography variant='h3'>Your task is to do the following:</Typography>
-          <Typography variant='body1'>TODO: Provide task details</Typography>
-          <Typography variant='h3'>Remember to:</Typography>
-          <Typography variant='body1'>TODO: Task breakdown</Typography>
-        </Stack>
-      )}
+      {task && <TaskInstructions task={task} />}
     </>
   );
 };
