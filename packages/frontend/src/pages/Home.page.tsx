@@ -1,8 +1,6 @@
 import { Divider, Stack, Typography } from "@mui/material";
 import { FC } from "react";
-import {
-  CameraCheckActivity,
-} from "../components/ActivityCard.component";
+import { CameraCheckActivity } from "../components/ActivityCard.component";
 import { TaskList } from "../components/TaskList.component";
 
 export const Home: FC = () => {
