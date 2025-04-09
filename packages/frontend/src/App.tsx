@@ -12,6 +12,7 @@ import { Home } from "./pages/Home.page";
 import { UserContextProvider } from "./contexts/User.context";
 import { CameraCheck } from "./pages/CameraCheck.page";
 import { SnackbarProvider } from "./contexts/Snackbar.context";
+import { ClientProvider } from "./contexts/Client.context";
 
 const App: FC = () => {
   return (
@@ -19,18 +20,20 @@ const App: FC = () => {
       <SnackbarProvider>
         <CasdoorProvider>
           <UserContextProvider>
-            <Navigation />
-            <Container component="main">
-              <BrowserRouter>
-                <Routes>
-                  <Route index path="/" element={<Landing />} />
-                  <Route path="/callback" element={<AuthCallback />} />
-                  <Route path="/home" element={<Home />} />
-                  <Route path="/cam-check" element={<CameraCheck />} />
-                </Routes>
-              </BrowserRouter>
-            </Container>
-            <Footer />
+            <ClientProvider>
+              <Navigation />
+              <Container component="main">
+                <BrowserRouter>
+                  <Routes>
+                    <Route index path="/" element={<Landing />} />
+                    <Route path="/callback" element={<AuthCallback />} />
+                    <Route path="/home" element={<Home />} />
+                    <Route path="/cam-check" element={<CameraCheck />} />
+                  </Routes>
+                </BrowserRouter>
+              </Container>
+              <Footer />
+            </ClientProvider>
           </UserContextProvider>
         </CasdoorProvider>
       </SnackbarProvider>
