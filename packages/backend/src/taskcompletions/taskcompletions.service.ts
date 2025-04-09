@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { CreateTaskCompletionDto } from './dto/create-taskcompletion.dto';
 import { UpdateTaskCompletionDto } from './dto/update-taskcompletion.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -6,13 +6,30 @@ import { TaskCompletion } from '@prisma/client';
 import { PaginationDTO } from '../pagination/pagination.dto';
 import { TasksService } from '../tasks/tasks.service';
 import { FindByUserTask } from './dto/find-by-user-task.dto';
+import { ConfigService } from '@nestjs/config';
+import { User } from 'casdoor-nodejs-sdk/lib/cjs/user';
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { S3_PROVIDER } from 'src/s3/s3.provider';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 @Injectable()
 export class TaskCompletionsService {
+  private readonly taskIteration: string;
+  private readonly bucket: string;
+  private readonly expiration: number;
+
   constructor(
     private readonly prismaService: PrismaService,
     private readonly taskService: TasksService,
-  ) {}
+    @Inject(S3_PROVIDER) private readonly s3: S3Client,
+    configService: ConfigService
+  ) {
+    this.taskIteration = configService.getOrThrow<string>('meta.taskIteration');
+    this.bucket = configService.getOrThrow<string>('s3.bucket');
+    this.expiration = configService.getOrThrow<number>('s3.signedExpiration');
+
+
+  }
 
   create(
     createTaskCompletionDto: CreateTaskCompletionDto,
@@ -89,5 +106,25 @@ export class TaskCompletionsService {
       video: '',
       user: findQuery.user,
     });
+  }
+
+  async getUploadUrl(taskCompletionId: string, user: User): Promise<string> {
+    // Get the task completion
+    const taskCompletion = await this.findOne(taskCompletionId);
+    if (!taskCompletion) {
+      throw new BadRequestException(`Task Completion not found: ${taskCompletionId}`);
+    }
+
+    // Get the name of the file
+    const filename = this.getVideoNameFormat(taskCompletion, user);
+
+    // Construct the upload request
+    const request = new PutObjectCommand({ Bucket: this.bucket, Key: filename });
+    return getSignedUrl(this.s3, request, { expiresIn: this.expiration });
+  }
+
+  private getVideoNameFormat(taskCompletion: TaskCompletion, user: User): string {
+    // TODO: Determine site ID and descriptor ID
+    return `${this.taskIteration}_SiteId_${user.id!}_${taskCompletion.taskId}`;
   }
 }

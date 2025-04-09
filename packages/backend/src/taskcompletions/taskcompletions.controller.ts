@@ -17,7 +17,7 @@ import { UpdateTaskCompletionDto } from './dto/update-taskcompletion.dto';
 import { TaskCompletionEntity } from './entities/taskcompletion.entity';
 import { PaginationDTO, makeContentRange } from 'src/pagination/pagination.dto';
 import { Response as Res } from 'express';
-import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiResponseProperty } from '@nestjs/swagger';
 import { FindByUserTask } from './dto/find-by-user-task.dto';
 import { FindByTask } from './dto/find-by-task.dto';
 import { CasdoorGuard } from 'src/casdoor/casdoor.guard';
@@ -114,5 +114,19 @@ export class TaskCompletionsController {
       task: findQuery.task,
       user: user.id!,
     });
+  }
+
+  @Get('/upload-url/:id')
+  @UseGuards(CasdoorGuard)
+  @ApiOperation({
+    description: 'Get the presigned URL to upload the recordeded video'
+  })
+  @ApiResponse({ type: String })
+  async getVideoUploadURL(
+    @Param('id') taskCompletionId: string,
+    @UserCtx() user: User
+  ): Promise<string> {
+    // TODO: Validate it is the correct user making the request
+    return this.taskCompletionsService.getUploadUrl(taskCompletionId, user);
   }
 }
