@@ -1,8 +1,7 @@
 import { Stack } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
 import { TaskEntity, tasksControllerGetActiveTasks } from '../client';
-import { ActivityCard } from './ActivityCard.component';
-import taskPreviewImage from '../assets/TaskPreviewImage.png';
+import { TaskActivity } from './ActivityCard.component';
 
 export const TaskList: FC = () => {
   const [taskList, setTaskList] = useState<TaskEntity[]>([]);
@@ -25,14 +24,7 @@ export const TaskList: FC = () => {
   return (
     <Stack>
       {taskList.map((task) => (
-        <ActivityCard
-          previewImage={taskPreviewImage}
-          activityTitle={task.title}
-          activityDescription={task.preview}
-          activityEstimatedTime={task.timeSeconds + ''}
-          activityComplete={false}
-          onSelectionAction={() => console.log('hi :)')}
-        />
+        <TaskActivity task={task} />
       ))}
     </Stack>
   );

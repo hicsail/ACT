@@ -5,6 +5,10 @@ import {
   CheckBoxOutlineBlank,
   CheckBoxOutlined,
 } from "@mui/icons-material";
+import cameraCheckImage from "../assets/TutorialPreviewImage.png";
+import { useNavigate } from "react-router";
+import { TaskEntity } from "../client";
+import taskPreviewImage from '../assets/TaskPreviewImage.png';
 
 export interface ActivityCardProps {
   previewImage: string;
@@ -61,5 +65,41 @@ const IncompleteStatus: FC = () => {
       <CheckBoxOutlineBlank />
       <Typography variant="body1">Not Completed</Typography>
     </Stack>
+  );
+};
+
+
+export const CameraCheckActivity: FC = () => {
+  const navigate = useNavigate();
+
+  return (
+    <ActivityCard
+      previewImage={cameraCheckImage}
+      activityTitle="Camera and Mic Check"
+      activityDescription="Click start to check that your camera and microphone are working properly, by recording a five second video. This is essential to successful engagement with the tasks and for accurate data collection."
+      activityEstimatedTime="5s"
+      activityComplete={false}
+      onSelectionAction={() => navigate("/cam-check")}
+    />
+  )
+};
+
+export interface TaskActivityProps {
+  task: TaskEntity;
+}
+
+export const TaskActivity: FC<TaskActivityProps> = ({ task }) => {
+
+  const
+
+  return (
+    <ActivityCard
+      previewImage={taskPreviewImage}
+      activityTitle={task.title}
+      activityDescription={task.preview}
+      activityEstimatedTime={task.timeSeconds + ''}
+      activityComplete={false}
+      onSelectionAction={() => console.log('hi :)')}
+    />
   );
 };

@@ -1,6 +1,6 @@
 import { Divider, Stack, Typography } from "@mui/material";
 import { FC } from "react";
-import { ActivityCard } from "../components/ActivityCard.component";
+import { ActivityCard, CameraCheckActivity } from "../components/ActivityCard.component";
 import cameraCheckImage from "../assets/TutorialPreviewImage.png";
 import { useNavigate } from "react-router";
 import { TaskList } from "../components/TaskList.component";
@@ -45,14 +45,7 @@ export const Home: FC = () => {
 
         <Divider variant="middle" sx={{ borderColor: "black" }} />
 
-        <ActivityCard
-          previewImage={cameraCheckImage}
-          activityTitle="Camera and Mic Check"
-          activityDescription="Click start to check that your camera and microphone are working properly, by recording a five second video. This is essential to successful engagement with the tasks and for accurate data collection."
-          activityEstimatedTime="5s"
-          activityComplete={false}
-          onSelectionAction={() => navigate("/cam-check")}
-        />
+        <CameraCheckActivity />
 
         <TaskList />
       </Stack>
