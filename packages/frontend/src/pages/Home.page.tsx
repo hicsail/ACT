@@ -1,6 +1,9 @@
 import { Divider, Stack, Typography } from "@mui/material";
 import { FC } from "react";
-import { ActivityCard, CameraCheckActivity } from "../components/ActivityCard.component";
+import {
+  ActivityCard,
+  CameraCheckActivity,
+} from "../components/ActivityCard.component";
 import cameraCheckImage from "../assets/TutorialPreviewImage.png";
 import { useNavigate } from "react-router";
 import { TaskList } from "../components/TaskList.component";

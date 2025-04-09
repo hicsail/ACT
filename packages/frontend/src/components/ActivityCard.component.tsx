@@ -7,8 +7,11 @@ import {
 } from "@mui/icons-material";
 import cameraCheckImage from "../assets/TutorialPreviewImage.png";
 import { useNavigate } from "react-router";
-import { taskCompletionsControllerFindOrCreateByTask, TaskEntity } from "../client";
-import taskPreviewImage from '../assets/TaskPreviewImage.png';
+import {
+  taskCompletionsControllerFindOrCreateByTask,
+  TaskEntity,
+} from "../client";
+import taskPreviewImage from "../assets/TaskPreviewImage.png";
 import { TaskCompletionEntity } from "../client";
 
 export interface ActivityCardProps {
@@ -69,7 +72,6 @@ const IncompleteStatus: FC = () => {
   );
 };
 
-
 export const CameraCheckActivity: FC = () => {
   const navigate = useNavigate();
 
@@ -82,7 +84,7 @@ export const CameraCheckActivity: FC = () => {
       activityComplete={false}
       onSelectionAction={() => navigate("/cam-check")}
     />
-  )
+  );
 };
 
 export interface TaskActivityProps {
@@ -90,14 +92,16 @@ export interface TaskActivityProps {
 }
 
 export const TaskActivity: FC<TaskActivityProps> = ({ task }) => {
-  const [taskCompletion, setTaskCompletion] = useState<TaskCompletionEntity | null>(null);
+  const [taskCompletion, setTaskCompletion] =
+    useState<TaskCompletionEntity | null>(null);
 
   const getTaskCompletion = async () => {
-    const taskCompletionResult = await taskCompletionsControllerFindOrCreateByTask({
-      query: {
-        task: task.id
-      }
-    });
+    const taskCompletionResult =
+      await taskCompletionsControllerFindOrCreateByTask({
+        query: {
+          task: task.id,
+        },
+      });
 
     if (taskCompletionResult.error || !taskCompletionResult.data) {
       // TODO: Handle error
@@ -118,7 +122,7 @@ export const TaskActivity: FC<TaskActivityProps> = ({ task }) => {
       activityDescription={task.preview}
       activityEstimatedTimeSeconds={task.timeSeconds}
       activityComplete={taskCompletion ? taskCompletion.complete : false}
-      onSelectionAction={() => console.log('hi :)')}
+      onSelectionAction={() => console.log("hi :)")}
     />
   );
 };
