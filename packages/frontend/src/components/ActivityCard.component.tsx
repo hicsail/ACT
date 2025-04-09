@@ -15,7 +15,7 @@ export interface ActivityCardProps {
   previewImage: string;
   activityTitle: string;
   activityDescription: string;
-  activityEstimatedTime: string;
+  activityEstimatedTimeSeconds: number;
   activityComplete: boolean;
   onSelectionAction: () => void;
 }
@@ -36,7 +36,7 @@ export const ActivityCard: FC<ActivityCardProps> = (props) => {
             <Stack direction="row" sx={{ flex: 1 }} alignItems="center" gap={1}>
               <AccessTime />
               <Typography variant="body1">
-                {props.activityEstimatedTime}
+                {`${props.activityEstimatedTimeSeconds}s`}
               </Typography>
             </Stack>
             <Button variant="contained" onClick={props.onSelectionAction}>
@@ -78,7 +78,7 @@ export const CameraCheckActivity: FC = () => {
       previewImage={cameraCheckImage}
       activityTitle="Camera and Mic Check"
       activityDescription="Click start to check that your camera and microphone are working properly, by recording a five second video. This is essential to successful engagement with the tasks and for accurate data collection."
-      activityEstimatedTime="5s"
+      activityEstimatedTimeSeconds={5}
       activityComplete={false}
       onSelectionAction={() => navigate("/cam-check")}
     />
@@ -116,7 +116,7 @@ export const TaskActivity: FC<TaskActivityProps> = ({ task }) => {
       previewImage={taskPreviewImage}
       activityTitle={task.title}
       activityDescription={task.preview}
-      activityEstimatedTime={task.timeSeconds + ''}
+      activityEstimatedTimeSeconds={task.timeSeconds}
       activityComplete={taskCompletion ? taskCompletion.complete : false}
       onSelectionAction={() => console.log('hi :)')}
     />
