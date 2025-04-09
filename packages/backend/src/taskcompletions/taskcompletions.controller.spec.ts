@@ -8,12 +8,10 @@ describe('TaskcompletionsController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TaskcompletionsController],
-      providers: [TaskcompletionsService],
+      providers: [TaskcompletionsService]
     }).compile();
 
-    controller = module.get<TaskcompletionsController>(
-      TaskcompletionsController,
-    );
+    controller = module.get<TaskcompletionsController>(TaskcompletionsController);
   });
 
   it('should be defined', () => {

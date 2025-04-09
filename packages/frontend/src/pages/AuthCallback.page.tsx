@@ -1,7 +1,7 @@
-import { FC, useEffect } from "react";
-import { config } from "../config/configuration";
-import { useNavigate, useSearchParams } from "react-router";
-import { useUser } from "../contexts/User.context";
+import { FC, useEffect } from 'react';
+import { config } from '../config/configuration';
+import { useNavigate, useSearchParams } from 'react-router';
+import { useUser } from '../contexts/User.context';
 
 export const AuthCallback: FC = () => {
   const [searchParams, _setSearchParams] = useSearchParams();
@@ -10,12 +10,9 @@ export const AuthCallback: FC = () => {
 
   const handleLogin = async (code: string) => {
     // Fetch the JWT
-    const loginResponse = await fetch(
-      `${config.backendURL}/casdoor/signin?code=${code}`,
-      {
-        method: "POST",
-      },
-    );
+    const loginResponse = await fetch(`${config.backendURL}/casdoor/signin?code=${code}`, {
+      method: 'POST'
+    });
 
     // Pull out the token
     const token = (await loginResponse.json()).token;
@@ -24,11 +21,11 @@ export const AuthCallback: FC = () => {
     login(token);
 
     // Redirect to home page
-    navigate("/home");
+    navigate('/home');
   };
 
   useEffect(() => {
-    const code = searchParams.get("code");
+    const code = searchParams.get('code');
 
     if (code) {
       handleLogin(code);

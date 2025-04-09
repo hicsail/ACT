@@ -14,16 +14,16 @@ import configuration from './config/configuration';
   imports: [
     ConfigModule.forRoot({
       load: [configuration],
-      isGlobal: true,
+      isGlobal: true
     }),
     CasdoorModule,
     PrismaModule,
     TasksModule,
     PaginationModule,
     TaskCompletionsModule,
-    S3Module,
+    S3Module
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService]
 })
 export class AppModule {}

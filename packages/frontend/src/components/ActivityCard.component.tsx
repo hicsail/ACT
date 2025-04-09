@@ -1,18 +1,6 @@
-import { FC, useEffect, useState } from "react";
-import { Button, Grid, Stack, Typography } from "@mui/material";
-import {
-  AccessTime,
-  CheckBoxOutlineBlank,
-  CheckBoxOutlined,
-} from "@mui/icons-material";
-import cameraCheckImage from "../assets/TutorialPreviewImage.png";
-import { useNavigate } from "react-router";
-import {
-  taskCompletionsControllerFindOrCreateByTask,
-  TaskEntity,
-} from "../client";
-import taskPreviewImage from "../assets/TaskPreviewImage.png";
-import { TaskCompletionEntity } from "../client";
+import { FC } from 'react';
+import { Button, Grid, Stack, Typography } from '@mui/material';
+import { AccessTime, CheckBoxOutlineBlank, CheckBoxOutlined } from '@mui/icons-material';
 
 export interface ActivityCardProps {
   previewImage: string;
@@ -38,12 +26,10 @@ export const ActivityCard: FC<ActivityCardProps> = (props) => {
           <Stack direction="row" alignItems="center">
             <Stack direction="row" sx={{ flex: 1 }} alignItems="center" gap={1}>
               <AccessTime />
-              <Typography variant="body1">
-                {`${props.activityEstimatedTimeSeconds}s`}
-              </Typography>
+              <Typography variant="body1">{`${props.activityEstimatedTimeSeconds}s`}</Typography>
             </Stack>
             <Button variant="contained" onClick={props.onSelectionAction}>
-              {props.activityComplete ? "Retake" : "Start"}
+              {props.activityComplete ? 'Retake' : 'Start'}
             </Button>
           </Stack>
 
@@ -69,60 +55,5 @@ const IncompleteStatus: FC = () => {
       <CheckBoxOutlineBlank />
       <Typography variant="body1">Not Completed</Typography>
     </Stack>
-  );
-};
-
-export const CameraCheckActivity: FC = () => {
-  const navigate = useNavigate();
-
-  return (
-    <ActivityCard
-      previewImage={cameraCheckImage}
-      activityTitle="Camera and Mic Check"
-      activityDescription="Click start to check that your camera and microphone are working properly, by recording a five second video. This is essential to successful engagement with the tasks and for accurate data collection."
-      activityEstimatedTimeSeconds={5}
-      activityComplete={false}
-      onSelectionAction={() => navigate("/cam-check")}
-    />
-  );
-};
-
-export interface TaskActivityProps {
-  task: TaskEntity;
-}
-
-export const TaskActivity: FC<TaskActivityProps> = ({ task }) => {
-  const [taskCompletion, setTaskCompletion] =
-    useState<TaskCompletionEntity | null>(null);
-
-  const getTaskCompletion = async () => {
-    const taskCompletionResult =
-      await taskCompletionsControllerFindOrCreateByTask({
-        query: {
-          task: task.id,
-        },
-      });
-
-    if (taskCompletionResult.error || !taskCompletionResult.data) {
-      // TODO: Handle error
-      return;
-    }
-
-    setTaskCompletion(taskCompletionResult.data);
-  };
-
-  useEffect(() => {
-    getTaskCompletion();
-  }, []);
-
-  return (
-    <ActivityCard
-      previewImage={taskPreviewImage}
-      activityTitle={task.title}
-      activityDescription={task.preview}
-      activityEstimatedTimeSeconds={task.timeSeconds}
-      activityComplete={taskCompletion ? taskCompletion.complete : false}
-      onSelectionAction={() => console.log("hi :)")}
-    />
   );
 };

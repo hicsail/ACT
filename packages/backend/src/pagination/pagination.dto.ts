@@ -22,23 +22,17 @@ const sortTransform = (params: TransformFnParams): SortField => {
     // Try to parse the field as JSON
     raw = JSON.parse(params.value);
   } catch (error) {
-    throw new BadRequestException(
-      `Failed to parse sorted field: ${params.value}`,
-    );
+    throw new BadRequestException(`Failed to parse sorted field: ${params.value}`);
   }
 
   // Check if the result is an array
   if (!Array.isArray(raw)) {
-    throw new BadRequestException(
-      `Expected an array to be passed in for sort field`,
-    );
+    throw new BadRequestException(`Expected an array to be passed in for sort field`);
   }
 
   // Make sure the correct fields are present
   if (raw.length != 2) {
-    throw new BadRequestException(
-      `Expected the sort field array to only be 2 elements`,
-    );
+    throw new BadRequestException(`Expected the sort field array to only be 2 elements`);
   }
 
   const field = raw[0];
@@ -52,14 +46,12 @@ const sortTransform = (params: TransformFnParams): SortField => {
   // Validation the direction
   const directionLower = direction.toLowerCase();
   if (directionLower !== 'asc' && directionLower !== 'desc') {
-    throw new BadRequestException(
-      `Expected direction to either be asc or desc, got: ${direction}`,
-    );
+    throw new BadRequestException(`Expected direction to either be asc or desc, got: ${direction}`);
   }
 
   return {
     field,
-    direction: directionLower,
+    direction: directionLower
   };
 };
 
@@ -70,23 +62,17 @@ const rangeTransform = (params: TransformFnParams): RangeField => {
     raw = JSON.parse(params.value);
   } catch (error) {
     console.log(error);
-    throw new BadRequestException(
-      `Failed to parse range field: ${params.value}`,
-    );
+    throw new BadRequestException(`Failed to parse range field: ${params.value}`);
   }
 
   // Check if the result is an array
   if (!Array.isArray(raw)) {
-    throw new BadRequestException(
-      `Expected an array to be passed in for sort field`,
-    );
+    throw new BadRequestException(`Expected an array to be passed in for sort field`);
   }
 
   // Make sure the correct fields are present
   if (raw.length != 2) {
-    throw new BadRequestException(
-      `Expected the sort field array to only be 2 elements`,
-    );
+    throw new BadRequestException(`Expected the sort field array to only be 2 elements`);
   }
 
   const start = raw[0];
@@ -103,7 +89,7 @@ const rangeTransform = (params: TransformFnParams): RangeField => {
 
   return {
     start,
-    end,
+    end
   };
 };
 
@@ -114,9 +100,7 @@ const filterTransform = (params: TransformFnParams): FilterField => {
     raw = JSON.parse(params.value);
   } catch (error) {
     console.log(error);
-    throw new BadRequestException(
-      `Failed to parse range field: ${params.value}`,
-    );
+    throw new BadRequestException(`Failed to parse range field: ${params.value}`);
   }
 
   // Check if the result is an array
@@ -141,11 +125,7 @@ export class PaginationDTO {
   filter?: FilterField;
 }
 
-export const makeContentRange = (
-  name: string,
-  pagination: PaginationDTO,
-  total: number,
-): string => {
+export const makeContentRange = (name: string, pagination: PaginationDTO, total: number): string => {
   if (pagination.range) {
     return `${name} ${pagination.range.start}-${pagination.range.end > total ? total - 1 : pagination.range.end}/${total}`;
   }

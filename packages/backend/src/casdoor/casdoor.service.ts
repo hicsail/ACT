@@ -10,23 +10,21 @@ export class CasdoorService {
 
   constructor(
     @Inject(CASDOOR_PROVIDER) private readonly casdoor: CasdoorSDK,
-    configService: ConfigService,
+    configService: ConfigService
   ) {
-    this.frontendCallbackURL = configService.getOrThrow<string>(
-      'frontend.authCallback',
-    );
+    this.frontendCallbackURL = configService.getOrThrow<string>('frontend.authCallback');
   }
 
   getSignInURL(): { url: string } {
     return {
-      url: this.casdoor.getSignInUrl(this.frontendCallbackURL),
+      url: this.casdoor.getSignInUrl(this.frontendCallbackURL)
     };
   }
 
   async handleSignup(code: string): Promise<{ token: string }> {
     const token = await this.casdoor.getAuthToken(code);
     return {
-      token: token.access_token,
+      token: token.access_token
     };
   }
 

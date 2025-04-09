@@ -5,10 +5,10 @@ export default () => ({
     clientSecret: process.env.CASDOOR_CLIENT_SECRET,
     certificate: process.env.CASDOOR_CERTIFICATE,
     orgName: process.env.CASDOOR_ORG_NAME,
-    appName: process.env.CASDOOR_APP_NAME,
+    appName: process.env.CASDOOR_APP_NAME
   },
   frontend: {
-    authCallback: process.env.FRONTEND_AUTH_CALLBACK,
+    authCallback: process.env.FRONTEND_AUTH_CALLBACK
   },
   s3: {
     endpoint: process.env.S3_ENDPOINT || 'https://stack.nerc.mghpcc.org:13808',

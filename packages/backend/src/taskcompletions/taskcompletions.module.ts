@@ -9,6 +9,6 @@ import { S3Module } from '../s3/s3.module';
 @Module({
   imports: [PrismaModule, TasksModule, CasdoorModule, S3Module],
   controllers: [TaskCompletionsController],
-  providers: [TaskCompletionsService],
+  providers: [TaskCompletionsService]
 })
 export class TaskCompletionsModule {}

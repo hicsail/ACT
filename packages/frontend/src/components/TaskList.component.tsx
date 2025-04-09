@@ -1,7 +1,7 @@
-import { Stack } from "@mui/material";
-import { FC, useEffect, useState } from "react";
-import { TaskEntity, tasksControllerGetActiveTasks } from "../client";
-import { TaskActivity } from "./ActivityCard.component";
+import { Stack } from '@mui/material';
+import { FC, useEffect, useState } from 'react';
+import { TaskEntity, tasksControllerGetActiveTasks } from '../client';
+import { TaskActivity } from './TaskActivity.component';
 
 export const TaskList: FC = () => {
   const [taskList, setTaskList] = useState<TaskEntity[]>([]);
