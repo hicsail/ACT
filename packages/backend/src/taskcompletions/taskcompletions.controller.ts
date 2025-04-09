@@ -107,7 +107,7 @@ export class TaskCompletionsController {
   @ApiResponse({ type: TaskCompletionEntity })
   async findOrCreateByTask(
     @Query() findQuery: FindByTask,
-    @UserCtx() user: User
+    @UserCtx() user: User,
   ): Promise<TaskCompletionEntity> {
     return this.findOrCreateByUserTask({
       task: findQuery.task,

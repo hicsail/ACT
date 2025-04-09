@@ -7,6 +7,6 @@ import { CasdoorGuard } from './casdoor.guard';
 @Module({
   controllers: [CasdoorController],
   providers: [casdoorProvider, CasdoorService, CasdoorGuard],
-  exports: [CasdoorGuard, CasdoorService]
+  exports: [CasdoorGuard, CasdoorService],
 })
 export class CasdoorModule {}
