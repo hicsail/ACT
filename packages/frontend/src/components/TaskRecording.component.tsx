@@ -14,7 +14,7 @@ export interface TaskRecordingProps {
   taskCompletion: TaskCompletionEntity;
 }
 
-export const TaskRecording: FC<TaskRecordingProps> = ({ taskCompletion }) => {
+export const TaskRecording: FC<TaskRecordingProps> = ({ task, taskCompletion }) => {
   const handleVideoComplete = async (_blobURL: string, blob: Blob) => {
     // Get link to upload the video
     const uploadUrlResult = await taskCompletionsControllerGetVideoUploadUrl({
@@ -63,7 +63,7 @@ export const TaskRecording: FC<TaskRecordingProps> = ({ taskCompletion }) => {
         timeLimit={5}
       />
 
-      <TaskInstructionsSide />
+      <TaskInstructionsSide task={task} />
     </Stack>
   );
 };

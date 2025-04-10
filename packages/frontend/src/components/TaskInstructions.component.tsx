@@ -18,7 +18,11 @@ export const TaskInstructions: FC<TaskInstructionsProps> = ({ task, onStart }) =
       <Typography variant="body1">{task.taskDetails}</Typography>
       <Typography variant="h3">Remember to:</Typography>
       <List sx={{ listStyleType: 'disc' }}>
-        {(task.prompts as any).map((txt: string, index: number) => (<ListItem key={index} sx={{ display: 'list-item' }}><ListItemText>{txt}</ListItemText></ListItem>))}
+        {(task.prompts as any).map((txt: string, index: number) => (
+          <ListItem key={index} sx={{ display: 'list-item' }}>
+            <ListItemText>{txt}</ListItemText>
+          </ListItem>
+        ))}
       </List>
       <Typography variant="body1">TODO: Task breakdown</Typography>
       <Button variant="contained" onClick={onStart}>
