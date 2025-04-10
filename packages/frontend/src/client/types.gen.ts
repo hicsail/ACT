@@ -25,6 +25,22 @@ export type CreateTaskDto = {
      * Duration of the task in seconds
      */
     timeSeconds: number;
+    /**
+     * Task description given to the user
+     */
+    description: string;
+    /**
+     * Problem overview for the user
+     */
+    problemDescription: string;
+    /**
+     * Additional details for the user to follow
+     */
+    taskDetails: string;
+    /**
+     * Prompts for the user to meet
+     */
+    prompts: Array<string>;
 };
 
 export type TaskEntity = {
@@ -56,6 +72,24 @@ export type TaskEntity = {
      * Duration of the task in seconds
      */
     timeSeconds: number;
+    /**
+     * Task description given to the user
+     */
+    description: string;
+    /**
+     * Problem overview for the user
+     */
+    problemDescription: string;
+    /**
+     * Additional details for the user to follow
+     */
+    taskDetails: string;
+    /**
+     * Prompts for the user to meet
+     */
+    prompts: {
+        [key: string]: unknown;
+    };
 };
 
 export type UpdateTaskDto = {
@@ -473,21 +507,6 @@ export type TaskCompletionsControllerFindOrCreateByTaskResponses = {
 };
 
 export type TaskCompletionsControllerFindOrCreateByTaskResponse = TaskCompletionsControllerFindOrCreateByTaskResponses[keyof TaskCompletionsControllerFindOrCreateByTaskResponses];
-
-export type TaskCompletionsControllerGetVideoUploadUrlData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/taskCompletions/upload-url/{id}';
-};
-
-export type TaskCompletionsControllerGetVideoUploadUrlResponses = {
-    default: string;
-};
-
-export type TaskCompletionsControllerGetVideoUploadUrlResponse = TaskCompletionsControllerGetVideoUploadUrlResponses[keyof TaskCompletionsControllerGetVideoUploadUrlResponses];
 
 export type ClientOptions = {
     baseUrl: string;
