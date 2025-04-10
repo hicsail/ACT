@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Task } from '@prisma/client';
-import { IsNumber, IsString } from 'class-validator';
+import { IsArray, IsNumber, IsString } from 'class-validator';
 
 export class CreateTaskDto implements Omit<Task, 'id'> {
   @ApiProperty({ description: 'Category the task falls under' })
@@ -26,4 +26,21 @@ export class CreateTaskDto implements Omit<Task, 'id'> {
   @ApiProperty({ description: 'Duration of the task in seconds' })
   @IsNumber()
   timeSeconds: number;
+
+  @ApiProperty({ description: 'Task description given to the user' })
+  @IsString()
+  description: string;
+
+  @ApiProperty({ description: 'Problem overview for the user' })
+  @IsString()
+  problemDescription: string;
+
+  @ApiProperty({ description: 'Additional details for the user to follow' })
+  @IsString()
+  taskDetails: string;
+
+  @ApiProperty({ description: 'Prompts for the user to meet' })
+  @IsArray()
+  @IsString({ each: true })
+  prompts: string[];
 }

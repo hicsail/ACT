@@ -31,6 +31,10 @@ model Task {
   previewImage       String
   timeSeconds        Int
   taskCompletions    TaskCompletion[]
+  description        String    @db.LongText
+  problemDescription String    @db.LongText
+  taskDetails        String    @db.LongText
+  prompts            Json
 }
 
 model TaskCompletion {

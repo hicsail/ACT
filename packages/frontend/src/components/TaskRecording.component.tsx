@@ -8,13 +8,16 @@ import {
   taskCompletionsControllerUpdate,
   TaskEntity
 } from '../client';
+import { useNavigate } from 'react-router';
 
 export interface TaskRecordingProps {
   task: TaskEntity;
   taskCompletion: TaskCompletionEntity;
 }
 
-export const TaskRecording: FC<TaskRecordingProps> = ({ taskCompletion }) => {
+export const TaskRecording: FC<TaskRecordingProps> = ({ task, taskCompletion }) => {
+  const navigate = useNavigate();
+
   const handleVideoComplete = async (_blobURL: string, blob: Blob) => {
     // Get link to upload the video
     const uploadUrlResult = await taskCompletionsControllerGetVideoUploadUrl({
@@ -53,6 +56,8 @@ export const TaskRecording: FC<TaskRecordingProps> = ({ taskCompletion }) => {
     if (updateResult.error) {
       console.error('Failed to mark as finished');
     }
+
+    navigate('/home');
   };
 
   return (
@@ -63,7 +68,7 @@ export const TaskRecording: FC<TaskRecordingProps> = ({ taskCompletion }) => {
         timeLimit={5}
       />
 
-      <TaskInstructionsSide />
+      <TaskInstructionsSide task={task} />
     </Stack>
   );
 };

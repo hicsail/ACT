@@ -25,6 +25,22 @@ export type CreateTaskDto = {
      * Duration of the task in seconds
      */
     timeSeconds: number;
+    /**
+     * Task description given to the user
+     */
+    description: string;
+    /**
+     * Problem overview for the user
+     */
+    problemDescription: string;
+    /**
+     * Additional details for the user to follow
+     */
+    taskDetails: string;
+    /**
+     * Prompts for the user to meet
+     */
+    prompts: Array<string>;
 };
 
 export type TaskEntity = {
@@ -56,6 +72,24 @@ export type TaskEntity = {
      * Duration of the task in seconds
      */
     timeSeconds: number;
+    /**
+     * Task description given to the user
+     */
+    description: string;
+    /**
+     * Problem overview for the user
+     */
+    problemDescription: string;
+    /**
+     * Additional details for the user to follow
+     */
+    taskDetails: string;
+    /**
+     * Prompts for the user to meet
+     */
+    prompts: {
+        [key: string]: unknown;
+    };
 };
 
 export type UpdateTaskDto = {
