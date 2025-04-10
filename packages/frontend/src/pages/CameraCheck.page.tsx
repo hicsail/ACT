@@ -1,33 +1,19 @@
-import {
-  FormControl,
-  FormControlLabel,
-  RadioGroup,
-  Stack,
-  Typography,
-  Radio,
-  Button,
-  Link,
-} from "@mui/material";
-import { FC, useState } from "react";
-import { VideoRecord } from "../components/VideoRecord.component";
-import { config } from "../config/configuration";
-import { useNavigate } from "react-router";
+import { FormControl, FormControlLabel, RadioGroup, Stack, Typography, Radio, Button, Link } from '@mui/material';
+import { FC, useState } from 'react';
+import { VideoRecord } from '../components/VideoRecord.component';
+import { config } from '../config/configuration';
+import { useNavigate } from 'react-router';
 
 export const CameraCheck: FC = () => {
   const [isComplete, setIsComplete] = useState<boolean>(false);
 
   return (
     <Stack spacing={3}>
-      <VideoRecord
-        downloadRecording={true}
-        onRecordingStop={(_blobURL) => setIsComplete(true)}
-        timeLimit={5}
-      />
+      <VideoRecord downloadRecording={true} onRecordingStop={(_blobURL, _blob) => setIsComplete(true)} timeLimit={5} />
 
       <Typography variant="body2">
-        Please do not use wireless headphones in the recording of these tasks,
-        as they cause audio delays. If you experience audio delays for other
-        reasons, but are still able to complete the tasks, we will accept those
+        Please do not use wireless headphones in the recording of these tasks, as they cause audio delays. If you
+        experience audio delays for other reasons, but are still able to complete the tasks, we will accept those
         videos.
       </Typography>
 
@@ -45,17 +31,14 @@ const CompletionForm: FC = () => {
       window.location.reload();
     } else {
       // TODO: Save results
-      navigate("/home");
+      navigate('/home');
     }
   };
 
   return (
     <Stack>
       <FormControl>
-        <RadioGroup
-          value={issueFound}
-          onChange={(_, checked) => setIssueFound(checked as any)}
-        >
+        <RadioGroup value={issueFound} onChange={(_, checked) => setIssueFound(checked as any)}>
           <FormControlLabel
             value={false}
             control={<Radio />}
@@ -70,7 +53,7 @@ const CompletionForm: FC = () => {
       </FormControl>
 
       <Button variant="contained" onClick={handleFinishClick}>
-        {issueFound ? "Refresh and Retake" : "Finish"}
+        {issueFound ? 'Refresh and Retake' : 'Finish'}
       </Button>
 
       {issueFound && <ResolvePermissionError />}
@@ -81,10 +64,7 @@ const CompletionForm: FC = () => {
 const ResolvePermissionError: FC = () => {
   return (
     <Stack spacing={3}>
-      <Typography>
-        Check out the following resources to resolve permission issues you may
-        be having;{" "}
-      </Typography>
+      <Typography>Check out the following resources to resolve permission issues you may be having; </Typography>
       <Stack spacing={1}>
         <Link
           variant="body2"
@@ -104,20 +84,19 @@ const ResolvePermissionError: FC = () => {
         </Link>
       </Stack>
       <Typography variant="caption">
-        If you are experiencing any audio delays, please check if you are using
-        any form or wireless headphones during the recording process. If you are
-        not using any wireless headphones and are experiencing only audio
-        delays, please continue as these videos will still be accepted.
+        If you are experiencing any audio delays, please check if you are using any form or wireless headphones during
+        the recording process. If you are not using any wireless headphones and are experiencing only audio delays,
+        please continue as these videos will still be accepted.
       </Typography>
       <Typography>
-        Please fill{" "}
+        Please fill{' '}
         <Link href={config.googleFormURL} target="_blank" rel="noopener">
           this form
-        </Link>{" "}
-        and email{" "}
-        <Typography fontWeight={800} style={{ display: "inline-block" }}>
+        </Link>{' '}
+        and email{' '}
+        <Typography fontWeight={800} style={{ display: 'inline-block' }}>
           teachsimlab@gmail.com
-        </Typography>{" "}
+        </Typography>{' '}
         if you still need help.
       </Typography>
     </Stack>

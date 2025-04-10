@@ -7,21 +7,23 @@ import { PrismaModule } from './prisma/prisma.module';
 import { TasksModule } from './tasks/tasks.module';
 import { PaginationModule } from './pagination/pagination.module';
 import { TaskCompletionsModule } from './taskcompletions/taskcompletions.module';
+import { S3Module } from './s3/s3.module';
 import configuration from './config/configuration';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: [configuration],
-      isGlobal: true,
+      isGlobal: true
     }),
     CasdoorModule,
     PrismaModule,
     TasksModule,
     PaginationModule,
     TaskCompletionsModule,
+    S3Module
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService]
 })
 export class AppModule {}

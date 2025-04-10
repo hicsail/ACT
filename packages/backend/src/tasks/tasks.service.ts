@@ -10,44 +10,40 @@ import { TaskSetService } from './taskset.service';
 export class TasksService {
   constructor(
     private readonly prismaService: PrismaService,
-    private readonly taskSetService: TaskSetService,
+    private readonly taskSetService: TaskSetService
   ) {}
 
   async create(createTaskDto: CreateTaskDto): Promise<Task> {
     return this.prismaService.task.create({
-      data: createTaskDto,
+      data: createTaskDto
     });
   }
 
   async findAll(pagination: PaginationDTO): Promise<Task[]> {
     return this.prismaService.task.findMany({
       where: pagination.filter,
-      take: pagination.range
-        ? pagination.range.end - pagination.range.start
-        : undefined,
+      take: pagination.range ? pagination.range.end - pagination.range.start : undefined,
       skip: pagination.range ? pagination.range.start : undefined,
-      orderBy: pagination.sort
-        ? { [pagination.sort.field]: pagination.sort.direction }
-        : undefined,
+      orderBy: pagination.sort ? { [pagination.sort.field]: pagination.sort.direction } : undefined
     });
   }
 
   async findOne(id: string): Promise<Task | null> {
     return this.prismaService.task.findUnique({
-      where: { id },
+      where: { id }
     });
   }
 
   async update(id: string, updateTaskDto: UpdateTaskDto): Promise<Task | null> {
     return this.prismaService.task.update({
       where: { id },
-      data: updateTaskDto,
+      data: updateTaskDto
     });
   }
 
   async remove(id: string): Promise<void> {
     await this.prismaService.task.delete({
-      where: { id },
+      where: { id }
     });
   }
 
@@ -62,7 +58,7 @@ export class TasksService {
     }
 
     return this.prismaService.task.findMany({
-      where: { taskSetId: activeSet.id },
+      where: { taskSetId: activeSet.id }
     });
   }
 }

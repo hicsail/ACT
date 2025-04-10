@@ -9,7 +9,7 @@ import {
   Response,
   Param,
   NotFoundException,
-  Put,
+  Put
 } from '@nestjs/common';
 import { TaskSetService } from './taskset.service';
 import { CreateTaskSetDto } from './dto/create-taskset.dto';
@@ -31,18 +31,12 @@ export class TaskSetController {
 
   @Get()
   @ApiResponse({ type: [TaskSetEntity] })
-  async findAll(
-    @Query() pagination: PaginationDTO,
-    @Response() res: Res,
-  ): Promise<any> {
+  async findAll(@Query() pagination: PaginationDTO, @Response() res: Res): Promise<any> {
     const result = await this.taskSetService.findAll(pagination);
 
     // Determine content-range header
     const total = await this.taskSetService.count();
-    res.setHeader(
-      'Content-Range',
-      makeContentRange('tasks', pagination, total),
-    );
+    res.setHeader('Content-Range', makeContentRange('tasks', pagination, total));
 
     return res.json(result);
   }
@@ -59,10 +53,7 @@ export class TaskSetController {
 
   @Patch(':id')
   @ApiResponse({ type: TaskSetEntity })
-  async update(
-    @Param('id') id: string,
-    @Body() updateTaskDto: UpdateTaskSetDto,
-  ): Promise<TaskSetEntity> {
+  async update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskSetDto): Promise<TaskSetEntity> {
     const updated = await this.taskSetService.update(id, updateTaskDto);
     if (!updated) {
       throw new NotFoundException(`Task with id ${id} not found`);

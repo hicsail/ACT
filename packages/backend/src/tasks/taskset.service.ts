@@ -13,43 +13,36 @@ export class TaskSetService {
     return this.prismaService.taskSet.create({
       data: {
         ...createTaskSetDto,
-        active: false,
-      },
+        active: false
+      }
     });
   }
 
   async findAll(pagination: PaginationDTO): Promise<TaskSet[]> {
     return this.prismaService.taskSet.findMany({
       where: pagination.filter,
-      take: pagination.range
-        ? pagination.range.end - pagination.range.start
-        : undefined,
+      take: pagination.range ? pagination.range.end - pagination.range.start : undefined,
       skip: pagination.range ? pagination.range.start : undefined,
-      orderBy: pagination.sort
-        ? { [pagination.sort.field]: pagination.sort.direction }
-        : undefined,
+      orderBy: pagination.sort ? { [pagination.sort.field]: pagination.sort.direction } : undefined
     });
   }
 
   async findOne(id: string): Promise<TaskSet | null> {
     return this.prismaService.taskSet.findUnique({
-      where: { id },
+      where: { id }
     });
   }
 
-  async update(
-    id: string,
-    updateTaskSetDto: UpdateTaskSetDto,
-  ): Promise<TaskSet | null> {
+  async update(id: string, updateTaskSetDto: UpdateTaskSetDto): Promise<TaskSet | null> {
     return this.prismaService.taskSet.update({
       where: { id },
-      data: updateTaskSetDto,
+      data: updateTaskSetDto
     });
   }
 
   async remove(id: string): Promise<void> {
     await this.prismaService.taskSet.delete({
-      where: { id },
+      where: { id }
     });
   }
 
@@ -61,22 +54,22 @@ export class TaskSetService {
     // First mark all others as inactive
     await this.prismaService.taskSet.updateMany({
       data: {
-        active: false,
-      },
+        active: false
+      }
     });
 
     // Now mark the single task set as active
     return this.prismaService.taskSet.update({
       where: { id },
       data: {
-        active: true,
-      },
+        active: true
+      }
     });
   }
 
   async getActive(): Promise<TaskSet | null> {
     return this.prismaService.taskSet.findFirst({
-      where: { active: true },
+      where: { active: true }
     });
   }
 }

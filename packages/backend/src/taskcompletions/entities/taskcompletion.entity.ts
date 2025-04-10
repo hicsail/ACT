@@ -6,7 +6,7 @@ export class TaskCompletionEntity implements TaskCompletion {
   id: string;
 
   @ApiProperty({
-    description: 'The ID of the task associated with the completion',
+    description: 'The ID of the task associated with the completion'
   })
   taskId: string;
 

@@ -1,15 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  NotFoundException,
-  Query,
-  Response,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Query, Response } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
@@ -30,18 +19,12 @@ export class TasksController {
 
   @Get()
   @ApiResponse({ type: [TaskEntity] })
-  async findAll(
-    @Query() pagination: PaginationDTO,
-    @Response() res: Res,
-  ): Promise<any> {
+  async findAll(@Query() pagination: PaginationDTO, @Response() res: Res): Promise<any> {
     const result = await this.tasksService.findAll(pagination);
 
     // Determine content-range header
     const total = await this.tasksService.count();
-    res.setHeader(
-      'Content-Range',
-      makeContentRange('tasks', pagination, total),
-    );
+    res.setHeader('Content-Range', makeContentRange('tasks', pagination, total));
 
     return res.json(result);
   }
@@ -58,10 +41,7 @@ export class TasksController {
 
   @Patch(':id')
   @ApiResponse({ type: TaskEntity })
-  async update(
-    @Param('id') id: string,
-    @Body() updateTaskDto: UpdateTaskDto,
-  ): Promise<TaskEntity> {
+  async update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto): Promise<TaskEntity> {
     const updated = await this.tasksService.update(id, updateTaskDto);
     if (!updated) {
       throw new NotFoundException(`Task with id ${id} not found`);

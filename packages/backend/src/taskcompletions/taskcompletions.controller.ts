@@ -9,7 +9,7 @@ import {
   Query,
   Response,
   NotFoundException,
-  UseGuards,
+  UseGuards
 } from '@nestjs/common';
 import { TaskCompletionsService } from './taskcompletions.service';
 import { CreateTaskCompletionDto } from './dto/create-taskcompletion.dto';
@@ -17,7 +17,7 @@ import { UpdateTaskCompletionDto } from './dto/update-taskcompletion.dto';
 import { TaskCompletionEntity } from './entities/taskcompletion.entity';
 import { PaginationDTO, makeContentRange } from 'src/pagination/pagination.dto';
 import { Response as Res } from 'express';
-import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiResponseProperty } from '@nestjs/swagger';
 import { FindByUserTask } from './dto/find-by-user-task.dto';
 import { FindByTask } from './dto/find-by-task.dto';
 import { CasdoorGuard } from 'src/casdoor/casdoor.guard';
@@ -26,32 +26,22 @@ import { User } from 'casdoor-nodejs-sdk/lib/cjs/user';
 
 @Controller('taskCompletions')
 export class TaskCompletionsController {
-  constructor(
-    private readonly taskCompletionsService: TaskCompletionsService,
-  ) {}
+  constructor(private readonly taskCompletionsService: TaskCompletionsService) {}
 
   @Post()
   @ApiResponse({ type: TaskCompletionEntity })
-  create(
-    @Body() createTaskCompletionDto: CreateTaskCompletionDto,
-  ): Promise<TaskCompletionEntity> {
+  create(@Body() createTaskCompletionDto: CreateTaskCompletionDto): Promise<TaskCompletionEntity> {
     return this.taskCompletionsService.create(createTaskCompletionDto);
   }
 
   @Get()
   @ApiResponse({ type: [TaskCompletionEntity] })
-  async findAll(
-    @Query() pagination: PaginationDTO,
-    @Response() res: Res,
-  ): Promise<any> {
+  async findAll(@Query() pagination: PaginationDTO, @Response() res: Res): Promise<any> {
     const result = await this.taskCompletionsService.findAll(pagination);
 
     // Determine content-range header
     const total = await this.taskCompletionsService.count();
-    res.setHeader(
-      'Content-Range',
-      makeContentRange('tasks', pagination, total),
-    );
+    res.setHeader('Content-Range', makeContentRange('tasks', pagination, total));
 
     return res.json(result);
   }
@@ -70,12 +60,9 @@ export class TaskCompletionsController {
   @ApiResponse({ type: TaskCompletionEntity })
   async update(
     @Param('id') id: string,
-    @Body() updateTaskCompletionDto: UpdateTaskCompletionDto,
+    @Body() updateTaskCompletionDto: UpdateTaskCompletionDto
   ): Promise<TaskCompletionEntity> {
-    const updated = await this.taskCompletionsService.update(
-      id,
-      updateTaskCompletionDto,
-    );
+    const updated = await this.taskCompletionsService.update(id, updateTaskCompletionDto);
     if (!updated) {
       throw new NotFoundException(`Task Completion with id ${id} not found`);
     }
@@ -89,30 +76,36 @@ export class TaskCompletionsController {
 
   @Get('/by-user/query')
   @ApiOperation({
-    description: 'Get a task completion by providing the user and task',
+    description: 'Get a task completion by providing the user and task'
   })
   @ApiResponse({ type: TaskCompletionEntity })
-  async findOrCreateByUserTask(
-    @Query() findQuery: FindByUserTask,
-  ): Promise<TaskCompletionEntity> {
+  async findOrCreateByUserTask(@Query() findQuery: FindByUserTask): Promise<TaskCompletionEntity> {
     return this.taskCompletionsService.findOrCreateByUserTask(findQuery);
   }
 
   @Get('/by-user/header')
   @UseGuards(CasdoorGuard)
   @ApiOperation({
-    description:
-      'Get a task completion by inferring the user from the JWT and the task from the query',
+    description: 'Get a task completion by inferring the user from the JWT and the task from the query'
   })
   @ApiResponse({ type: TaskCompletionEntity })
   @ApiBearerAuth()
-  async findOrCreateByTask(
-    @Query() findQuery: FindByTask,
-    @UserCtx() user: User,
-  ): Promise<TaskCompletionEntity> {
+  async findOrCreateByTask(@Query() findQuery: FindByTask, @UserCtx() user: User): Promise<TaskCompletionEntity> {
     return this.findOrCreateByUserTask({
       task: findQuery.task,
-      user: user.id!,
+      user: user.id!
     });
+  }
+
+  @Get('/upload-url/:id')
+  @UseGuards(CasdoorGuard)
+  @ApiOperation({
+    description: 'Get the presigned URL to upload the recordeded video'
+  })
+  @ApiResponse({ type: String })
+  @ApiBearerAuth()
+  async getVideoUploadURL(@Param('id') taskCompletionId: string, @UserCtx() user: User): Promise<string> {
+    // TODO: Validate it is the correct user making the request
+    return this.taskCompletionsService.getUploadUrl(taskCompletionId, user);
   }
 }

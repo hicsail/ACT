@@ -1,6 +1,6 @@
-import { createContext, FC, useContext, useEffect, useState } from "react";
+import { createContext, FC, useContext, useEffect, useState } from 'react';
 
-export const TOKEN_KEY = "CASDOOR_JWT";
+export const TOKEN_KEY = 'CASDOOR_JWT';
 
 export interface UserInfo {
   token: string;
@@ -18,7 +18,7 @@ export interface UserProviderProps {
 }
 
 const hasJWTExpired = (token: string): boolean => {
-  const expiry = JSON.parse(window.atob(token.split(".")[1])).exp;
+  const expiry = JSON.parse(window.atob(token.split('.')[1])).exp;
   return Math.floor(new Date().getTime() / 1000) >= expiry;
 };
 
@@ -40,11 +40,7 @@ export const UserContextProvider: FC<UserProviderProps> = ({ children }) => {
     localStorage.setItem(TOKEN_KEY, token);
   };
 
-  return (
-    <UserContext.Provider value={{ user, login: handleLogin }}>
-      {children}
-    </UserContext.Provider>
-  );
+  return <UserContext.Provider value={{ user, login: handleLogin }}>{children}</UserContext.Provider>;
 };
 
 export const useUser = () => useContext(UserContext);
