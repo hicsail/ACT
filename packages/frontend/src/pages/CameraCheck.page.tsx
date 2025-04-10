@@ -9,7 +9,7 @@ export const CameraCheck: FC = () => {
 
   return (
     <Stack spacing={3}>
-      <VideoRecord downloadRecording={true} onRecordingStop={(_blobURL) => setIsComplete(true)} timeLimit={5} />
+      <VideoRecord downloadRecording={true} onRecordingStop={(_blobURL, _blob) => setIsComplete(true)} timeLimit={5} />
 
       <Typography variant="body2">
         Please do not use wireless headphones in the recording of these tasks, as they cause audio delays. If you

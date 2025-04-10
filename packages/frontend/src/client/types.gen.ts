@@ -474,6 +474,21 @@ export type TaskCompletionsControllerFindOrCreateByTaskResponses = {
 
 export type TaskCompletionsControllerFindOrCreateByTaskResponse = TaskCompletionsControllerFindOrCreateByTaskResponses[keyof TaskCompletionsControllerFindOrCreateByTaskResponses];
 
+export type TaskCompletionsControllerGetVideoUploadUrlData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/taskCompletions/upload-url/{id}';
+};
+
+export type TaskCompletionsControllerGetVideoUploadUrlResponses = {
+    default: string;
+};
+
+export type TaskCompletionsControllerGetVideoUploadUrlResponse = TaskCompletionsControllerGetVideoUploadUrlResponses[keyof TaskCompletionsControllerGetVideoUploadUrlResponses];
+
 export type ClientOptions = {
     baseUrl: string;
 };

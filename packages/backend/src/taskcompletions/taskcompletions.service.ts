@@ -110,6 +110,6 @@ export class TaskCompletionsService {
 
   private getVideoNameFormat(taskCompletion: TaskCompletion, user: User): string {
     // TODO: Determine site ID and descriptor ID
-    return `${this.taskIteration}_SiteId_${user.id!}_${taskCompletion.taskId}`;
+    return `${this.taskIteration}_SiteId_${user.id!}_${taskCompletion.taskId}.mp4`;
   }
 }

@@ -1,7 +1,6 @@
 import { Stack, Typography } from '@mui/material';
 import { FC } from 'react';
 
-
 export const TaskInstructionsSide: FC = () => {
   return (
     <Stack>

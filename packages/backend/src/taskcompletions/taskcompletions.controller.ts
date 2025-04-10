@@ -103,6 +103,7 @@ export class TaskCompletionsController {
     description: 'Get the presigned URL to upload the recordeded video'
   })
   @ApiResponse({ type: String })
+  @ApiBearerAuth()
   async getVideoUploadURL(@Param('id') taskCompletionId: string, @UserCtx() user: User): Promise<string> {
     // TODO: Validate it is the correct user making the request
     return this.taskCompletionsService.getUploadUrl(taskCompletionId, user);

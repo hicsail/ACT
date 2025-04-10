@@ -6,7 +6,7 @@ import { CountDownTimer, CountDownState } from './CountDownTimer.component';
 
 export interface VideoRecordProps {
   downloadRecording: boolean;
-  onRecordingStop?: (mediaBlobUrl: string) => void;
+  onRecordingStop?: (mediaBlobUrl: string, blob: Blob) => void;
   timeLimit: number;
 }
 
@@ -14,11 +14,11 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
   const { pushSnackbarMessage } = useSnackbar();
   const recorder = useReactMediaRecorder({
     video: true,
-    onStop: (mediaBlobUrl, _blob) => handleCompletion(mediaBlobUrl)
+    onStop: (mediaBlobUrl, blob) => handleCompletion(mediaBlobUrl, blob)
   });
   const [countDownState, setCountDownState] = useState<CountDownState>('paused');
 
-  const handleCompletion = (blobURL: string) => {
+  const handleCompletion = (blobURL: string, blob: Blob) => {
     if (props.downloadRecording) {
       const link = document.createElement('a');
       link.href = blobURL;
@@ -29,7 +29,7 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
     }
 
     if (props.onRecordingStop) {
-      props.onRecordingStop(blobURL);
+      props.onRecordingStop(blobURL, blob);
     }
 
     setCountDownState('restart');

@@ -9,7 +9,6 @@ export const s3Provider: Provider<S3Client> = {
   provide: S3_PROVIDER,
   useFactory: (configService: ConfigService) => {
     return new S3Client({
-      endpoint: configService.getOrThrow<string>('s3.endpoint'),
       forcePathStyle: true,
       region: configService.getOrThrow<string>('s3.region'),
       credentials: {
