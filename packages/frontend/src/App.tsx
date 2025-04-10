@@ -13,7 +13,7 @@ import { UserContextProvider } from './contexts/User.context';
 import { CameraCheck } from './pages/CameraCheck.page';
 import { SnackbarProvider } from './contexts/Snackbar.context';
 import { ClientProvider } from './contexts/Client.context';
-import { TaskRecording } from './pages/TaskRecording.page';
+import { Task } from './pages/Task.page';
 
 const App: FC = () => {
   return (
@@ -30,7 +30,7 @@ const App: FC = () => {
                     <Route path="/callback" element={<AuthCallback />} />
                     <Route path="/home" element={<Home />} />
                     <Route path="/cam-check" element={<CameraCheck />} />
-                    <Route path="/taskcompletion/:taskCompletionId" element={<TaskRecording />} />
+                    <Route path="/taskcompletion/:taskCompletionId" element={<Task />} />
                   </Routes>
                 </BrowserRouter>
               </Container>

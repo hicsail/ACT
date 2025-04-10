@@ -2,11 +2,13 @@ import { FC, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { TaskCompletionEntity, taskCompletionsControllerFindOne, TaskEntity, tasksControllerFindOne } from '../client';
 import { TaskInstructions } from '../components/TaskInstructions.component';
+import { TaskRecording } from '../components/TaskRecording.component';
 
-export const TaskRecording: FC = () => {
+export const Task: FC = () => {
   const { taskCompletionId } = useParams();
   const [taskCompletion, setTaskCompletion] = useState<TaskCompletionEntity | null>(null);
   const [task, setTask] = useState<TaskEntity | null>(null);
+  const [view, setView] = useState<'instructions' | 'recording'>('instructions');
 
   const loadTaskDetails = async (taskCompletionId: string) => {
     // First get the task completion object
@@ -54,7 +56,8 @@ export const TaskRecording: FC = () => {
 
   return (
     <>
-      {task && <TaskInstructions task={task} />}
+      {task && view == 'instructions' && <TaskInstructions task={task} onStart={() => setView('recording')}/>}
+      {task && view == 'recording' && <TaskRecording />}
     </>
   );
 };
