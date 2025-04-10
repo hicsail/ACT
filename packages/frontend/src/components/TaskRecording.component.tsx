@@ -2,7 +2,7 @@ import { Stack } from '@mui/material';
 import { FC } from 'react';
 import { VideoRecord } from './VideoRecord.component';
 import { TaskInstructionsSide } from './TaskInstructionsSide.component';
-import { TaskCompletionEntity, taskCompletionsControllerGetVideoUploadUrl, TaskEntity } from '../client';
+import { TaskCompletionEntity, taskCompletionsControllerGetVideoUploadUrl, taskCompletionsControllerUpdate, TaskEntity } from '../client';
 
 export interface TaskRecordingProps {
   task: TaskEntity;
@@ -24,6 +24,7 @@ export const TaskRecording: FC<TaskRecordingProps> = ({ task, taskCompletion }) 
       return;
     }
 
+    // Upload the video
     const result = await fetch(uploadUrlResult.data, {
       method: 'PUT',
       body: blob,
@@ -32,9 +33,20 @@ export const TaskRecording: FC<TaskRecordingProps> = ({ task, taskCompletion }) 
       }
     });
 
+    // Check result
     if (!result.ok) {
       console.error(`Failed to upload video`);
       return;
+    }
+
+    // Mark as complete
+    const updateResult = await taskCompletionsControllerUpdate({
+      path: { id: taskCompletion.id },
+      body: { complete: true }
+    });
+
+    if (updateResult.error) {
+      console.error('Failed to mark as finished');
     }
   };
 
