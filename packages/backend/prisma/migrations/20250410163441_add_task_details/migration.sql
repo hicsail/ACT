@@ -8,7 +8,7 @@
 
 */
 -- AlterTable
-ALTER TABLE `Task` ADD COLUMN `description` VARCHAR(191) NOT NULL,
-    ADD COLUMN `problemDescription` VARCHAR(191) NOT NULL,
+ALTER TABLE `Task` ADD COLUMN `description` LONGTEXT NOT NULL,
+    ADD COLUMN `problemDescription` LONGTEXT NOT NULL,
     ADD COLUMN `prompts` JSON NOT NULL,
-    ADD COLUMN `taskDetails` VARCHAR(191) NOT NULL;
+    ADD COLUMN `taskDetails` LONGTEXT NOT NULL;
