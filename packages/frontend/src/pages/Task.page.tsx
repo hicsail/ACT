@@ -56,7 +56,7 @@ export const Task: FC = () => {
 
   return (
     <>
-      {task && view == 'instructions' && <TaskInstructions task={task} onStart={() => setView('recording')}/>}
+      {task && view == 'instructions' && <TaskInstructions task={task} onStart={() => setView('recording')} />}
       {task && taskCompletion && view == 'recording' && <TaskRecording task={task} taskCompletion={taskCompletion} />}
     </>
   );

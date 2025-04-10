@@ -2,7 +2,12 @@ import { Stack } from '@mui/material';
 import { FC } from 'react';
 import { VideoRecord } from './VideoRecord.component';
 import { TaskInstructionsSide } from './TaskInstructionsSide.component';
-import { TaskCompletionEntity, taskCompletionsControllerGetVideoUploadUrl, taskCompletionsControllerUpdate, TaskEntity } from '../client';
+import {
+  TaskCompletionEntity,
+  taskCompletionsControllerGetVideoUploadUrl,
+  taskCompletionsControllerUpdate,
+  TaskEntity
+} from '../client';
 
 export interface TaskRecordingProps {
   task: TaskEntity;
@@ -51,7 +56,7 @@ export const TaskRecording: FC<TaskRecordingProps> = ({ task, taskCompletion }) 
   };
 
   return (
-    <Stack direction='row'>
+    <Stack direction="row">
       <VideoRecord
         downloadRecording={false}
         onRecordingStop={(blobURL, blob) => handleVideoComplete(blobURL, blob)}
