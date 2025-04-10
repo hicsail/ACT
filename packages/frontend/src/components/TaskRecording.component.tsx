@@ -14,7 +14,7 @@ export interface TaskRecordingProps {
   taskCompletion: TaskCompletionEntity;
 }
 
-export const TaskRecording: FC<TaskRecordingProps> = ({ task, taskCompletion }) => {
+export const TaskRecording: FC<TaskRecordingProps> = ({ taskCompletion }) => {
   const handleVideoComplete = async (_blobURL: string, blob: Blob) => {
     // Get link to upload the video
     const uploadUrlResult = await taskCompletionsControllerGetVideoUploadUrl({
