@@ -31,6 +31,10 @@ model Task {
   previewImage       String
   timeSeconds        Int
   taskCompletions    TaskCompletion[]
+  description        String
+  problemDescription String
+  taskDetails        String
+  prompts            Json
 }
 
 model TaskCompletion {
