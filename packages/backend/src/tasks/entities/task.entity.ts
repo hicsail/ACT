@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Task } from '@prisma/client';
+import { JsonValue } from '@prisma/client/runtime/library';
 
 export class TaskEntity implements Task {
   @ApiProperty({ description: 'Unique ID of the task' })
@@ -22,4 +23,16 @@ export class TaskEntity implements Task {
 
   @ApiProperty({ description: 'Duration of the task in seconds' })
   timeSeconds: number;
+
+  @ApiProperty({ description: 'Task description given to the user' })
+  description: string;
+
+  @ApiProperty({ description: 'Problem overview for the user' })
+  problemDescription: string;
+
+  @ApiProperty({ description: 'Additional details for the user to follow' })
+  taskDetails: string;
+
+  @ApiProperty({ description: 'Prompts for the user to meet' })
+  prompts: JsonValue;
 }
