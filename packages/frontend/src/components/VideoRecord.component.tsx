@@ -18,7 +18,7 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
     onStop: (mediaBlobUrl, blob) => handleCompletion(mediaBlobUrl, blob)
   });
   const [countDownState, setCountDownState] = useState<CountDownState>('paused');
-  const [blobPayload, setBlobPayload] = useState<{ blobURL: string, blob: Blob} | null>(null);
+  const [blobPayload, setBlobPayload] = useState<{ blobURL: string; blob: Blob } | null>(null);
 
   const handleCompletion = (blobURL: string, blob: Blob) => {
     if (props.downloadRecording) {
@@ -39,7 +39,7 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
     if (props.onSubmit && blobPayload) {
       props.onSubmit(blobPayload.blobURL, blobPayload.blob);
     }
-  }
+  };
 
   const handleRecordClick = () => {
     if (recorder.status == 'recording') {
@@ -110,7 +110,9 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
         </Grid>
 
         <Grid size={6}>
-          <Button variant="contained" onClick={handleSubmit}>Submit Recording</Button>
+          <Button variant="contained" onClick={handleSubmit}>
+            Submit Recording
+          </Button>
         </Grid>
       </Grid>
       <video src={recorder.mediaBlobUrl} controls autoPlay loop ref={videoRef} />
