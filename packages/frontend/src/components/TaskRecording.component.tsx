@@ -64,7 +64,7 @@ export const TaskRecording: FC<TaskRecordingProps> = ({ task, taskCompletion }) 
     <Stack direction="row">
       <VideoRecord
         downloadRecording={false}
-        onRecordingStop={(blobURL, blob) => handleVideoComplete(blobURL, blob)}
+        onSubmit={(blobURL, blob) => handleVideoComplete(blobURL, blob)}
         timeLimit={5}
       />
 

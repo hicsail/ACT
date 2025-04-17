@@ -7,6 +7,7 @@ import { CountDownTimer, CountDownState } from './CountDownTimer.component';
 export interface VideoRecordProps {
   downloadRecording: boolean;
   onRecordingStop?: (mediaBlobUrl: string, blob: Blob) => void;
+  onSubmit?: (bloblUrl: string, blob: Blob) => void;
   timeLimit: number;
 }
 
@@ -17,6 +18,7 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
     onStop: (mediaBlobUrl, blob) => handleCompletion(mediaBlobUrl, blob)
   });
   const [countDownState, setCountDownState] = useState<CountDownState>('paused');
+  const [blobPayload, setBlobPayload] = useState<{ blobURL: string; blob: Blob } | null>(null);
 
   const handleCompletion = (blobURL: string, blob: Blob) => {
     if (props.downloadRecording) {
@@ -28,11 +30,15 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
       document.body.removeChild(link);
     }
 
-    if (props.onRecordingStop) {
-      props.onRecordingStop(blobURL, blob);
-    }
+    setBlobPayload({ blobURL, blob });
 
     setCountDownState('restart');
+  };
+
+  const handleSubmit = () => {
+    if (props.onSubmit && blobPayload) {
+      props.onSubmit(blobPayload.blobURL, blobPayload.blob);
+    }
   };
 
   const handleRecordClick = () => {
@@ -104,7 +110,9 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
         </Grid>
 
         <Grid size={6}>
-          <Button variant="contained">Submit Recording</Button>
+          <Button variant="contained" onClick={handleSubmit}>
+            Submit Recording
+          </Button>
         </Grid>
       </Grid>
       <video src={recorder.mediaBlobUrl} controls autoPlay loop ref={videoRef} />
