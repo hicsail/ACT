@@ -11,6 +11,7 @@ import { User } from 'casdoor-nodejs-sdk/lib/cjs/user';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { S3_PROVIDER } from 'src/s3/s3.provider';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { TaskCompletionId } from './dto/task-completion-id';
 
 @Injectable()
 export class TaskCompletionsService {
@@ -44,22 +45,22 @@ export class TaskCompletionsService {
     });
   }
 
-  findOne(id: string): Promise<TaskCompletion | null> {
+  findOne(taskCompletionId: TaskCompletionId): Promise<TaskCompletion | null> {
     return this.prismaService.taskCompletion.findUnique({
-      where: { id }
+      where: { id: taskCompletionId }
     });
   }
 
-  update(id: string, updateTaskCompletionDto: UpdateTaskCompletionDto): Promise<TaskCompletion | null> {
+  update(taskCompletionId: TaskCompletionId, updateTaskCompletionDto: UpdateTaskCompletionDto): Promise<TaskCompletion | null> {
     return this.prismaService.taskCompletion.update({
-      where: { id },
+      where: { id: taskCompletionId },
       data: updateTaskCompletionDto
     });
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(taskCompletionId: TaskCompletionId): Promise<void> {
     await this.prismaService.taskCompletion.delete({
-      where: { id }
+      where: { id: taskCompletionId }
     });
   }
 
@@ -70,7 +71,7 @@ export class TaskCompletionsService {
   async findOrCreateByUserTask(findQuery: FindByUserTask): Promise<TaskCompletion> {
     // Check if one exists
     const existing = await this.prismaService.taskCompletion.findFirst({
-      where: { user: findQuery.user, taskId: findQuery.task }
+      where: { userId: findQuery.user, taskId: findQuery.task }
     });
 
     // If an existing task completion is found, return it
@@ -89,11 +90,11 @@ export class TaskCompletionsService {
       taskId: findQuery.task,
       complete: false,
       video: '',
-      user: findQuery.user
+      userId: findQuery.user
     });
   }
 
-  async getUploadUrl(taskCompletionId: string, user: User): Promise<string> {
+  async getUploadUrl(taskCompletionId: TaskCompletionId, user: User): Promise<string> {
     // Get the task completion
     const taskCompletion = await this.findOne(taskCompletionId);
     if (!taskCompletion) {
@@ -111,5 +112,14 @@ export class TaskCompletionsService {
   private getVideoNameFormat(taskCompletion: TaskCompletion, user: User): string {
     // TODO: Determine site ID and descriptor ID
     return `${this.taskIteration}_SiteId_${user.id!}_${taskCompletion.taskId}.mp4`;
+  }
+
+  /**
+   * Gets or creates all the task completions based on the active task set
+   */
+  private async getOrCreateTaskCompletions(user: User): Promise<TaskCompletion[]> {
+    const activeTasksIDs = (await this.taskService.getActiveTasks()).map(task => task.id);
+
+    return [];
   }
 }

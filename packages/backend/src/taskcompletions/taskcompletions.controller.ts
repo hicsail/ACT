@@ -23,6 +23,7 @@ import { FindByTask } from './dto/find-by-task.dto';
 import { CasdoorGuard } from 'src/casdoor/casdoor.guard';
 import { UserCtx } from '../casdoor/user.context';
 import { User } from 'casdoor-nodejs-sdk/lib/cjs/user';
+import { TaskCompletionId } from './dto/task-completion-id';
 
 @Controller('taskCompletions')
 export class TaskCompletionsController {
@@ -46,32 +47,32 @@ export class TaskCompletionsController {
     return res.json(result);
   }
 
-  @Get(':id')
+  @Get('/id')
   @ApiResponse({ type: TaskCompletionEntity })
-  async findOne(@Param('id') id: string): Promise<TaskCompletionEntity> {
-    const found = await this.taskCompletionsService.findOne(id);
+  async findOne(@Query() taskCompletionId: TaskCompletionId) : Promise<TaskCompletionEntity> {
+    const found = await this.taskCompletionsService.findOne(taskCompletionId);
     if (!found) {
-      throw new NotFoundException(`Task Completion with id ${id} not found`);
+      throw new NotFoundException(`Task Completion with id ${taskCompletionId} not found`);
     }
     return found;
   }
 
-  @Patch(':id')
+  @Patch()
   @ApiResponse({ type: TaskCompletionEntity })
   async update(
-    @Param('id') id: string,
+    @Query() taskCompletionId: TaskCompletionId,
     @Body() updateTaskCompletionDto: UpdateTaskCompletionDto
   ): Promise<TaskCompletionEntity> {
-    const updated = await this.taskCompletionsService.update(id, updateTaskCompletionDto);
+    const updated = await this.taskCompletionsService.update(taskCompletionId, updateTaskCompletionDto);
     if (!updated) {
-      throw new NotFoundException(`Task Completion with id ${id} not found`);
+      throw new NotFoundException(`Task Completion with id ${taskCompletionId} not found`);
     }
     return updated;
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.taskCompletionsService.remove(id);
+  @Delete()
+  remove(@Query() taskCompletionId: TaskCompletionId) {
+    return this.taskCompletionsService.remove(taskCompletionId);
   }
 
   @Get('/by-user/query')
@@ -97,14 +98,14 @@ export class TaskCompletionsController {
     });
   }
 
-  @Get('/upload-url/:id')
+  @Get('/upload-url')
   @UseGuards(CasdoorGuard)
   @ApiOperation({
     description: 'Get the presigned URL to upload the recordeded video'
   })
   @ApiResponse({ type: String })
   @ApiBearerAuth()
-  async getVideoUploadURL(@Param('id') taskCompletionId: string, @UserCtx() user: User): Promise<string> {
+  async getVideoUploadURL(@Query() taskCompletionId: TaskCompletionId, @UserCtx() user: User): Promise<string> {
     // TODO: Validate it is the correct user making the request
     return this.taskCompletionsService.getUploadUrl(taskCompletionId, user);
   }

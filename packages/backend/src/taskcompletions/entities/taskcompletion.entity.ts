@@ -2,9 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { TaskCompletion } from '@prisma/client';
 
 export class TaskCompletionEntity implements TaskCompletion {
-  @ApiProperty({ description: 'Unique ID fo the completion' })
-  id: string;
-
   @ApiProperty({
     description: 'The ID of the task associated with the completion'
   })
@@ -17,5 +14,5 @@ export class TaskCompletionEntity implements TaskCompletion {
   video: string;
 
   @ApiProperty({ description: 'The ID of the user who made the completion' })
-  user: string;
+  userId: string;
 }
