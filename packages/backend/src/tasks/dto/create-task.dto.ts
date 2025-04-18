@@ -43,4 +43,8 @@ export class CreateTaskDto implements Omit<Task, 'id'> {
   @IsArray()
   @IsString({ each: true })
   prompts: string[];
+
+  @ApiProperty({ description: 'Order the tasks are presented to the user' })
+  @IsNumber()
+  order: number;
 }

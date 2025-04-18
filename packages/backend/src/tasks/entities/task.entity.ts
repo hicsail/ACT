@@ -35,4 +35,7 @@ export class TaskEntity implements Task {
 
   @ApiProperty({ description: 'Prompts for the user to meet' })
   prompts: JsonValue;
+
+  @ApiProperty({ description: 'Order the tasks are presented to the user' })
+  order: number;
 }
