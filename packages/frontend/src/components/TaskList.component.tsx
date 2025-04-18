@@ -28,6 +28,8 @@ export const TaskList: FC = () => {
       return;
     }
 
+    console.log(taskCompletion);
+
     // Now update the fields
     setTask(taskResponse.data);
     setTaskCompletion(taskCompletionResponse.data);

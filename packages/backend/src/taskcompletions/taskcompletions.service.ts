@@ -127,6 +127,7 @@ export class TaskCompletionsService {
     return this.prismaService.taskCompletion.findFirst({
       where: {
         complete: false,
+        userId,
         task: {
           taskSet: {
             active: true
