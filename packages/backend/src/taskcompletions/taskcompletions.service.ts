@@ -109,6 +109,36 @@ export class TaskCompletionsService {
     return getSignedUrl(this.s3, request, { expiresIn: this.expiration });
   }
 
+  /**
+   * Get the next task completion for the user to complete or null if non are left
+   */
+  async getNextTaskCompletion(userId: string): Promise<TaskCompletion | null> {
+    // First, make sure the task completions for the user exists
+    await this.getOrCreateTaskCompletions(userId);
+
+    // Now we know all of the task completions exist, its just a matter of
+    // getting the one that matches the following criteria
+    //
+    // 1. From the active task set
+    // 2. From the list of incomplete task completions
+    // 3. Ordered by the task's order field
+    return this.prismaService.taskCompletion.findFirst({
+      where: {
+        complete: false,
+        task: {
+          taskSet: {
+            active: true
+          }
+        }
+      },
+      orderBy: {
+        task: {
+          order: 'asc'
+        }
+      }
+    });
+  }
+
   private getVideoNameFormat(taskCompletion: TaskCompletion, user: User): string {
     // TODO: Determine site ID and descriptor ID
     return `${this.taskIteration}_SiteId_${user.id!}_${taskCompletion.taskId}.mp4`;
@@ -117,9 +147,15 @@ export class TaskCompletionsService {
   /**
    * Gets or creates all the task completions based on the active task set
    */
-  private async getOrCreateTaskCompletions(user: User): Promise<TaskCompletion[]> {
+  private async getOrCreateTaskCompletions(userId: string): Promise<TaskCompletion[]> {
     const activeTasksIDs = (await this.taskService.getActiveTasks()).map(task => task.id);
 
-    return [];
+    return await this.prismaService.$transaction(activeTasksIDs.map(taskId => (
+      this.prismaService.taskCompletion.upsert({
+        where: { id: { taskId, userId }},
+        update: {},
+        create: { taskId, userId, complete: false, video: '' }
+      })
+    )));
   }
 }
