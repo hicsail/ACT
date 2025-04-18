@@ -24,6 +24,7 @@ import { CasdoorGuard } from 'src/casdoor/casdoor.guard';
 import { UserCtx } from '../casdoor/user.context';
 import { User } from 'casdoor-nodejs-sdk/lib/cjs/user';
 import { TaskCompletionId } from './dto/task-completion-id';
+import { Task } from '@prisma/client';
 
 @Controller('taskCompletions')
 export class TaskCompletionsController {
@@ -96,6 +97,22 @@ export class TaskCompletionsController {
       task: findQuery.task,
       user: user.id!
     });
+  }
+
+  @Get('/next-incomplete')
+  @UseGuards(CasdoorGuard)
+  @ApiOperation({
+    description: 'Get the next task completion for the user to go through'
+  })
+  @ApiResponse({ type: TaskCompletionEntity })
+  @ApiBearerAuth()
+  async getNextIncomplete(@UserCtx() user: User): Promise<TaskCompletionEntity> {
+    const next = await this.taskCompletionsService.getNextTaskCompletion(user.id!);
+    if (!next) {
+      throw new NotFoundException(`No next task completion`);
+    }
+
+    return next;
   }
 
   @Get('/upload-url')
