@@ -30,7 +30,7 @@ const App: FC = () => {
                     <Route path="/callback" element={<AuthCallback />} />
                     <Route path="/home" element={<Home />} />
                     <Route path="/cam-check" element={<CameraCheck />} />
-                    <Route path="/taskcompletion/:taskCompletionId" element={<Task />} />
+                    <Route path="/taskcompletion" element={<Task />} />
                   </Routes>
                 </BrowserRouter>
               </Container>

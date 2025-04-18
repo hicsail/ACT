@@ -111,7 +111,6 @@ export class TaskCompletionsController {
     if (!next) {
       throw new NotFoundException(`No next task completion`);
     }
-
     return next;
   }
 
@@ -122,8 +121,8 @@ export class TaskCompletionsController {
   })
   @ApiResponse({ type: String })
   @ApiBearerAuth()
-  async getVideoUploadURL(@Query() taskCompletionId: TaskCompletionId, @UserCtx() user: User): Promise<string> {
+  async getVideoUploadURL(@Query('taskId') taskId: string, @UserCtx() user: User): Promise<string> {
     // TODO: Validate it is the correct user making the request
-    return this.taskCompletionsService.getUploadUrl(taskCompletionId, user);
+    return this.taskCompletionsService.getUploadUrl(taskId, user);
   }
 }

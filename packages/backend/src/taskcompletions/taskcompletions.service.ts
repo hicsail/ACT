@@ -94,11 +94,13 @@ export class TaskCompletionsService {
     });
   }
 
-  async getUploadUrl(taskCompletionId: TaskCompletionId, user: User): Promise<string> {
+  async getUploadUrl(taskId: string, user: User): Promise<string> {
     // Get the task completion
-    const taskCompletion = await this.findOne(taskCompletionId);
+    const taskCompletion = await this.findOne({
+      taskId, userId: user.id!
+    });
     if (!taskCompletion) {
-      throw new BadRequestException(`Task Completion not found: ${taskCompletionId}`);
+      throw new BadRequestException(`Task Completion not found: ${taskId}`);
     }
 
     // Get the name of the file

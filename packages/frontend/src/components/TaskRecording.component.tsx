@@ -9,21 +9,23 @@ import {
   TaskEntity
 } from '../client';
 import { useNavigate } from 'react-router';
+import { useUser } from '../contexts/User.context';
 
 export interface TaskRecordingProps {
   task: TaskEntity;
   taskCompletion: TaskCompletionEntity;
 }
 
-export const TaskRecording: FC<TaskRecordingProps> = ({ task, taskCompletion }) => {
+export const TaskRecording: FC<TaskRecordingProps> = ({ task }) => {
   const navigate = useNavigate();
+  const { user } = useUser();
 
   const handleVideoComplete = async (_blobURL: string, blob: Blob) => {
     // Get link to upload the video
     const uploadUrlResult = await taskCompletionsControllerGetVideoUploadUrl({
-      path: {
-        id: taskCompletion.id
-      }
+      query: {
+        taskId: task.id
+      },
     });
 
     if (uploadUrlResult.error || !uploadUrlResult.data) {
@@ -49,7 +51,10 @@ export const TaskRecording: FC<TaskRecordingProps> = ({ task, taskCompletion }) 
 
     // Mark as complete
     const updateResult = await taskCompletionsControllerUpdate({
-      path: { id: taskCompletion.id },
+      query: {
+        taskId: task.id,
+        userId: user!.id
+      },
       body: { complete: true }
     });
 
