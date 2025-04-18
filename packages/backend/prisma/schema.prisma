@@ -35,6 +35,7 @@ model Task {
   problemDescription String    @db.LongText
   taskDetails        String    @db.LongText
   prompts            Json
+  order              Int
 }
 
 model TaskCompletion {
