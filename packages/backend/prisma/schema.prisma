@@ -35,13 +35,15 @@ model Task {
   problemDescription String    @db.LongText
   taskDetails        String    @db.LongText
   prompts            Json
+  order              Int
 }
 
 model TaskCompletion {
-  id                 String    @id @default(uuid())
   task               Task      @relation(fields: [taskId], references: [id])
   taskId             String
   complete           Boolean
   video              String
-  user               String
+  userId             String
+
+  @@id(name: "id", [taskId, userId])
 }

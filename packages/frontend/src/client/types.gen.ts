@@ -41,6 +41,10 @@ export type CreateTaskDto = {
      * Prompts for the user to meet
      */
     prompts: Array<string>;
+    /**
+     * Order the tasks are presented to the user
+     */
+    order: number;
 };
 
 export type TaskEntity = {
@@ -90,6 +94,10 @@ export type TaskEntity = {
     prompts: {
         [key: string]: unknown;
     };
+    /**
+     * Order the tasks are presented to the user
+     */
+    order: number;
 };
 
 export type UpdateTaskDto = {
@@ -153,14 +161,10 @@ export type CreateTaskCompletionDto = {
     /**
      * The ID of the user who made the completion
      */
-    user: string;
+    userId: string;
 };
 
 export type TaskCompletionEntity = {
-    /**
-     * Unique ID fo the completion
-     */
-    id: string;
     /**
      * The ID of the task associated with the completion
      */
@@ -176,7 +180,7 @@ export type TaskCompletionEntity = {
     /**
      * The ID of the user who made the completion
      */
-    user: string;
+    userId: string;
 };
 
 export type UpdateTaskCompletionDto = {
@@ -195,7 +199,7 @@ export type UpdateTaskCompletionDto = {
     /**
      * The ID of the user who made the completion
      */
-    user?: string;
+    userId?: string;
 };
 
 export type AppControllerGetHelloData = {
@@ -399,6 +403,26 @@ export type TaskSetControllerSetActiveResponses = {
 
 export type TaskSetControllerSetActiveResponse = TaskSetControllerSetActiveResponses[keyof TaskSetControllerSetActiveResponses];
 
+export type TaskCompletionsControllerRemoveData = {
+    body?: never;
+    path?: never;
+    query: {
+        /**
+         * The task of the completion
+         */
+        taskId: string;
+        /**
+         * The user the completion is assocaited with
+         */
+        userId: string;
+    };
+    url: '/taskCompletions';
+};
+
+export type TaskCompletionsControllerRemoveResponses = {
+    200: unknown;
+};
+
 export type TaskCompletionsControllerFindAllData = {
     body?: never;
     path?: never;
@@ -411,6 +435,28 @@ export type TaskCompletionsControllerFindAllResponses = {
 };
 
 export type TaskCompletionsControllerFindAllResponse = TaskCompletionsControllerFindAllResponses[keyof TaskCompletionsControllerFindAllResponses];
+
+export type TaskCompletionsControllerUpdateData = {
+    body: UpdateTaskCompletionDto;
+    path?: never;
+    query: {
+        /**
+         * The task of the completion
+         */
+        taskId: string;
+        /**
+         * The user the completion is assocaited with
+         */
+        userId: string;
+    };
+    url: '/taskCompletions';
+};
+
+export type TaskCompletionsControllerUpdateResponses = {
+    default: TaskCompletionEntity;
+};
+
+export type TaskCompletionsControllerUpdateResponse = TaskCompletionsControllerUpdateResponses[keyof TaskCompletionsControllerUpdateResponses];
 
 export type TaskCompletionsControllerCreateData = {
     body: CreateTaskCompletionDto;
@@ -425,26 +471,20 @@ export type TaskCompletionsControllerCreateResponses = {
 
 export type TaskCompletionsControllerCreateResponse = TaskCompletionsControllerCreateResponses[keyof TaskCompletionsControllerCreateResponses];
 
-export type TaskCompletionsControllerRemoveData = {
-    body?: never;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/taskCompletions/{id}';
-};
-
-export type TaskCompletionsControllerRemoveResponses = {
-    200: unknown;
-};
-
 export type TaskCompletionsControllerFindOneData = {
     body?: never;
-    path: {
-        id: string;
+    path?: never;
+    query: {
+        /**
+         * The task of the completion
+         */
+        taskId: string;
+        /**
+         * The user the completion is assocaited with
+         */
+        userId: string;
     };
-    query?: never;
-    url: '/taskCompletions/{id}';
+    url: '/taskCompletions/id';
 };
 
 export type TaskCompletionsControllerFindOneResponses = {
@@ -452,21 +492,6 @@ export type TaskCompletionsControllerFindOneResponses = {
 };
 
 export type TaskCompletionsControllerFindOneResponse = TaskCompletionsControllerFindOneResponses[keyof TaskCompletionsControllerFindOneResponses];
-
-export type TaskCompletionsControllerUpdateData = {
-    body: UpdateTaskCompletionDto;
-    path: {
-        id: string;
-    };
-    query?: never;
-    url: '/taskCompletions/{id}';
-};
-
-export type TaskCompletionsControllerUpdateResponses = {
-    default: TaskCompletionEntity;
-};
-
-export type TaskCompletionsControllerUpdateResponse = TaskCompletionsControllerUpdateResponses[keyof TaskCompletionsControllerUpdateResponses];
 
 export type TaskCompletionsControllerFindOrCreateByUserTaskData = {
     body?: never;
@@ -508,13 +533,26 @@ export type TaskCompletionsControllerFindOrCreateByTaskResponses = {
 
 export type TaskCompletionsControllerFindOrCreateByTaskResponse = TaskCompletionsControllerFindOrCreateByTaskResponses[keyof TaskCompletionsControllerFindOrCreateByTaskResponses];
 
+export type TaskCompletionsControllerGetNextIncompleteData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/taskCompletions/next-incomplete';
+};
+
+export type TaskCompletionsControllerGetNextIncompleteResponses = {
+    default: TaskCompletionEntity;
+};
+
+export type TaskCompletionsControllerGetNextIncompleteResponse = TaskCompletionsControllerGetNextIncompleteResponses[keyof TaskCompletionsControllerGetNextIncompleteResponses];
+
 export type TaskCompletionsControllerGetVideoUploadUrlData = {
     body?: never;
-    path: {
-        id: string;
+    path?: never;
+    query: {
+        taskId: string;
     };
-    query?: never;
-    url: '/taskCompletions/upload-url/{id}';
+    url: '/taskCompletions/upload-url';
 };
 
 export type TaskCompletionsControllerGetVideoUploadUrlResponses = {

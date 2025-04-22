@@ -11,6 +11,7 @@ import { User } from 'casdoor-nodejs-sdk/lib/cjs/user';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { S3_PROVIDER } from 'src/s3/s3.provider';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { TaskCompletionId } from './dto/task-completion-id';
 
 @Injectable()
 export class TaskCompletionsService {
@@ -44,22 +45,25 @@ export class TaskCompletionsService {
     });
   }
 
-  findOne(id: string): Promise<TaskCompletion | null> {
+  findOne(taskCompletionId: TaskCompletionId): Promise<TaskCompletion | null> {
     return this.prismaService.taskCompletion.findUnique({
-      where: { id }
+      where: { id: taskCompletionId }
     });
   }
 
-  update(id: string, updateTaskCompletionDto: UpdateTaskCompletionDto): Promise<TaskCompletion | null> {
+  update(
+    taskCompletionId: TaskCompletionId,
+    updateTaskCompletionDto: UpdateTaskCompletionDto
+  ): Promise<TaskCompletion | null> {
     return this.prismaService.taskCompletion.update({
-      where: { id },
+      where: { id: taskCompletionId },
       data: updateTaskCompletionDto
     });
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(taskCompletionId: TaskCompletionId): Promise<void> {
     await this.prismaService.taskCompletion.delete({
-      where: { id }
+      where: { id: taskCompletionId }
     });
   }
 
@@ -70,7 +74,7 @@ export class TaskCompletionsService {
   async findOrCreateByUserTask(findQuery: FindByUserTask): Promise<TaskCompletion> {
     // Check if one exists
     const existing = await this.prismaService.taskCompletion.findFirst({
-      where: { user: findQuery.user, taskId: findQuery.task }
+      where: { userId: findQuery.user, taskId: findQuery.task }
     });
 
     // If an existing task completion is found, return it
@@ -89,15 +93,18 @@ export class TaskCompletionsService {
       taskId: findQuery.task,
       complete: false,
       video: '',
-      user: findQuery.user
+      userId: findQuery.user
     });
   }
 
-  async getUploadUrl(taskCompletionId: string, user: User): Promise<string> {
+  async getUploadUrl(taskId: string, user: User): Promise<string> {
     // Get the task completion
-    const taskCompletion = await this.findOne(taskCompletionId);
+    const taskCompletion = await this.findOne({
+      taskId,
+      userId: user.id!
+    });
     if (!taskCompletion) {
-      throw new BadRequestException(`Task Completion not found: ${taskCompletionId}`);
+      throw new BadRequestException(`Task Completion not found: ${taskId}`);
     }
 
     // Get the name of the file
@@ -108,8 +115,56 @@ export class TaskCompletionsService {
     return getSignedUrl(this.s3, request, { expiresIn: this.expiration });
   }
 
+  /**
+   * Get the next task completion for the user to complete or null if non are left
+   */
+  async getNextTaskCompletion(userId: string): Promise<TaskCompletion | null> {
+    // First, make sure the task completions for the user exists
+    await this.getOrCreateTaskCompletions(userId);
+
+    // Now we know all of the task completions exist, its just a matter of
+    // getting the one that matches the following criteria
+    //
+    // 1. From the active task set
+    // 2. From the list of incomplete task completions
+    // 3. Ordered by the task's order field
+    return this.prismaService.taskCompletion.findFirst({
+      where: {
+        complete: false,
+        userId,
+        task: {
+          taskSet: {
+            active: true
+          }
+        }
+      },
+      orderBy: {
+        task: {
+          order: 'asc'
+        }
+      }
+    });
+  }
+
   private getVideoNameFormat(taskCompletion: TaskCompletion, user: User): string {
     // TODO: Determine site ID and descriptor ID
     return `${this.taskIteration}_SiteId_${user.id!}_${taskCompletion.taskId}.mp4`;
+  }
+
+  /**
+   * Gets or creates all the task completions based on the active task set
+   */
+  private async getOrCreateTaskCompletions(userId: string): Promise<TaskCompletion[]> {
+    const activeTasksIDs = (await this.taskService.getActiveTasks()).map((task) => task.id);
+
+    return await this.prismaService.$transaction(
+      activeTasksIDs.map((taskId) =>
+        this.prismaService.taskCompletion.upsert({
+          where: { id: { taskId, userId } },
+          update: {},
+          create: { taskId, userId, complete: false, video: '' }
+        })
+      )
+    );
   }
 }

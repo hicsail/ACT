@@ -1,30 +1,48 @@
-import { Stack } from '@mui/material';
 import { FC, useEffect, useState } from 'react';
-import { TaskEntity, tasksControllerGetActiveTasks } from '../client';
+import {
+  TaskCompletionEntity,
+  taskCompletionsControllerGetNextIncomplete,
+  TaskEntity,
+  tasksControllerFindOne
+} from '../client';
 import { TaskActivity } from './TaskActivity.component';
 
 export const TaskList: FC = () => {
-  const [taskList, setTaskList] = useState<TaskEntity[]>([]);
+  const [task, setTask] = useState<TaskEntity | null>(null);
+  const [taskCompletion, setTaskCompletion] = useState<TaskCompletionEntity | null>(null);
 
   const getActiveTasks = async () => {
-    const taskResponse = await tasksControllerGetActiveTasks();
-
-    if (taskResponse.error || !taskResponse.data) {
+    // Get the next incomplete task completion
+    const taskCompletionResponse = await taskCompletionsControllerGetNextIncomplete();
+    if (taskCompletionResponse.response.status == 404) {
+      // TODO: Handle no more tasks
+      return;
+    }
+    if (taskCompletionResponse.error || !taskCompletionResponse.data) {
       // TODO: Error handling
       return;
     }
-    setTaskList(taskResponse.data);
+    const taskCompletion = taskCompletionResponse.data;
+
+    // Now get the cooresponding task
+    const taskResponse = await tasksControllerFindOne({
+      path: { id: taskCompletion.taskId }
+    });
+    if (taskResponse.error || !taskResponse.data) {
+      // TODO: Handle error
+      return;
+    }
+
+    console.log(taskCompletion);
+
+    // Now update the fields
+    setTask(taskResponse.data);
+    setTaskCompletion(taskCompletionResponse.data);
   };
 
   useEffect(() => {
     getActiveTasks();
   }, []);
 
-  return (
-    <Stack>
-      {taskList.map((task) => (
-        <TaskActivity task={task} key={task.id} />
-      ))}
-    </Stack>
-  );
+  return <>{task && taskCompletion && <TaskActivity task={task} taskCompletion={taskCompletion} key={task.id} />}</>;
 };

@@ -2,8 +2,25 @@ import { createContext, FC, useContext, useEffect, useState } from 'react';
 
 export const TOKEN_KEY = 'CASDOOR_JWT';
 
+const parseJwt = (token: string) => {
+  var base64Url = token.split('.')[1];
+  var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  var jsonPayload = decodeURIComponent(
+    window
+      .atob(base64)
+      .split('')
+      .map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join('')
+  );
+
+  return JSON.parse(jsonPayload);
+};
+
 export interface UserInfo {
   token: string;
+  id: string;
 }
 
 export interface UserContextPayload {
@@ -29,14 +46,16 @@ export const UserContextProvider: FC<UserProviderProps> = ({ children }) => {
   useEffect(() => {
     const existingToken = localStorage.getItem(TOKEN_KEY);
     if (existingToken && !hasJWTExpired(existingToken)) {
-      setUser({ token: existingToken });
+      const user = parseJwt(existingToken);
+      setUser({ token: existingToken, id: user.id });
     } else {
       setUser(undefined);
     }
   }, []);
 
   const handleLogin = (token: string) => {
-    setUser({ token });
+    const user = parseJwt(token);
+    setUser({ token, id: user.id });
     localStorage.setItem(TOKEN_KEY, token);
   };
 
