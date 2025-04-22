@@ -15,6 +15,7 @@ async function main() {
 
   // Set 2 tasks
   await prisma.task.create({ data: { taskSetId: set2.id, ...seed.task2_1 } });
+  await prisma.task.create({ data: { taskSetId: set2.id, ...seed.task2_2 } });
 }
 
 main()

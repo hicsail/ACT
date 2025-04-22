@@ -106,3 +106,25 @@ You are going to enact a think aloud for students to witness your expert thinkin
   ],
   order: 1
 };
+
+export const task2_2: Omit<CreateTaskDto, 'taskSetId'> = {
+  category: 'math',
+  title: 'Task 2.2 Think Aloud',
+  preview: 'Click "start" to begin your this task. Fourth grade math context.',
+  previewImage: '',
+  timeSeconds: 5 * 60,
+  description: `
+You are working with your fourth-grade class on word problems. Your students can solve addition and subtraction problems, but the complexity of word problems can challenge your students. They are also familiar with adding and subtracting fractions with like denominators.
+You are going to enact a think aloud for students to witness your expert thinking as you make sense of the context and quantities in the word problem, and as you monitor your progress towards your problem-solving goals.
+  `,
+  problemDescription: 'Diego and his cousin are sharing a pie. Diego ate 4/10 of the pie. His cousin ate some more. They ate 9/10 of the pie together. How much of the pie did his cousin eat?',
+  taskDetails: 'Provide a think aloud to make sense of the word problem.',
+  prompts: [
+    'Share the purpose for your think aloud with your students.',
+    'Narrate your thinking about how you approach understanding this problem.',
+    'Address how you make sense of the context, quantities, and mathematical relationships.',
+    'Demonstrate how you might represent the context of the problem with manipulatives, a diagram or other visual.',
+    'Ensure that you are modeling accuracy, clarity, and precision to mathematical language.'
+  ],
+  order: 2
+};
