@@ -50,7 +50,7 @@ export class TaskCompletionsController {
 
   @Get('/id')
   @ApiResponse({ type: TaskCompletionEntity })
-  async findOne(@Query() taskCompletionId: TaskCompletionId) : Promise<TaskCompletionEntity> {
+  async findOne(@Query() taskCompletionId: TaskCompletionId): Promise<TaskCompletionEntity> {
     const found = await this.taskCompletionsService.findOne(taskCompletionId);
     if (!found) {
       throw new NotFoundException(`Task Completion with id ${taskCompletionId} not found`);

@@ -51,7 +51,10 @@ export class TaskCompletionsService {
     });
   }
 
-  update(taskCompletionId: TaskCompletionId, updateTaskCompletionDto: UpdateTaskCompletionDto): Promise<TaskCompletion | null> {
+  update(
+    taskCompletionId: TaskCompletionId,
+    updateTaskCompletionDto: UpdateTaskCompletionDto
+  ): Promise<TaskCompletion | null> {
     return this.prismaService.taskCompletion.update({
       where: { id: taskCompletionId },
       data: updateTaskCompletionDto
@@ -97,7 +100,8 @@ export class TaskCompletionsService {
   async getUploadUrl(taskId: string, user: User): Promise<string> {
     // Get the task completion
     const taskCompletion = await this.findOne({
-      taskId, userId: user.id!
+      taskId,
+      userId: user.id!
     });
     if (!taskCompletion) {
       throw new BadRequestException(`Task Completion not found: ${taskId}`);
@@ -151,14 +155,16 @@ export class TaskCompletionsService {
    * Gets or creates all the task completions based on the active task set
    */
   private async getOrCreateTaskCompletions(userId: string): Promise<TaskCompletion[]> {
-    const activeTasksIDs = (await this.taskService.getActiveTasks()).map(task => task.id);
+    const activeTasksIDs = (await this.taskService.getActiveTasks()).map((task) => task.id);
 
-    return await this.prismaService.$transaction(activeTasksIDs.map(taskId => (
-      this.prismaService.taskCompletion.upsert({
-        where: { id: { taskId, userId }},
-        update: {},
-        create: { taskId, userId, complete: false, video: '' }
-      })
-    )));
+    return await this.prismaService.$transaction(
+      activeTasksIDs.map((taskId) =>
+        this.prismaService.taskCompletion.upsert({
+          where: { id: { taskId, userId } },
+          update: {},
+          create: { taskId, userId, complete: false, video: '' }
+        })
+      )
+    );
   }
 }

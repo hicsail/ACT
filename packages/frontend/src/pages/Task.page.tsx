@@ -15,7 +15,6 @@ export const Task: FC = () => {
     setTask(state.task);
   }, []);
 
-
   return (
     <>
       {task && view == 'instructions' && <TaskInstructions task={task} onStart={() => setView('recording')} />}

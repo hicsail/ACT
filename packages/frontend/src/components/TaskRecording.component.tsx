@@ -25,7 +25,7 @@ export const TaskRecording: FC<TaskRecordingProps> = ({ task }) => {
     const uploadUrlResult = await taskCompletionsControllerGetVideoUploadUrl({
       query: {
         taskId: task.id
-      },
+      }
     });
 
     if (uploadUrlResult.error || !uploadUrlResult.data) {

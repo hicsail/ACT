@@ -1,5 +1,10 @@
 import { FC, useEffect, useState } from 'react';
-import { TaskCompletionEntity, taskCompletionsControllerGetNextIncomplete, TaskEntity, tasksControllerFindOne } from '../client';
+import {
+  TaskCompletionEntity,
+  taskCompletionsControllerGetNextIncomplete,
+  TaskEntity,
+  tasksControllerFindOne
+} from '../client';
 import { TaskActivity } from './TaskActivity.component';
 
 export const TaskList: FC = () => {
@@ -39,9 +44,5 @@ export const TaskList: FC = () => {
     getActiveTasks();
   }, []);
 
-  return (
-    <>
-      {task && taskCompletion && <TaskActivity task={task} taskCompletion={taskCompletion} key={task.id} /> }
-    </>
-  );
+  return <>{task && taskCompletion && <TaskActivity task={task} taskCompletion={taskCompletion} key={task.id} />}</>;
 };

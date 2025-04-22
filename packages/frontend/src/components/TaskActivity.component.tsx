@@ -16,7 +16,7 @@ export const TaskActivity: FC<TaskActivityProps> = ({ task, taskCompletion }) =>
     if (!taskCompletion) {
       throw new Error(`Cannot navigate to the task completion, no task prescent`);
     }
-    navigate(`/taskcompletion`, { state: { taskCompletion, task }});
+    navigate(`/taskcompletion`, { state: { taskCompletion, task } });
   };
 
   return (
