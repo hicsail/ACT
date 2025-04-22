@@ -39,11 +39,12 @@ model Task {
 }
 
 model TaskCompletion {
+  id                 String    @default(uuid())
   task               Task      @relation(fields: [taskId], references: [id])
   taskId             String
   complete           Boolean
   video              String
   userId             String
 
-  @@id(name: "id", [taskId, userId])
+  @@id(name: "taskCompletionId", [taskId, userId])
 }

@@ -47,7 +47,7 @@ export class TaskCompletionsService {
 
   findOne(taskCompletionId: TaskCompletionId): Promise<TaskCompletion | null> {
     return this.prismaService.taskCompletion.findUnique({
-      where: { id: taskCompletionId }
+      where: { taskCompletionId: taskCompletionId }
     });
   }
 
@@ -56,14 +56,14 @@ export class TaskCompletionsService {
     updateTaskCompletionDto: UpdateTaskCompletionDto
   ): Promise<TaskCompletion | null> {
     return this.prismaService.taskCompletion.update({
-      where: { id: taskCompletionId },
+      where: { taskCompletionId: taskCompletionId },
       data: updateTaskCompletionDto
     });
   }
 
   async remove(taskCompletionId: TaskCompletionId): Promise<void> {
     await this.prismaService.taskCompletion.delete({
-      where: { id: taskCompletionId }
+      where: { taskCompletionId: taskCompletionId }
     });
   }
 
@@ -160,7 +160,7 @@ export class TaskCompletionsService {
     return await this.prismaService.$transaction(
       activeTasksIDs.map((taskId) =>
         this.prismaService.taskCompletion.upsert({
-          where: { id: { taskId, userId } },
+          where: { taskCompletionId: { taskId, userId } },
           update: {},
           create: { taskId, userId, complete: false, video: '' }
         })

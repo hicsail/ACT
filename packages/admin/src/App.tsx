@@ -8,6 +8,7 @@ function App() {
   return (
     <Admin dataProvider={dataSource}>
       <Resource name="tasks" list={ListGuesser} />
+      <Resource name="taskCompletions" list={ListGuesser} />
     </Admin>
   );
 }
