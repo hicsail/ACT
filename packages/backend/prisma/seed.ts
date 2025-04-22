@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import { CreateTaskSetDto } from '../src/tasks/dto/create-taskset.dto';
 import * as seed from './seed-data';
 
 const prisma = new PrismaClient();
@@ -9,8 +8,13 @@ async function main() {
   const set1 = await prisma.taskSet.create({ data: { active: true, ...seed.set1Content } });
   const set2 = await prisma.taskSet.create({ data: { active: false, ...seed.set2Content } });
 
-  // Add in the tasks themselves
-  await prisma.task.create({ data: { taskSetId: set1.id, ...seed.task1_1} });
+  // Set 1 tasks
+  await prisma.task.create({ data: { taskSetId: set1.id, ...seed.task1_1 } });
+  await prisma.task.create({ data: { taskSetId: set1.id, ...seed.task1_2 } });
+  await prisma.task.create({ data: { taskSetId: set1.id, ...seed.task1_3 } });
+
+  // Set 2 tasks
+  await prisma.task.create({ data: { taskSetId: set2.id, ...seed.task2_1 } });
 }
 
 main()
