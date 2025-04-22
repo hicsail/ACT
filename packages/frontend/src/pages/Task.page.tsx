@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
-import { TaskCompletionEntity, taskCompletionsControllerFindOne, TaskEntity, tasksControllerFindOne } from '../client';
+import { TaskCompletionEntity, TaskEntity } from '../client';
 import { TaskInstructions } from '../components/TaskInstructions.component';
 import { TaskRecording } from '../components/TaskRecording.component';
 
