@@ -50,7 +50,6 @@ export const TaskRecording: FC<TaskRecordingProps> = ({ task }) => {
     }
 
     // Mark as complete
-    console.log(user);
     const updateResult = await taskCompletionsControllerUpdate({
       query: {
         taskId: task.id,
