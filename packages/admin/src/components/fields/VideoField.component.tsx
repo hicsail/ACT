@@ -1,7 +1,7 @@
-import { useRecordContext } from "react-admin";
-import { FC, useEffect, useState, useRef } from "react";
-import { taskCompletionsControllerGetVideoDownloadUrl } from "../../client";
-import { Box } from "@mui/material";
+import { useRecordContext } from 'react-admin';
+import { FC, useEffect, useState, useRef } from 'react';
+import { taskCompletionsControllerGetVideoDownloadUrl } from '../../client';
+import { Box } from '@mui/material';
 
 interface VideoViewProps {
   video: string;
@@ -45,8 +45,8 @@ export const VideoField: FC<{ source: string }> = ({ source }) => {
   const getVideoURL = async () => {
     const urlResponse = await taskCompletionsControllerGetVideoDownloadUrl({
       query: {
-        video: record[source],
-      },
+        video: record[source]
+      }
     });
 
     if (urlResponse.error || !urlResponse.data) {
@@ -59,7 +59,7 @@ export const VideoField: FC<{ source: string }> = ({ source }) => {
   };
 
   useEffect(() => {
-    if (!record || !record["complete"]) {
+    if (!record || !record['complete']) {
       setUrl(null);
       return;
     }
