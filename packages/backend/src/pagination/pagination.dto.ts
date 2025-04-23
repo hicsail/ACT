@@ -108,6 +108,14 @@ const filterTransform = (params: TransformFnParams): FilterField => {
     throw new BadRequestException(`Expected an object to be passed in`);
   }
 
+  // If the subfield is an array, need to transform the payload to
+  // match Prism's format
+  for (const key in raw) {
+    if (Array.isArray(raw[key])) {
+      raw[key] = { in: raw[key] };
+    }
+  }
+
   return raw;
 };
 
