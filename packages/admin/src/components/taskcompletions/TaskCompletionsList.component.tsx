@@ -8,7 +8,6 @@ export const TaskCompletionsList: FC = () => {
     <List>
       <Datagrid>
         <BooleanField source='complete' />
-        <TextField source='video' />
         <VideoField source='video' />
       </Datagrid>
     </List>
