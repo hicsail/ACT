@@ -1,7 +1,7 @@
 import { TaskCompletion } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateTaskCompletionDto implements Omit<TaskCompletion, 'completion'> {
+export class CreateTaskCompletionDto implements Omit<TaskCompletion, 'completion' | 'id'> {
   @ApiProperty({
     description: 'The ID of the task associated with the completion'
   })

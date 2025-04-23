@@ -3,6 +3,11 @@ import { TaskCompletion } from '@prisma/client';
 
 export class TaskCompletionEntity implements TaskCompletion {
   @ApiProperty({
+    description: 'Generated ID'
+  })
+  id: string;
+
+  @ApiProperty({
     description: 'The ID of the task associated with the completion'
   })
   taskId: string;

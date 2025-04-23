@@ -8,7 +8,7 @@ import { TasksService } from '../tasks/tasks.service';
 import { FindByUserTask } from './dto/find-by-user-task.dto';
 import { ConfigService } from '@nestjs/config';
 import { User } from 'casdoor-nodejs-sdk/lib/cjs/user';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { S3_PROVIDER } from 'src/s3/s3.provider';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { TaskCompletionId } from './dto/task-completion-id';
@@ -47,7 +47,7 @@ export class TaskCompletionsService {
 
   findOne(taskCompletionId: TaskCompletionId): Promise<TaskCompletion | null> {
     return this.prismaService.taskCompletion.findUnique({
-      where: { id: taskCompletionId }
+      where: { taskCompletionId: taskCompletionId }
     });
   }
 
@@ -56,14 +56,14 @@ export class TaskCompletionsService {
     updateTaskCompletionDto: UpdateTaskCompletionDto
   ): Promise<TaskCompletion | null> {
     return this.prismaService.taskCompletion.update({
-      where: { id: taskCompletionId },
+      where: { taskCompletionId: taskCompletionId },
       data: updateTaskCompletionDto
     });
   }
 
   async remove(taskCompletionId: TaskCompletionId): Promise<void> {
     await this.prismaService.taskCompletion.delete({
-      where: { id: taskCompletionId }
+      where: { taskCompletionId: taskCompletionId }
     });
   }
 
@@ -115,6 +115,11 @@ export class TaskCompletionsService {
     return getSignedUrl(this.s3, request, { expiresIn: this.expiration });
   }
 
+  async getDownloadUrl(video: string): Promise<string> {
+    const request = new GetObjectCommand({ Bucket: this.bucket, Key: video });
+    return getSignedUrl(this.s3, request, { expiresIn: this.expiration });
+  }
+
   /**
    * Get the next task completion for the user to complete or null if non are left
    */
@@ -148,7 +153,11 @@ export class TaskCompletionsService {
 
   private getVideoNameFormat(taskCompletion: TaskCompletion, user: User): string {
     // TODO: Determine site ID and descriptor ID
-    return `${this.taskIteration}_SiteId_${user.id!}_${taskCompletion.taskId}.mp4`;
+    return this.getVideoNameFormatTask(taskCompletion.taskId, user.id!);
+  }
+
+  private getVideoNameFormatTask(taskId: string, userId: string): string {
+    return `${this.taskIteration}_SiteId_${userId!}_${taskId}.mp4`;
   }
 
   /**
@@ -160,9 +169,9 @@ export class TaskCompletionsService {
     return await this.prismaService.$transaction(
       activeTasksIDs.map((taskId) =>
         this.prismaService.taskCompletion.upsert({
-          where: { id: { taskId, userId } },
+          where: { taskCompletionId: { taskId, userId } },
           update: {},
-          create: { taskId, userId, complete: false, video: '' }
+          create: { taskId, userId, complete: false, video: this.getVideoNameFormatTask(taskId, userId) }
         })
       )
     );
