@@ -8,7 +8,7 @@ import { TasksService } from '../tasks/tasks.service';
 import { FindByUserTask } from './dto/find-by-user-task.dto';
 import { ConfigService } from '@nestjs/config';
 import { User } from 'casdoor-nodejs-sdk/lib/cjs/user';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { S3_PROVIDER } from 'src/s3/s3.provider';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { TaskCompletionId } from './dto/task-completion-id';
@@ -112,6 +112,11 @@ export class TaskCompletionsService {
 
     // Construct the upload request
     const request = new PutObjectCommand({ Bucket: this.bucket, Key: filename });
+    return getSignedUrl(this.s3, request, { expiresIn: this.expiration });
+  }
+
+  async getDownloadUrl(video: string): Promise<string> {
+    const request = new GetObjectCommand({ Bucket: this.bucket, Key: video });
     return getSignedUrl(this.s3, request, { expiresIn: this.expiration });
   }
 

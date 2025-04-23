@@ -8,7 +8,6 @@ export const VideoField: FC<{ source: string}> = ({ source }) => {
   if (!record) {
     return null;
   }
-  console.log(record[source]);
 
   return <p>hi</p>;
 };

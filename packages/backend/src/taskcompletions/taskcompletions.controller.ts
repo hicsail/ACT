@@ -125,4 +125,13 @@ export class TaskCompletionsController {
     // TODO: Validate it is the correct user making the request
     return this.taskCompletionsService.getUploadUrl(taskId, user);
   }
+
+  @Get('/view-url')
+  @ApiOperation({
+    description: 'Get the presigned URL to download a video'
+  })
+  @ApiResponse({ type: String })
+  async getVideoDownloadURL(@Query('video') video: string): Promise<string> {
+    return this.taskCompletionsService.getDownloadUrl(video);
+  }
 }
