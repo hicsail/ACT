@@ -580,6 +580,19 @@ export type TaskCompletionsControllerGetVideoDownloadUrlResponses = {
 
 export type TaskCompletionsControllerGetVideoDownloadUrlResponse = TaskCompletionsControllerGetVideoDownloadUrlResponses[keyof TaskCompletionsControllerGetVideoDownloadUrlResponses];
 
+export type TaskCompletionsControllerDeleteVideoData = {
+    body?: never;
+    path?: never;
+    query: {
+        video: string;
+    };
+    url: '/taskCompletions/video';
+};
+
+export type TaskCompletionsControllerDeleteVideoResponses = {
+    200: unknown;
+};
+
 export type ClientOptions = {
     baseUrl: string;
 };

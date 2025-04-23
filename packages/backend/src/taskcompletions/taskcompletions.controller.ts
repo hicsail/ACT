@@ -134,4 +134,12 @@ export class TaskCompletionsController {
   async getVideoDownloadURL(@Query('video') video: string): Promise<string> {
     return this.taskCompletionsService.getDownloadUrl(video);
   }
+
+  @Delete('/video')
+  @ApiOperation({
+    description: 'Delete a video from the S3 bucket'
+  })
+  async deleteVideo(@Query('video') video: string): Promise<void> {
+    await this.taskCompletionsService.deleteVideo(video);
+  }
 }

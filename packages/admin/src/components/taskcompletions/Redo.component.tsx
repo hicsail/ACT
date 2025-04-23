@@ -1,7 +1,7 @@
 import { useRecordContext, useRefresh } from 'react-admin';
 import { FC } from 'react';
 import { Button } from '@mui/material';
-import { taskCompletionsControllerUpdate } from '../../client';
+import { taskCompletionsControllerDeleteVideo, taskCompletionsControllerUpdate } from '../../client';
 
 
 export const Redo: FC = () => {
@@ -28,6 +28,18 @@ export const Redo: FC = () => {
     if (updateResponse.error) {
       // TODO: Handle erorr
       console.error(updateResponse.error);
+    }
+
+    // Delete the video itself
+    const deleteResponse = await taskCompletionsControllerDeleteVideo({
+      query: {
+        video: record['video']
+      }
+    });
+
+    // Check for errors
+    if (deleteResponse.error) {
+      console.error(deleteResponse.error);
     }
 
     // Update the page

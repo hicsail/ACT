@@ -8,7 +8,7 @@ import { TasksService } from '../tasks/tasks.service';
 import { FindByUserTask } from './dto/find-by-user-task.dto';
 import { ConfigService } from '@nestjs/config';
 import { User } from 'casdoor-nodejs-sdk/lib/cjs/user';
-import { GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { S3_PROVIDER } from 'src/s3/s3.provider';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { TaskCompletionId } from './dto/task-completion-id';
@@ -149,6 +149,11 @@ export class TaskCompletionsService {
         }
       }
     });
+  }
+
+  async deleteVideo(video: string): Promise<void> {
+    const request = new DeleteObjectCommand({ Bucket: this.bucket, Key: video });
+    await this.s3.send(request);
   }
 
   private getVideoNameFormat(taskCompletion: TaskCompletion, user: User): string {
