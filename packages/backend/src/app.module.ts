@@ -8,6 +8,7 @@ import { TasksModule } from './tasks/tasks.module';
 import { PaginationModule } from './pagination/pagination.module';
 import { TaskCompletionsModule } from './taskcompletions/taskcompletions.module';
 import { S3Module } from './s3/s3.module';
+import { UsersModule } from './users/users.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -21,7 +22,8 @@ import configuration from './config/configuration';
     TasksModule,
     PaginationModule,
     TaskCompletionsModule,
-    S3Module
+    S3Module,
+    UsersModule
   ],
   controllers: [AppController],
   providers: [AppService]
