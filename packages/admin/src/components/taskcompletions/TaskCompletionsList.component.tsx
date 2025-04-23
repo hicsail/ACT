@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { BooleanField, Datagrid, List, TextField } from "react-admin";
+import { BooleanField, Datagrid, List } from "react-admin";
 import { VideoField } from "../fields/VideoField.component";
 
 export const TaskCompletionsList: FC = () => {
