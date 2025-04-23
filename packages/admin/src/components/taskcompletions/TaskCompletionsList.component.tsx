@@ -7,8 +7,8 @@ export const TaskCompletionsList: FC = () => {
   return (
     <List>
       <Datagrid>
-        <ReferenceField source='taskId' reference='tasks'>
-          <TextField source='title' />
+        <ReferenceField source="taskId" reference="tasks">
+          <TextField source="title" />
         </ReferenceField>
         <BooleanField source="complete" />
         <VideoField source="video" />
