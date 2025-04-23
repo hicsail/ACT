@@ -6,6 +6,6 @@ import { CasdoorModule } from '../casdoor/casdoor.module';
 @Module({
   imports: [CasdoorModule],
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [UsersService]
 })
 export class UsersModule {}

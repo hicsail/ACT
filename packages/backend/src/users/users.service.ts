@@ -26,6 +26,7 @@ export class UsersService {
 
   async count(): Promise<number> {
     // Passing in a boolean for "isOnline" seems to result in an error
-    return (await this.casdoor.getUserCount(0 as any)).data;
+    // Also the return types do not match
+    return ((await this.casdoor.getUserCount(0 as any)).data as any).data;
   }
 }

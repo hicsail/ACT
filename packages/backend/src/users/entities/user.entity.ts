@@ -2,6 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
 export class UserEntity {
+  @ApiProperty({ description: 'Unique ID of the user' })
+  @Expose()
+  id: string;
+
   @ApiProperty({ description: 'First name of the user' })
   @Expose()
   firstName: string;
