@@ -60,6 +60,7 @@ export const VideoField: FC<{ source: string }> = ({ source }) => {
 
   useEffect(() => {
     if (!record || !record["complete"]) {
+      setUrl(null);
       return;
     }
 
