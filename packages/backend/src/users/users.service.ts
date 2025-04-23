@@ -1,6 +1,4 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { CASDOOR_PROVIDER } from 'src/casdoor/casdoor.provider';
 import { SDK as CasdoorSDK } from 'casdoor-nodejs-sdk';
 import { PaginationDTO } from 'src/pagination/pagination.dto';
@@ -18,15 +16,16 @@ export class UsersService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string): Promise<UserEntity | null> {
+    const found = await this.casdoor.getUser(id);
+    if (found.status == 404) {
+      return null;
+    }
+    return plainToInstance(UserEntity, found.data.data);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async count(): Promise<number> {
+    // Passing in a boolean for "isOnline" seems to result in an error
+    return (await this.casdoor.getUserCount(0 as any)).data;
   }
 }

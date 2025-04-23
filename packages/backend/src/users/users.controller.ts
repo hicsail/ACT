@@ -1,8 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Response } from '@nestjs/common';
+import { Controller, Get, Param, Query, Response } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { Response as Res } from 'express';
-import { PaginationDTO } from 'src/pagination/pagination.dto';
+import { PaginationDTO, makeContentRange } from 'src/pagination/pagination.dto';
 
 @Controller('users')
 export class UsersController {
@@ -10,21 +9,16 @@ export class UsersController {
 
   @Get()
   async findAll(@Query() pagination: PaginationDTO, @Response() res: Res) {
+    // Determine content-range header
+    const total = await this.usersService.count();
+    console.log(total);
+    res.setHeader('Content-Range', makeContentRange('tasks', pagination, total));
+
     return res.json(await this.usersService.findAll(pagination));
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.usersService.remove(+id);
+    return this.usersService.findOne(id);
   }
 }
