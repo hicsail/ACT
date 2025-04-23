@@ -1,7 +1,7 @@
-import { useRecordContext } from 'react-admin';
-import { FC, useEffect, useState, useRef } from 'react';
-import { taskCompletionsControllerGetVideoDownloadUrl } from '../../client';
-import { Box } from '@mui/material';
+import { useRecordContext } from "react-admin";
+import { FC, useEffect, useState, useRef } from "react";
+import { taskCompletionsControllerGetVideoDownloadUrl } from "../../client";
+import { Box } from "@mui/material";
 
 interface VideoViewProps {
   video: string;
@@ -27,20 +27,14 @@ const VideoView: FC<VideoViewProps> = ({ video, maxSize }) => {
 
   return (
     <Box sx={{ maxWidth: maxSize }}>
-      <video
-        width={maxSize}
-        ref={videoRef}
-        autoPlay={false}
-        controls={true}
-      >
+      <video width={maxSize} ref={videoRef} autoPlay={false} controls={true}>
         <source src={video} />
       </video>
     </Box>
   );
 };
 
-
-export const VideoField: FC<{ source: string}> = ({ source }) => {
+export const VideoField: FC<{ source: string }> = ({ source }) => {
   const record = useRecordContext();
   const [url, setUrl] = useState<string | null>(null);
 
@@ -51,8 +45,8 @@ export const VideoField: FC<{ source: string}> = ({ source }) => {
   const getVideoURL = async () => {
     const urlResponse = await taskCompletionsControllerGetVideoDownloadUrl({
       query: {
-        video: record[source]
-      }
+        video: record[source],
+      },
     });
 
     if (urlResponse.error || !urlResponse.data) {
@@ -65,14 +59,12 @@ export const VideoField: FC<{ source: string}> = ({ source }) => {
   };
 
   useEffect(() => {
-    if (!record || !record['complete']) {
+    if (!record || !record["complete"]) {
       return;
     }
 
     getVideoURL();
   }, [record]);
 
-  return (
-    url && <VideoView video={url} maxSize={300} />
-  );
+  return url && <VideoView video={url} maxSize={300} />;
 };
