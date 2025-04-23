@@ -1,10 +1,11 @@
 import { FC } from 'react';
-import { BooleanField, Datagrid, List, ReferenceField, TextInput, TextField } from 'react-admin';
+import { BooleanField, Datagrid, List, ReferenceField, TextInput, TextField, ReferenceInput } from 'react-admin';
 import { VideoField } from '../fields/VideoField.component';
 import { Redo } from './Redo.component';
 
 const taskCompletionsFilters = [
-  <TextInput label='User' source='userId' />
+  <TextInput label='User' source='userId' />,
+  <ReferenceInput source='taskId' reference='tasks' sort={{ field: 'title', order: 'ASC' }} />
 ];
 
 export const TaskCompletionsList: FC = () => {
