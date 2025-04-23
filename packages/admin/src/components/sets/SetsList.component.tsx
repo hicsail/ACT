@@ -6,8 +6,8 @@ export const SetsList: FC = () => {
   return (
     <List>
       <Datagrid>
-        <TextField source='name' />
-        <TextField source='description' />
+        <TextField source="name" />
+        <TextField source="description" />
         <SetActive />
       </Datagrid>
     </List>

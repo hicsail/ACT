@@ -27,6 +27,8 @@ export const SetActive: FC = () => {
   };
 
   return (
-    <Button variant='contained' disabled={record['active']}  onClick={handleSetActive}>Set Active</Button>
+    <Button variant="contained" disabled={record['active']} onClick={handleSetActive}>
+      Set Active
+    </Button>
   );
 };
