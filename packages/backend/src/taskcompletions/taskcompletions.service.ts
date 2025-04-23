@@ -148,7 +148,11 @@ export class TaskCompletionsService {
 
   private getVideoNameFormat(taskCompletion: TaskCompletion, user: User): string {
     // TODO: Determine site ID and descriptor ID
-    return `${this.taskIteration}_SiteId_${user.id!}_${taskCompletion.taskId}.mp4`;
+    return this.getVideoNameFormatTask(taskCompletion.taskId, user.id!);
+  }
+
+  private getVideoNameFormatTask(taskId: string, userId: string): string {
+    return `${this.taskIteration}_SiteId_${userId!}_${taskId}.mp4`;
   }
 
   /**
@@ -162,7 +166,7 @@ export class TaskCompletionsService {
         this.prismaService.taskCompletion.upsert({
           where: { taskCompletionId: { taskId, userId } },
           update: {},
-          create: { taskId, userId, complete: false, video: '' }
+          create: { taskId, userId, complete: false, video: this.getVideoNameFormatTask(taskId, userId) }
         })
       )
     );
