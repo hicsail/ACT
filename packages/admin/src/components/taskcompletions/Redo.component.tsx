@@ -1,8 +1,10 @@
-import { useRecordContext, useRefresh } from 'react-admin';
-import { FC } from 'react';
-import { Button } from '@mui/material';
-import { taskCompletionsControllerDeleteVideo, taskCompletionsControllerUpdate } from '../../client';
-
+import { useRecordContext, useRefresh } from "react-admin";
+import { FC } from "react";
+import { Button } from "@mui/material";
+import {
+  taskCompletionsControllerDeleteVideo,
+  taskCompletionsControllerUpdate,
+} from "../../client";
 
 export const Redo: FC = () => {
   const refresh = useRefresh();
@@ -16,12 +18,12 @@ export const Redo: FC = () => {
     // Make the request to mark the completion as incomplete
     const updateResponse = await taskCompletionsControllerUpdate({
       query: {
-        taskId: record['taskId'],
-        userId: record['userId']
+        taskId: record["taskId"],
+        userId: record["userId"],
       },
       body: {
-        complete: false
-      }
+        complete: false,
+      },
     });
 
     // Check for errors
@@ -33,8 +35,8 @@ export const Redo: FC = () => {
     // Delete the video itself
     const deleteResponse = await taskCompletionsControllerDeleteVideo({
       query: {
-        video: record['video']
-      }
+        video: record["video"],
+      },
     });
 
     // Check for errors
@@ -47,6 +49,12 @@ export const Redo: FC = () => {
   };
 
   return (
-    <Button variant='contained' disabled={!record['complete']} onClick={handleRedo}>Redo</Button>
+    <Button
+      variant="contained"
+      disabled={!record["complete"]}
+      onClick={handleRedo}
+    >
+      Redo
+    </Button>
   );
 };
