@@ -5,7 +5,7 @@ import { PaginationDTO } from '../pagination/pagination.dto';
 import { StudyMapping } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Readable } from 'stream';
-import csvParser from 'csv-parser';
+const csv = require('csv-parser')
 
 @Injectable()
 export class StudymappingService {
@@ -41,7 +41,7 @@ export class StudymappingService {
   }
 
   async handleCSV(file: Express.Multer.File): Promise<void> {
-    const parser = Readable.from(file.buffer).pipe(csvParser({ strict: true }));
+    const parser = Readable.from(file.buffer).pipe(csv({ strict: true }));
     const newStudyMappings: Omit<StudyMapping, 'id'>[] = [];
 
     for await (const row of parser) {
@@ -53,7 +53,7 @@ export class StudymappingService {
       });
     }
 
-    this.prismaService.studyMapping.createMany({
+    await this.prismaService.studyMapping.createMany({
       data: newStudyMappings
     });
   }

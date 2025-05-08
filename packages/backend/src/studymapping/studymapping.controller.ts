@@ -1,9 +1,9 @@
 import { Body, Controller, Post, Query, Response, Get, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { WebhookPayload } from './dto/webhook.dto';
 import { StudymappingService } from './studymapping.service';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiBody, ApiResponse, ApiConsumes } from '@nestjs/swagger';
 import { StudyMappingEntity } from './entities/studymapping.entity';
-import { PaginationDTO, makeContentRange } from 'src/pagination/pagination.dto';
+import { PaginationDTO, makeContentRange } from '../pagination/pagination.dto';
 import { Response as Res } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -35,8 +35,21 @@ export class StudymappingController {
   }
 
   @Post('upload')
+  @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('file'))
-  async uploadCSV(@UploadedFile() file: Express.Multer.File): Promise<void> {
-
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary'
+        }
+      }
+    }
+  })
+  async uploadCSV(@UploadedFile('file') file: Express.Multer.File): Promise<void> {
+    console.log(file);
+    await this.studyMappingService.handleCSV(file);
   }
 }
