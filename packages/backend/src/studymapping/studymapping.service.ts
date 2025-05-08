@@ -17,7 +17,13 @@ export class StudymappingService {
       throw new Error(`User with email ${payload.object.email} not found`);
     }
 
-    user.affiliation = 'test';
+    const studyMapping = await this.find(user.email!);
+    if (!studyMapping) {
+      throw new Error(`User with email ${user.email} not found in the study mappings`);
+    }
+
+    user.affiliation = studyMapping.studyId;
+    user.location = studyMapping.region;
     await this.casdoorService.updateUser(user);
   }
 

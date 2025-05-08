@@ -33,6 +33,7 @@ export const StudyMappingList: FC = () => {
         <Datagrid>
           <TextField source="email" />
           <TextField source="studyId" />
+          <TextField source="region" />
         </Datagrid>
       </List>
     </Stack>
