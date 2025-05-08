@@ -50,6 +50,7 @@ model TaskCompletion {
 }
 
 model StudyMapping {
+  id                 String   @default(uuid())
   email              String   @unique
   studyId            String
 }

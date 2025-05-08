@@ -5,6 +5,7 @@ import { TaskCompletionsList } from './components/taskcompletions/TaskCompletion
 import { ClientProvider } from './contexts/Client.context';
 import { TasksLists } from './components/tasks/TasksLists.component';
 import { SetsList } from './components/sets/SetsList.component';
+import { StudyMappingList } from './components/studymapping/StudyMappingList.component';
 
 function App() {
   const dataSource = simpleRestProvider(config.backendURL);
@@ -12,9 +13,10 @@ function App() {
   return (
     <ClientProvider>
       <Admin dataProvider={dataSource}>
-        <Resource name="sets" list={SetsList} />
-        <Resource name="tasks" list={TasksLists} />
-        <Resource name="taskCompletions" list={TaskCompletionsList} />
+        <Resource name='sets' list={SetsList} />
+        <Resource name='tasks' list={TasksLists} />
+        <Resource name='taskCompletions' list={TaskCompletionsList} />
+        <Resource name='studymapping' list={StudyMappingList} />
       </Admin>
     </ClientProvider>
   );
