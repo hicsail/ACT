@@ -1,10 +1,11 @@
-import { Body, Controller, Post, Query, Response, Get } from '@nestjs/common';
+import { Body, Controller, Post, Query, Response, Get, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { WebhookPayload } from './dto/webhook.dto';
 import { StudymappingService } from './studymapping.service';
 import { ApiResponse } from '@nestjs/swagger';
 import { StudyMappingEntity } from './entities/studymapping.entity';
 import { PaginationDTO, makeContentRange } from 'src/pagination/pagination.dto';
 import { Response as Res } from 'express';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('studymapping')
 export class StudymappingController {
@@ -33,5 +34,9 @@ export class StudymappingController {
     return res.json(result);
   }
 
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadCSV(@UploadedFile() file: Express.Multer.File): Promise<void> {
 
+  }
 }

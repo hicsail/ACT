@@ -11,4 +11,7 @@ export class StudyMappingEntity implements StudyMapping {
 
   @ApiProperty({ description: 'Unique study ID for the user' })
   studyId: string;
+
+  @ApiProperty({ description: 'Region the user is in' })
+  region: string;
 }

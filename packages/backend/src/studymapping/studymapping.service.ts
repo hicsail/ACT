@@ -4,6 +4,8 @@ import { WebhookPayload } from './dto/webhook.dto';
 import { PaginationDTO } from '../pagination/pagination.dto';
 import { StudyMapping } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { Readable } from 'stream';
+import csvParser from 'csv-parser';
 
 @Injectable()
 export class StudymappingService {
@@ -19,6 +21,12 @@ export class StudymappingService {
     await this.casdoorService.updateUser(user);
   }
 
+  async find(email: string): Promise<StudyMapping | null> {
+    return this.prismaService.studyMapping.findUnique({
+      where: { email }
+    });
+  }
+
   async findAll(pagination: PaginationDTO): Promise<StudyMapping[]> {
     return this.prismaService.studyMapping.findMany({
       where: pagination.filter,
@@ -32,4 +40,21 @@ export class StudymappingService {
     return this.prismaService.studyMapping.count();
   }
 
+  async handleCSV(file: Express.Multer.File): Promise<void> {
+    const parser = Readable.from(file.buffer).pipe(csvParser({ strict: true }));
+    const newStudyMappings: Omit<StudyMapping, 'id'>[] = [];
+
+    for await (const row of parser) {
+      // TODO: Check if the email already exists
+      newStudyMappings.push({
+        email: row.email,
+        studyId: row.studyId,
+        region: row.region
+      });
+    }
+
+    this.prismaService.studyMapping.createMany({
+      data: newStudyMappings
+    });
+  }
 }
