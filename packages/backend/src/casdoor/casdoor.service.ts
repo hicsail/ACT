@@ -31,4 +31,20 @@ export class CasdoorService {
   async parseJWT(jwt: string): Promise<User> {
     return this.casdoor.parseJwtToken(jwt);
   }
+
+  async updateUser(user: User): Promise<void> {
+    await this.casdoor.updateUser(user);
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
+    const users = await this.casdoor.getUsers();
+    for (const user of users.data.data) {
+      if (user.email === email) {
+        return user;
+      }
+    }
+
+    return null;
+  }
+
 }

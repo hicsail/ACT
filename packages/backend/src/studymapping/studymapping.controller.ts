@@ -14,6 +14,6 @@ export class StudymappingController {
     }
 
     // Otherwise, update the user object
-    await
+    await this.studyMappingService.setStudyID(payload);
   }
 }
