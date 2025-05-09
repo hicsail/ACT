@@ -5,11 +5,14 @@ import { PaginationDTO } from '../pagination/pagination.dto';
 import { StudyMapping } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Readable } from 'stream';
-const csv = require('csv-parser')
+const csv = require('csv-parser');
 
 @Injectable()
 export class StudymappingService {
-  constructor(private readonly casdoorService: CasdoorService, private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly casdoorService: CasdoorService,
+    private readonly prismaService: PrismaService
+  ) {}
 
   async setStudyID(payload: WebhookPayload): Promise<void> {
     const user = await this.casdoorService.findByEmail(payload.object.email);

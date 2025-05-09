@@ -1,4 +1,4 @@
-import { Transform } from "class-transformer";
+import { Transform } from 'class-transformer';
 
 export class UserPayload {
   application: string;
@@ -42,7 +42,7 @@ export class WebhookPayload {
 
   isTriggered: false;
 
-  extendedUser: null
+  extendedUser: null;
 
   response: string;
 }

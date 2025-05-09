@@ -13,10 +13,10 @@ function App() {
   return (
     <ClientProvider>
       <Admin dataProvider={dataSource}>
-        <Resource name='sets' list={SetsList} />
-        <Resource name='tasks' list={TasksLists} />
-        <Resource name='taskCompletions' list={TaskCompletionsList} />
-        <Resource name='studymapping' list={StudyMappingList} />
+        <Resource name="sets" list={SetsList} />
+        <Resource name="tasks" list={TasksLists} />
+        <Resource name="taskCompletions" list={TaskCompletionsList} />
+        <Resource name="studymapping" list={StudyMappingList} />
       </Admin>
     </ClientProvider>
   );

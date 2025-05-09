@@ -46,5 +46,4 @@ export class CasdoorService {
 
     return null;
   }
-
 }

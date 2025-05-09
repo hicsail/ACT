@@ -24,8 +24,8 @@ export const StudyMappingList: FC = () => {
   };
 
   return (
-    <Stack direction='column' sx={{ alignContent: 'center', alignItems: 'center' }}>
-      <Button variant='contained' sx={{ maxWidth: 300 }} component='label'>
+    <Stack direction="column" sx={{ alignContent: 'center', alignItems: 'center' }}>
+      <Button variant="contained" sx={{ maxWidth: 300 }} component="label">
         Upload Study Mappings
         <input hidden accept=".csv" multiple type="file" onChange={handleFileUpload} />
       </Button>
@@ -38,4 +38,4 @@ export const StudyMappingList: FC = () => {
       </List>
     </Stack>
   );
-}
+};
