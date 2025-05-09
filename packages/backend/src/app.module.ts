@@ -9,6 +9,7 @@ import { PaginationModule } from './pagination/pagination.module';
 import { TaskCompletionsModule } from './taskcompletions/taskcompletions.module';
 import { S3Module } from './s3/s3.module';
 import { UsersModule } from './users/users.module';
+import { StudymappingModule } from './studymapping/studymapping.module';
 import configuration from './config/configuration';
 
 @Module({
@@ -23,7 +24,8 @@ import configuration from './config/configuration';
     PaginationModule,
     TaskCompletionsModule,
     S3Module,
-    UsersModule
+    UsersModule,
+    StudymappingModule
   ],
   controllers: [AppController],
   providers: [AppService]

@@ -206,6 +206,29 @@ export type UpdateTaskCompletionDto = {
     userId?: string;
 };
 
+export type WebhookPayload = {
+    [key: string]: unknown;
+};
+
+export type StudyMappingEntity = {
+    /**
+     * Placeholder ID for the admin client
+     */
+    id: string;
+    /**
+     * Email of the user
+     */
+    email: string;
+    /**
+     * Unique study ID for the user
+     */
+    studyId: string;
+    /**
+     * Region the user is in
+     */
+    region: string;
+};
+
 export type AppControllerGetHelloData = {
     body?: never;
     path?: never;
@@ -591,6 +614,67 @@ export type TaskCompletionsControllerDeleteVideoData = {
 
 export type TaskCompletionsControllerDeleteVideoResponses = {
     200: unknown;
+};
+
+export type UsersControllerFindAllData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/users';
+};
+
+export type UsersControllerFindAllResponses = {
+    200: unknown;
+};
+
+export type UsersControllerFindOneData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/users/{id}';
+};
+
+export type UsersControllerFindOneResponses = {
+    200: unknown;
+};
+
+export type StudymappingControllerFindAllData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/studymapping';
+};
+
+export type StudymappingControllerFindAllResponses = {
+    default: StudyMappingEntity;
+};
+
+export type StudymappingControllerFindAllResponse = StudymappingControllerFindAllResponses[keyof StudymappingControllerFindAllResponses];
+
+export type StudymappingControllerWebhookData = {
+    body: WebhookPayload;
+    path?: never;
+    query?: never;
+    url: '/studymapping';
+};
+
+export type StudymappingControllerWebhookResponses = {
+    201: unknown;
+};
+
+export type StudymappingControllerUploadCsvData = {
+    body: {
+        file?: Blob | File;
+    };
+    path?: never;
+    query?: never;
+    url: '/studymapping/upload';
+};
+
+export type StudymappingControllerUploadCsvResponses = {
+    201: unknown;
 };
 
 export type ClientOptions = {

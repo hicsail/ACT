@@ -48,3 +48,10 @@ model TaskCompletion {
 
   @@id(name: "taskCompletionId", [taskId, userId])
 }
+
+model StudyMapping {
+  id                 String   @default(uuid())
+  email              String   @unique
+  studyId            String
+  region             String
+}
