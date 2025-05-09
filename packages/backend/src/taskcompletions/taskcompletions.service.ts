@@ -123,9 +123,9 @@ export class TaskCompletionsService {
   /**
    * Get the next task completion for the user to complete or null if non are left
    */
-  async getNextTaskCompletion(userId: string): Promise<TaskCompletion | null> {
+  async getNextTaskCompletion(user: User): Promise<TaskCompletion | null> {
     // First, make sure the task completions for the user exists
-    await this.getOrCreateTaskCompletions(userId);
+    await this.getOrCreateTaskCompletions(user);
 
     // Now we know all of the task completions exist, its just a matter of
     // getting the one that matches the following criteria
@@ -136,7 +136,7 @@ export class TaskCompletionsService {
     return this.prismaService.taskCompletion.findFirst({
       where: {
         complete: false,
-        userId,
+        userId: user.id!,
         task: {
           taskSet: {
             active: true
@@ -158,25 +158,28 @@ export class TaskCompletionsService {
 
   private getVideoNameFormat(taskCompletion: TaskCompletion, user: User): string {
     // TODO: Determine site ID and descriptor ID
-    return this.getVideoNameFormatTask(taskCompletion.taskId, user.id!);
+    return this.getVideoNameFormatTask(taskCompletion.taskId, user);
   }
 
-  private getVideoNameFormatTask(taskId: string, userId: string): string {
-    return `${this.taskIteration}_SiteId_${userId!}_${taskId}.mp4`;
+  private getVideoNameFormatTask(taskId: string, user: User): string {
+    const studyID = user.affiliation ? user.affiliation : user.id!;
+    const site = user.location ? user.location : 'UNKNOWN';
+
+    return `${this.taskIteration}_${site}_${studyID}_${taskId}.mp4`;
   }
 
   /**
    * Gets or creates all the task completions based on the active task set
    */
-  private async getOrCreateTaskCompletions(userId: string): Promise<TaskCompletion[]> {
+  private async getOrCreateTaskCompletions(user: User): Promise<TaskCompletion[]> {
     const activeTasksIDs = (await this.taskService.getActiveTasks()).map((task) => task.id);
 
     return await this.prismaService.$transaction(
       activeTasksIDs.map((taskId) =>
         this.prismaService.taskCompletion.upsert({
-          where: { taskCompletionId: { taskId, userId } },
+          where: { taskCompletionId: { taskId, userId: user.id! } },
           update: {},
-          create: { taskId, userId, complete: false, video: this.getVideoNameFormatTask(taskId, userId) }
+          create: { taskId, userId: user.id!, complete: false, video: this.getVideoNameFormatTask(taskId, user) }
         })
       )
     );
