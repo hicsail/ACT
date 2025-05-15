@@ -15,4 +15,4 @@ export const TimeDisplay: FC<TimeDisplayProps> = ({ seconds }) => {
   const timeString = `${minutesString}:${secondsString}`;
 
   return <Typography variant="body1">{timeString}</Typography>;
-}
+};
