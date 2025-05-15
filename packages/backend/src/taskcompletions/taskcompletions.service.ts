@@ -108,7 +108,7 @@ export class TaskCompletionsService {
     }
 
     // Get the name of the file
-    const filename = this.getVideoNameFormat(taskCompletion, user);
+    const filename = await this.getVideoNameFormat(taskCompletion, user);
 
     // Construct the upload request
     const request = new PutObjectCommand({ Bucket: this.bucket, Key: filename });
@@ -156,30 +156,36 @@ export class TaskCompletionsService {
     await this.s3.send(request);
   }
 
-  private getVideoNameFormat(taskCompletion: TaskCompletion, user: User): string {
-    // TODO: Determine site ID and descriptor ID
-    return this.getVideoNameFormatTask(taskCompletion.taskId, user);
+  private async getVideoNameFormat(taskCompletion: TaskCompletion, user: User): Promise<string> {
+    // Try to get the task ID
+    const task = await this.taskService.findOne(taskCompletion.taskId);
+    if (!task) {
+      console.error(`Missing task id ${taskCompletion.taskId}`);
+    }
+    const descriptor = task ? task.descriptor : 'MISSING';
+    return this.getVideoNameFormatTask(user, descriptor);
   }
 
-  private getVideoNameFormatTask(taskId: string, user: User): string {
+  private getVideoNameFormatTask(user: User, taskDescriptor: string): string {
+    // Try to get the studyID and site ID off of the user object
     const studyID = user.affiliation ? user.affiliation : user.id!;
     const site = user.location ? user.location : 'UNKNOWN';
 
-    return `${this.taskIteration}_${site}_${studyID}_${taskId}.mp4`;
+    return `${this.taskIteration}_${site}_${studyID}_${taskDescriptor}.mp4`;
   }
 
   /**
    * Gets or creates all the task completions based on the active task set
    */
   private async getOrCreateTaskCompletions(user: User): Promise<TaskCompletion[]> {
-    const activeTasksIDs = (await this.taskService.getActiveTasks()).map((task) => task.id);
+    const activeTasks = await this.taskService.getActiveTasks();
 
     return await this.prismaService.$transaction(
-      activeTasksIDs.map((taskId) =>
+      activeTasks.map((task) =>
         this.prismaService.taskCompletion.upsert({
-          where: { taskCompletionId: { taskId, userId: user.id! } },
+          where: { taskCompletionId: { taskId: task.id, userId: user.id! } },
           update: {},
-          create: { taskId, userId: user.id!, complete: false, video: this.getVideoNameFormatTask(taskId, user) }
+          create: { taskId: task.id, userId: user.id!, complete: false, video: this.getVideoNameFormatTask(user, task.descriptor) }
         })
       )
     );
