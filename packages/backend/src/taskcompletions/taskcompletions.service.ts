@@ -185,7 +185,12 @@ export class TaskCompletionsService {
         this.prismaService.taskCompletion.upsert({
           where: { taskCompletionId: { taskId: task.id, userId: user.id! } },
           update: {},
-          create: { taskId: task.id, userId: user.id!, complete: false, video: this.getVideoNameFormatTask(user, task.descriptor) }
+          create: {
+            taskId: task.id,
+            userId: user.id!,
+            complete: false,
+            video: this.getVideoNameFormatTask(user, task.descriptor)
+          }
         })
       )
     );
