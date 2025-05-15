@@ -36,6 +36,7 @@ model Task {
   taskDetails        String    @db.LongText
   prompts            Json
   order              Int
+  descriptor         String
 }
 
 model TaskCompletion {

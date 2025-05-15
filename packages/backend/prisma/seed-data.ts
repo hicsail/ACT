@@ -34,7 +34,8 @@ Ava’s mom is 28 years old. Her grandma is 51. How much older is Ava’s grandm
     'Demonstrate how you might represent the context of the problem with manipulatives, a diagram or other visual.',
     'Ensure that you are modeling accuracy, clarity, and precision to mathematical language.'
   ],
-  order: 1
+  order: 1,
+  descriptor: 'P1'
 };
 
 export const task1_2: Omit<CreateTaskDto, 'taskSetId'> = {
@@ -58,7 +59,8 @@ You are going to provide a think aloud to make sense of word problems. In your t
     'Demonstrate how you might represent the context of the problem with manipulatives, a diagram or other visual.',
     'Ensure that you are modeling accuracy, clarity, and precision to mathematical language'
   ],
-  order: 2
+  order: 2,
+  descriptor: 'P2'
 };
 
 export const task1_3: Omit<CreateTaskDto, 'taskSetId'> = {
@@ -81,7 +83,8 @@ They are familiar with rounding to the nearest tens or hundreds place, and using
     'Demonstrate how you might represent the context of the problem with manipulatives, a diagram or other visual.',
     'Ensure that you are modeling accuracy, clarity, and precision to mathematical language.'
   ],
-  order: 3
+  order: 3,
+  descriptor: 'P3'
 };
 
 export const task2_1: Omit<CreateTaskDto, 'taskSetId'> = {
@@ -104,7 +107,8 @@ You are going to enact a think aloud for students to witness your expert thinkin
     'Demonstrate how you might represent the context of the problem with manipulatives, a diagram or other visual.',
     'Ensure that you are modeling accuracy, clarity, and precision to mathematical language.'
   ],
-  order: 1
+  order: 1,
+  descriptor: 'P4'
 };
 
 export const task2_2: Omit<CreateTaskDto, 'taskSetId'> = {
@@ -126,5 +130,30 @@ You are going to enact a think aloud for students to witness your expert thinkin
     'Demonstrate how you might represent the context of the problem with manipulatives, a diagram or other visual.',
     'Ensure that you are modeling accuracy, clarity, and precision to mathematical language.'
   ],
-  order: 2
+  order: 2,
+  descriptor: 'P5'
+};
+
+export const task2_3: Omit<CreateTaskDto, 'taskSetId'> = {
+  category: 'english',
+  title: 'Task 2.3 Think Aloud',
+  preview: 'Click "start" to begin your this task. Fifth grade math context.',
+  previewImage: '',
+  timeSeconds: 5 * 60,
+  description: `
+You are working with your fifth-grade students on estimating the answer in math problems.
+They are familiar with rounding to the nearest tens or hundreds place, and using tables. The challenge for students is when all of those skills are combined into a more complex problem.
+You are going to provide a think aloud to show how you make sense of problems that combine multiple skills and monitor your progress towards your problem-solving goals.
+  `,
+  problemDescription: 'Mrs. Molloy orders new supplies for the STEM club. About how much will it cost to purchase 14 coding robots? Use the table to answer the question.',
+  taskDetails: 'Provide a think aloud to make sense of the word problem.',
+  prompts: [
+    'Share the purpose for your think aloud with your students.',
+    'Narrate your thinking about how you approach understanding this problem.',
+    'Address how you make sense of the context, quantities, and mathematical relationships.',
+    'Demonstrate how you might represent the context of the problem with manipulatives, a diagram or other visual.',
+    'Ensure that you are modeling accuracy, clarity, and precision to mathematical language.'
+  ],
+  order: 3,
+  descriptor: 'P6'
 };

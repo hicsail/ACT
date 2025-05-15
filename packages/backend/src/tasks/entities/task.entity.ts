@@ -38,4 +38,7 @@ export class TaskEntity implements Task {
 
   @ApiProperty({ description: 'Order the tasks are presented to the user' })
   order: number;
+
+  @ApiProperty({ description: 'User provided ID for the task' })
+  descriptor: string;
 }
