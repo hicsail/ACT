@@ -1,6 +1,7 @@
 import { FC } from 'react';
 import { Button, Grid, Stack, Typography } from '@mui/material';
 import { AccessTime, CheckBoxOutlineBlank, CheckBoxOutlined } from '@mui/icons-material';
+import { TimeDisplay } from './TimeDisplay.component';
 
 export interface ActivityCardProps {
   previewImage: string;
@@ -26,7 +27,7 @@ export const ActivityCard: FC<ActivityCardProps> = (props) => {
           <Stack direction="row" alignItems="center">
             <Stack direction="row" sx={{ flex: 1 }} alignItems="center" gap={1}>
               <AccessTime />
-              <Typography variant="body1">{`${props.activityEstimatedTimeSeconds}s`}</Typography>
+              <TimeDisplay seconds={props.activityEstimatedTimeSeconds} />
             </Stack>
             <Button variant="contained" onClick={props.onSelectionAction}>
               {props.activityComplete ? 'Retake' : 'Start'}
