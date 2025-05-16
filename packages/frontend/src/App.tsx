@@ -14,6 +14,7 @@ import { CameraCheck } from './pages/CameraCheck.page';
 import { SnackbarProvider } from './contexts/Snackbar.context';
 import { ClientProvider } from './contexts/Client.context';
 import { Task } from './pages/Task.page';
+import { TrainingContextProvider } from './contexts/Training.contenxt';
 
 const App: FC = () => {
   return (
@@ -22,19 +23,21 @@ const App: FC = () => {
         <CasdoorProvider>
           <UserContextProvider>
             <ClientProvider>
-              <Navigation />
-              <Container component="main">
-                <BrowserRouter>
-                  <Routes>
-                    <Route index path="/" element={<Landing />} />
-                    <Route path="/callback" element={<AuthCallback />} />
-                    <Route path="/home" element={<Home />} />
-                    <Route path="/cam-check" element={<CameraCheck />} />
-                    <Route path="/taskcompletion" element={<Task />} />
-                  </Routes>
-                </BrowserRouter>
-              </Container>
-              <Footer />
+              <TrainingContextProvider>
+                <Navigation />
+                <Container component="main">
+                  <BrowserRouter>
+                    <Routes>
+                      <Route index path="/" element={<Landing />} />
+                      <Route path="/callback" element={<AuthCallback />} />
+                      <Route path="/home" element={<Home />} />
+                      <Route path="/cam-check" element={<CameraCheck />} />
+                      <Route path="/taskcompletion" element={<Task />} />
+                    </Routes>
+                  </BrowserRouter>
+                </Container>
+                <Footer />
+              </TrainingContextProvider>
             </ClientProvider>
           </UserContextProvider>
         </CasdoorProvider>
