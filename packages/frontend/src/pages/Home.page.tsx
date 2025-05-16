@@ -2,8 +2,11 @@ import { Divider, Stack, Typography } from '@mui/material';
 import { FC } from 'react';
 import { CameraCheckActivity } from '../components/CameraCheckActivity.component';
 import { TaskList } from '../components/TaskList.component';
+import { useTraining } from '../contexts/Training.contenxt';
 
 export const Home: FC = () => {
+  const training = useTraining();
+
   return (
     <>
       <Stack spacing={3} sx={{ textAlign: 'center', padding: 3 }}>
@@ -35,7 +38,7 @@ export const Home: FC = () => {
 
         <CameraCheckActivity />
 
-        <TaskList />
+        {training.hasCompletedCameraCheck && <TaskList />}
       </Stack>
     </>
   );
