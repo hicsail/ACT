@@ -30,7 +30,7 @@ export const TrainingContextProvider: FC<TrainingProviderProps> = ({ children })
 
   const saveContext = (context: TrainingLocalStoragePayload) => {
     localStorage.setItem(TRAINING_KEY, JSON.stringify(context));
-  }
+  };
 
   useEffect(() => {
     const existingContext = loadTrainingContext();
