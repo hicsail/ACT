@@ -1,4 +1,4 @@
-import { createContext, FC, useEffect, useState } from 'react'
+import { createContext, FC, useContext, useEffect, useState } from 'react';
 
 const TRAINING_KEY = 'TRAINING_CONTEXT';
 
@@ -20,22 +20,40 @@ export interface TrainingProviderProps {
 export const TrainingContextProvider: FC<TrainingProviderProps> = ({ children }) => {
   const [hasCompletedCameraCheck, setHasCompletedCameraCheck] = useState<boolean>(false);
 
-  useEffect(() => {
-    // Try to read back training context information from local storage
+  const loadTrainingContext = () => {
     const existingTrainingContext = localStorage.getItem(TRAINING_KEY);
-    if(!existingTrainingContext) {
-      setHasCompletedCameraCheck(false);
-      return;
+    if (!existingTrainingContext) {
+      return null;
     }
+    return JSON.parse(existingTrainingContext) as TrainingLocalStoragePayload;
+  };
 
-    // Try to parse the payload
-    const trainingContext = JSON.parse(existingTrainingContext) as TrainingLocalStoragePayload;
+  const saveContext = (context: TrainingLocalStoragePayload) => {
+    localStorage.setItem(TRAINING_KEY, JSON.stringify(context));
+  }
+
+  useEffect(() => {
+    const existingContext = loadTrainingContext();
 
     // Update the fields accordingly
-    setHasCompletedCameraCheck(trainingContext.hasCompletedCameraCheck ? trainingContext.hasCompletedCameraCheck : false);
+    setHasCompletedCameraCheck(
+      existingContext?.hasCompletedCameraCheck ? existingContext.hasCompletedCameraCheck : false
+    );
   }, []);
 
-  const markCameraCheckComplete = () => setHasCompletedCameraCheck(true)
+  const markCameraCheckComplete = () => {
+    setHasCompletedCameraCheck(true);
+
+    // Make sure to use the currently stored data
+    let existingContext = loadTrainingContext();
+    if (!existingContext) {
+      existingContext = {};
+    }
+
+    // Update the camera check field and save
+    existingContext.hasCompletedCameraCheck = true;
+    saveContext(existingContext);
+  };
 
   return (
     <TrainingContext.Provider value={{ hasCompletedCameraCheck, markCameraCheckComplete }}>
@@ -43,3 +61,5 @@ export const TrainingContextProvider: FC<TrainingProviderProps> = ({ children })
     </TrainingContext.Provider>
   );
 };
+
+export const useTraining = () => useContext(TrainingContext);
