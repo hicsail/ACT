@@ -3,6 +3,7 @@ import { FC, useState } from 'react';
 import { VideoRecord } from '../components/VideoRecord.component';
 import { config } from '../config/configuration';
 import { useNavigate } from 'react-router';
+import { useTraining } from '../contexts/Training.contenxt';
 
 export const CameraCheck: FC = () => {
   const [isComplete, setIsComplete] = useState<boolean>(false);
@@ -25,12 +26,13 @@ export const CameraCheck: FC = () => {
 const CompletionForm: FC = () => {
   const [issueFound, setIssueFound] = useState<boolean>(false);
   const navigate = useNavigate();
+  const training = useTraining();
 
   const handleFinishClick = () => {
     if (issueFound) {
       window.location.reload();
     } else {
-      // TODO: Save results
+      training.markCameraCheckComplete();
       navigate('/home');
     }
   };

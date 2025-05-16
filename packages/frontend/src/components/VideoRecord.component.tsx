@@ -30,6 +30,10 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
       document.body.removeChild(link);
     }
 
+    if (props.onRecordingStop) {
+      props.onRecordingStop(blobURL, blob);
+    }
+
     setBlobPayload({ blobURL, blob });
 
     setCountDownState('restart');
