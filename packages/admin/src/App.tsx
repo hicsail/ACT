@@ -6,18 +6,21 @@ import { ClientProvider } from './contexts/Client.context';
 import { TasksLists } from './components/tasks/TasksLists.component';
 import { SetsList } from './components/sets/SetsList.component';
 import { StudyMappingList } from './components/studymapping/StudyMappingList.component';
+import { CasdoorProvider } from './contexts/Casdoor.context';
 
 function App() {
   const dataSource = simpleRestProvider(config.backendURL);
 
   return (
     <ClientProvider>
-      <Admin dataProvider={dataSource}>
-        <Resource name="sets" list={SetsList} />
-        <Resource name="tasks" list={TasksLists} />
-        <Resource name="taskCompletions" list={TaskCompletionsList} />
-        <Resource name="studymapping" list={StudyMappingList} />
-      </Admin>
+      <CasdoorProvider>
+        <Admin dataProvider={dataSource}>
+          <Resource name="sets" list={SetsList} />
+          <Resource name="tasks" list={TasksLists} />
+          <Resource name="taskCompletions" list={TaskCompletionsList} />
+          <Resource name="studymapping" list={StudyMappingList} />
+        </Admin>
+      </CasdoorProvider>
     </ClientProvider>
   );
 }
