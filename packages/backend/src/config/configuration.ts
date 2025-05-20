@@ -10,6 +10,9 @@ export default () => ({
   frontend: {
     authCallback: process.env.FRONTEND_AUTH_CALLBACK
   },
+  admin: {
+    authCallback: process.env.ADMIN_AUTH_CALLBACK
+  },
   s3: {
     accessKeyId: process.env.S3_ACCESS_KEY,
     secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,

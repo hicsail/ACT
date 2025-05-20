@@ -46,7 +46,7 @@ export interface AuthContextProps {
  * Needed in the case that the login URL hasn't been
  * fetched yet in which case null is returned.
  */
-const getReactAdminAuthProvider = (loginURL: string | null, user: UserInfo | null): ReactAdminAuthProvider | null => {
+const getReactAdminAuthProvider = (loginURL: string | null, user: UserInfo | null, login: (token: string) => void): ReactAdminAuthProvider | null => {
   // If the login URL isn't present, the auth provider cannot be made
   if (!loginURL) {
     return null;
@@ -59,15 +59,31 @@ const getReactAdminAuthProvider = (loginURL: string | null, user: UserInfo | nul
     async checkAuth () {
       // Check if a user object is present, if it is, then the user
       // is already authenticated
+      console.log(user);
       if (user) {
         return;
       }
 
       // Otherwise, redirect to the login URL
-      window.location.href = loginURL;
+     // window.location.href = loginURL;
     },
     async handleCallback () {
+      console.log('CALLBACK');
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get('code');
+      if (!code) {
+        throw new Error('Missing code in URL');
+      }
 
+      // Fetch the JWT
+      const loginResponse = await fetch(`${config.backendURL}/casdoor/signin?code=${code}`, {
+        method: 'POST'
+      });
+
+      // Pull out the token
+      const token = (await loginResponse.json()).token;
+
+      login(token);
     },
     async logout () {
 
@@ -84,7 +100,7 @@ export const AuthProvider: FC<AuthContextProps> = ({ children }) => {
 
   // Handles getting the correct login URL for casdoor
   const getAuthURL = async () => {
-    const result = await fetch(`${config.backendURL}/casdoor/redirect`);
+    const result = await fetch(`${config.backendURL}/casdoor/redirect?origin=admin`);
     const body = await result.json();
     setLoginURL(body.url);
   };
@@ -103,7 +119,14 @@ export const AuthProvider: FC<AuthContextProps> = ({ children }) => {
     }
   }, []);
 
-  const authProvider = getReactAdminAuthProvider(loginURL, user);
+  const handleLogin = (token: string) => {
+    const user = parseJwt(token);
+    setUser({ token, id: user.id });
+    localStorage.setItem(TOKEN_KEY, token);
+  };
+
+  // Make the auth provider based on the existing user context and login URL
+  const authProvider = getReactAdminAuthProvider(loginURL, user, handleLogin);
 
   return <AuthContext.Provider value={{authProvider, user}}>{children}</AuthContext.Provider>
 };
