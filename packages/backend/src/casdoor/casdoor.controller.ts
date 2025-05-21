@@ -6,8 +6,8 @@ export class CasdoorController {
   constructor(private readonly casdoorService: CasdoorService) {}
 
   @Get('/redirect')
-  handleRedirect(): { url: string } {
-    return this.casdoorService.getSignInURL();
+  handleRedirect(@Query('origin') origin?: 'frontend' | 'admin'): { url: string } {
+    return this.casdoorService.getSignInURL(origin);
   }
 
   @Post('/signin')

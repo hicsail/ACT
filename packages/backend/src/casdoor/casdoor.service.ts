@@ -7,17 +7,24 @@ import { User } from 'casdoor-nodejs-sdk/lib/cjs/user';
 @Injectable()
 export class CasdoorService {
   private readonly frontendCallbackURL;
+  private readonly adminCallbackURL;
 
   constructor(
     @Inject(CASDOOR_PROVIDER) private readonly casdoor: CasdoorSDK,
     configService: ConfigService
   ) {
     this.frontendCallbackURL = configService.getOrThrow<string>('frontend.authCallback');
+    this.adminCallbackURL = configService.getOrThrow<string>('admin.authCallback');
   }
 
-  getSignInURL(): { url: string } {
+  getSignInURL(origin: 'frontend' | 'admin' | undefined): { url: string } {
+    let url = this.frontendCallbackURL;
+    if (origin === 'admin') {
+      url = this.adminCallbackURL;
+    }
+
     return {
-      url: this.casdoor.getSignInUrl(this.frontendCallbackURL)
+      url: this.casdoor.getSignInUrl(url)
     };
   }
 
