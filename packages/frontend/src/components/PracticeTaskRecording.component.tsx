@@ -1,11 +1,12 @@
-import { Stack } from '@mui/material';
-import { FC } from 'react';
+import { Button, Dialog, DialogContent, DialogTitle, Stack, Typography, DialogActions } from '@mui/material';
+import { FC, useState } from 'react';
 import { VideoRecord } from './VideoRecord.component';
 import { useNavigate } from 'react-router';
 import { PractiveTaskInstructionsSide } from './PracticeTaskInstructionsSide.component';
 
 export const PracticeTaskRecording: FC = () => {
   const navigate = useNavigate();
+  const [instructionsOpen, setInstructionsOpen] = useState<boolean>(false);
 
   const handleVideoComplete = async (_blobURL: string, blob: Blob) => {
     navigate('/home');
@@ -18,8 +19,38 @@ export const PracticeTaskRecording: FC = () => {
         onSubmit={(blobURL, blob) => handleVideoComplete(blobURL, blob)}
         timeLimit={5 * 60}
       />
-
-      <PractiveTaskInstructionsSide />
+      <Stack>
+        <PractiveTaskInstructionsSide />
+        <Button variant='contained' onClick={() => setInstructionsOpen(!instructionsOpen)}>
+          Click to See Instructions
+        </Button>
+      </Stack>
+      <Dialog open={instructionsOpen}>
+        <DialogTitle>Tutorial</DialogTitle>
+        <DialogContent>
+          <Typography variant='h3'>Important Information about the Buttons</Typography>
+          <Typography variant='body1'>
+            When you are in an actual task you will click
+            a blue bar at the bottom of your screen to
+            “Start Recording” when you want to progress to
+            the recording page. You will automatically progress
+            there as soon as the timer runs out as well. You cannot
+            go back once you’ve selected “Start Recording”.
+            The camera records automatically and a countdown timer begins to show you your remaining time.
+          </Typography>
+          <Typography variant='body1'>
+            On the top of the next page you will see a
+            “Submit Recording” button. This will stop recording
+            your video and upload it automatically to the secure
+            server. progress there as soon as the timer runs out
+            as well. Only click this button once you are done with your
+            task. The video will automatically submit once the timer runs out.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setInstructionsOpen(false)}>Ok</Button>
+        </DialogActions>
+      </Dialog>
     </Stack>
   );
 };
