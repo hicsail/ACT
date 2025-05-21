@@ -3,8 +3,8 @@ import { CasdoorService } from './casdoor.service';
 import { Request } from 'express';
 
 @Injectable()
-export class CasdoorGuard implements CanActivate {
-  constructor(private readonly casdoorService: CasdoorService) {}
+export class AdminGuard implements CanActivate {
+  constructor (private readonly casdoorService: CasdoorService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -21,7 +21,7 @@ export class CasdoorGuard implements CanActivate {
       // Add the user to the context
       request['user'] = user;
 
-      return true;
+      return !!user.isAdmin;
     } catch (error) {
       return false;
     }

@@ -1,18 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Query, Response } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, Query, Response, UseGuards } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { TaskEntity } from './entities/task.entity';
 import { Response as Res } from 'express';
 import { makeContentRange, PaginationDTO } from '../pagination/pagination.dto';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { CasdoorGuard } from 'src/casdoor/casdoor.guard';
+import { AdminGuard } from 'src/casdoor/admin.guard';
 
 @Controller('tasks')
+@ApiBearerAuth()
+@UseGuards(CasdoorGuard)
 export class TasksController {
   constructor(private readonly tasksService: TasksService) {}
 
   @Post()
   @ApiResponse({ type: TaskEntity })
+  @UseGuards(AdminGuard)
   create(@Body() createTaskDto: CreateTaskDto): Promise<TaskEntity> {
     return this.tasksService.create(createTaskDto);
   }
@@ -41,6 +46,7 @@ export class TasksController {
 
   @Patch(':id')
   @ApiResponse({ type: TaskEntity })
+  @UseGuards(AdminGuard)
   async update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto): Promise<TaskEntity> {
     const updated = await this.tasksService.update(id, updateTaskDto);
     if (!updated) {
@@ -50,6 +56,7 @@ export class TasksController {
   }
 
   @Delete(':id')
+  @UseGuards(AdminGuard)
   async remove(@Param('id') id: string): Promise<void> {
     await this.tasksService.remove(id);
   }

@@ -46,7 +46,8 @@ export const authProvider: AuthProvider = {
     localStorage.setItem(JWT_TOKEN_KEY, token);
   },
   logout: async () => {
-
+    localStorage.removeItem(JWT_TOKEN_KEY);
+    return;
   },
   checkError: async () => {
 

@@ -1,13 +1,17 @@
-import { Body, Controller, Post, Query, Response, Get, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Body, Controller, Post, Query, Response, Get, UseInterceptors, UploadedFile, UseGuards } from '@nestjs/common';
 import { WebhookPayload } from './dto/webhook.dto';
 import { StudymappingService } from './studymapping.service';
-import { ApiBody, ApiResponse, ApiConsumes } from '@nestjs/swagger';
+import { ApiBody, ApiResponse, ApiConsumes, ApiBearerAuth } from '@nestjs/swagger';
 import { StudyMappingEntity } from './entities/studymapping.entity';
 import { PaginationDTO, makeContentRange } from '../pagination/pagination.dto';
 import { Response as Res } from 'express';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { CasdoorGuard } from '../casdoor/casdoor.guard';
+import { AdminGuard } from 'src/casdoor/admin.guard';
 
 @Controller('studymapping')
+@ApiBearerAuth()
+@UseGuards(CasdoorGuard)
 export class StudymappingController {
   constructor(private readonly studyMappingService: StudymappingService) {}
 
@@ -48,6 +52,7 @@ export class StudymappingController {
       }
     }
   })
+  @UseGuards(AdminGuard)
   async uploadCSV(@UploadedFile('file') file: Express.Multer.File): Promise<void> {
     console.log(file);
     await this.studyMappingService.handleCSV(file);

@@ -19,23 +19,28 @@ import { Response as Res } from 'express';
 import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { FindByUserTask } from './dto/find-by-user-task.dto';
 import { FindByTask } from './dto/find-by-task.dto';
-import { CasdoorGuard } from 'src/casdoor/casdoor.guard';
+import { CasdoorGuard } from '../casdoor/casdoor.guard';
 import { UserCtx } from '../casdoor/user.context';
 import { User } from 'casdoor-nodejs-sdk/lib/cjs/user';
 import { TaskCompletionId } from './dto/task-completion-id';
+import { AdminGuard } from '../casdoor/admin.guard';
 
 @Controller('taskCompletions')
+@ApiBearerAuth()
+@UseGuards(CasdoorGuard)
 export class TaskCompletionsController {
   constructor(private readonly taskCompletionsService: TaskCompletionsService) {}
 
   @Post()
   @ApiResponse({ type: TaskCompletionEntity })
+  @UseGuards(AdminGuard)
   create(@Body() createTaskCompletionDto: CreateTaskCompletionDto): Promise<TaskCompletionEntity> {
     return this.taskCompletionsService.create(createTaskCompletionDto);
   }
 
   @Get()
   @ApiResponse({ type: [TaskCompletionEntity] })
+  @UseGuards(AdminGuard)
   async findAll(@Query() pagination: PaginationDTO, @Response() res: Res): Promise<any> {
     const result = await this.taskCompletionsService.findAll(pagination);
 
@@ -70,6 +75,7 @@ export class TaskCompletionsController {
   }
 
   @Delete()
+  @UseGuards(AdminGuard)
   remove(@Query() taskCompletionId: TaskCompletionId) {
     return this.taskCompletionsService.remove(taskCompletionId);
   }
@@ -84,12 +90,10 @@ export class TaskCompletionsController {
   }
 
   @Get('/by-user/header')
-  @UseGuards(CasdoorGuard)
   @ApiOperation({
     description: 'Get a task completion by inferring the user from the JWT and the task from the query'
   })
   @ApiResponse({ type: TaskCompletionEntity })
-  @ApiBearerAuth()
   async findOrCreateByTask(@Query() findQuery: FindByTask, @UserCtx() user: User): Promise<TaskCompletionEntity> {
     return this.findOrCreateByUserTask({
       task: findQuery.task,
@@ -98,12 +102,10 @@ export class TaskCompletionsController {
   }
 
   @Get('/next-incomplete')
-  @UseGuards(CasdoorGuard)
   @ApiOperation({
     description: 'Get the next task completion for the user to go through'
   })
   @ApiResponse({ type: TaskCompletionEntity })
-  @ApiBearerAuth()
   async getNextIncomplete(@UserCtx() user: User): Promise<TaskCompletionEntity> {
     const next = await this.taskCompletionsService.getNextTaskCompletion(user);
     if (!next) {
@@ -113,12 +115,10 @@ export class TaskCompletionsController {
   }
 
   @Get('/upload-url')
-  @UseGuards(CasdoorGuard)
   @ApiOperation({
     description: 'Get the presigned URL to upload the recordeded video'
   })
   @ApiResponse({ type: String })
-  @ApiBearerAuth()
   async getVideoUploadURL(@Query('taskId') taskId: string, @UserCtx() user: User): Promise<string> {
     // TODO: Validate it is the correct user making the request
     return this.taskCompletionsService.getUploadUrl(taskId, user);
@@ -129,6 +129,7 @@ export class TaskCompletionsController {
     description: 'Get the presigned URL to download a video'
   })
   @ApiResponse({ type: String })
+  @UseGuards(AdminGuard)
   async getVideoDownloadURL(@Query('video') video: string): Promise<string> {
     return this.taskCompletionsService.getDownloadUrl(video);
   }
@@ -137,6 +138,7 @@ export class TaskCompletionsController {
   @ApiOperation({
     description: 'Delete a video from the S3 bucket'
   })
+  @UseGuards(AdminGuard)
   async deleteVideo(@Query('video') video: string): Promise<void> {
     await this.taskCompletionsService.deleteVideo(video);
   }
