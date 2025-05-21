@@ -1,7 +1,7 @@
 import { AuthProvider } from 'react-admin';
 import { config } from './config/configuration';
 
-const JWT_TOKEN_KEY = 'CASDOOR_JWT_ADMIN';
+export const JWT_TOKEN_KEY = 'CASDOOR_JWT_ADMIN';
 
 const hasJWTExpired = (token: string): boolean => {
   const expiry = JSON.parse(window.atob(token.split('.')[1])).exp;

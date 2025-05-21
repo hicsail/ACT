@@ -1,4 +1,4 @@
-import { Admin, Resource } from 'react-admin';
+import { Admin, Resource, fetchUtils } from 'react-admin';
 import { config } from './config/configuration';
 import simpleRestProvider from 'ra-data-simple-rest';
 import { TaskCompletionsList } from './components/taskcompletions/TaskCompletionsList.component';
@@ -8,10 +8,19 @@ import { SetsList } from './components/sets/SetsList.component';
 import { StudyMappingList } from './components/studymapping/StudyMappingList.component';
 import { CasdoorProvider } from './contexts/Casdoor.context';
 import { BrowserRouter } from 'react-router-dom';
-import { authProvider } from './auth';
+import { authProvider, JWT_TOKEN_KEY } from './auth';
 
 function App() {
-  const dataSource = simpleRestProvider(config.backendURL);
+  const httpClient = (url: string, options: fetchUtils.Options = {}) => {
+    if (!options.headers) {
+      options.headers = new Headers({ Accept: 'application/json' });
+    }
+
+    const token = localStorage.getItem(JWT_TOKEN_KEY);
+    (options.headers as Headers).set('Authorization', `Bearer ${token}`);
+    return fetchUtils.fetchJson(url, options);
+  };
+  const dataSource = simpleRestProvider(config.backendURL, httpClient);
 
   return (
     <BrowserRouter>
