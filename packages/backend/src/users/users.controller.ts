@@ -36,7 +36,7 @@ export class UsersController {
 
   @Get('/training-complete/:id')
   @ApiResponse({ type: HasComplete })
-  async isTrainingComplete(@Param('id') id: string): Promise<{ complete: boolean}> {
+  async isTrainingComplete(@Param('id') id: string): Promise<{ complete: boolean }> {
     return {
       complete: await this.usersService.isTrainingComplete(id)
     };

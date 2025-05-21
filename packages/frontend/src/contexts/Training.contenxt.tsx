@@ -81,12 +81,14 @@ export const TrainingContextProvider: FC<TrainingProviderProps> = ({ children })
   };
 
   return (
-    <TrainingContext.Provider value={{
+    <TrainingContext.Provider
+      value={{
         hasCompletedCameraCheck,
         markCameraCheckComplete,
         hasCompletedTraining,
-        markCompletedTraining: () => getHasCompletedTraining(),
-    }}>
+        markCompletedTraining: () => getHasCompletedTraining()
+      }}
+    >
       {children}
     </TrainingContext.Provider>
   );

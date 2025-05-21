@@ -35,7 +35,9 @@ export const PracticeTaskInstructions: FC<PracticeTaskInstructionsProps> = ({ on
         -You are speaking to your class the entire time. -You may use visual (whiteboard, paper, etc.) and hold it up in
         bold, clear view to your camera.
       </Typography>
-      <Button variant="contained" onClick={onContinue}>Continue Tutorial</Button>
+      <Button variant="contained" onClick={onContinue}>
+        Continue Tutorial
+      </Button>
       <Button variant="contained" onClick={() => setInstructionsOpen(!instructionsOpen)}>
         Click to See Instructions
       </Button>

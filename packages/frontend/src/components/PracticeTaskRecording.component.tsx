@@ -38,30 +38,25 @@ export const PracticeTaskRecording: FC = () => {
       />
       <Stack>
         <PractiveTaskInstructionsSide />
-        <Button variant='contained' onClick={() => setInstructionsOpen(!instructionsOpen)}>
+        <Button variant="contained" onClick={() => setInstructionsOpen(!instructionsOpen)}>
           Click to See Instructions
         </Button>
       </Stack>
       <Dialog open={instructionsOpen}>
         <DialogTitle>Tutorial</DialogTitle>
         <DialogContent>
-          <Typography variant='h3'>Important Information about the Buttons</Typography>
-          <Typography variant='body1'>
-            When you are in an actual task you will click
-            a blue bar at the bottom of your screen to
-            “Start Recording” when you want to progress to
-            the recording page. You will automatically progress
-            there as soon as the timer runs out as well. You cannot
-            go back once you’ve selected “Start Recording”.
-            The camera records automatically and a countdown timer begins to show you your remaining time.
+          <Typography variant="h3">Important Information about the Buttons</Typography>
+          <Typography variant="body1">
+            When you are in an actual task you will click a blue bar at the bottom of your screen to “Start Recording”
+            when you want to progress to the recording page. You will automatically progress there as soon as the timer
+            runs out as well. You cannot go back once you’ve selected “Start Recording”. The camera records
+            automatically and a countdown timer begins to show you your remaining time.
           </Typography>
-          <Typography variant='body1'>
-            On the top of the next page you will see a
-            “Submit Recording” button. This will stop recording
-            your video and upload it automatically to the secure
-            server. progress there as soon as the timer runs out
-            as well. Only click this button once you are done with your
-            task. The video will automatically submit once the timer runs out.
+          <Typography variant="body1">
+            On the top of the next page you will see a “Submit Recording” button. This will stop recording your video
+            and upload it automatically to the secure server. progress there as soon as the timer runs out as well. Only
+            click this button once you are done with your task. The video will automatically submit once the timer runs
+            out.
           </Typography>
         </DialogContent>
         <DialogActions>
