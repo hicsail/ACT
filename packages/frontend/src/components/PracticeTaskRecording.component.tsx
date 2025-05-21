@@ -5,11 +5,13 @@ import { useNavigate } from 'react-router';
 import { PractiveTaskInstructionsSide } from './PracticeTaskInstructionsSide.component';
 import { useUser } from '../contexts/User.context';
 import { usersControllerMarkTrainingComplete } from '../client';
+import { useTraining } from '../contexts/Training.contenxt';
 
 export const PracticeTaskRecording: FC = () => {
   const navigate = useNavigate();
   const [instructionsOpen, setInstructionsOpen] = useState<boolean>(false);
   const { user } = useUser();
+  const { markCompletedTraining } = useTraining();
 
   const handleVideoComplete = async (_blobURL: string, _blob: Blob) => {
     const trainingCompleteResult = await usersControllerMarkTrainingComplete({
@@ -21,6 +23,8 @@ export const PracticeTaskRecording: FC = () => {
     if (trainingCompleteResult.error) {
       throw new Error('Failed to mark user training as complete');
     }
+
+    markCompletedTraining();
 
     navigate('/home');
   };

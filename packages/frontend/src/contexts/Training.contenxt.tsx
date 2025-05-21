@@ -1,4 +1,6 @@
 import { createContext, FC, useContext, useEffect, useState } from 'react';
+import { usersControllerIsTrainingComplete } from '../client';
+import { useUser } from '../contexts/User.context';
 
 const TRAINING_KEY = 'TRAINING_CONTEXT';
 
@@ -9,6 +11,8 @@ interface TrainingLocalStoragePayload {
 export interface TrainingContextPayload {
   hasCompletedCameraCheck: boolean;
   markCameraCheckComplete: () => void;
+  hasCompletedTraining: boolean;
+  markCompletedTraining: () => void;
 }
 
 const TrainingContext = createContext({} as TrainingContextPayload);
@@ -19,6 +23,8 @@ export interface TrainingProviderProps {
 
 export const TrainingContextProvider: FC<TrainingProviderProps> = ({ children }) => {
   const [hasCompletedCameraCheck, setHasCompletedCameraCheck] = useState<boolean>(false);
+  const [hasCompletedTraining, setHasCompletedTraining] = useState<boolean>(false);
+  const { user } = useUser();
 
   const loadTrainingContext = () => {
     const existingTrainingContext = localStorage.getItem(TRAINING_KEY);
@@ -28,6 +34,21 @@ export const TrainingContextProvider: FC<TrainingProviderProps> = ({ children })
     return JSON.parse(existingTrainingContext) as TrainingLocalStoragePayload;
   };
 
+  const getHasCompletedTraining = async () => {
+    const hasCompletedResults = await usersControllerIsTrainingComplete({
+      path: {
+        id: user!.id
+      }
+    });
+
+    if (hasCompletedResults.error || !hasCompletedResults.data) {
+      console.error(hasCompletedResults.error);
+      return;
+    }
+
+    setHasCompletedTraining(hasCompletedResults.data.complete);
+  };
+
   const saveContext = (context: TrainingLocalStoragePayload) => {
     localStorage.setItem(TRAINING_KEY, JSON.stringify(context));
   };
@@ -35,11 +56,15 @@ export const TrainingContextProvider: FC<TrainingProviderProps> = ({ children })
   useEffect(() => {
     const existingContext = loadTrainingContext();
 
+    if (user) {
+      getHasCompletedTraining();
+    }
+
     // Update the fields accordingly
     setHasCompletedCameraCheck(
       existingContext?.hasCompletedCameraCheck ? existingContext.hasCompletedCameraCheck : false
     );
-  }, []);
+  }, [user]);
 
   const markCameraCheckComplete = () => {
     setHasCompletedCameraCheck(true);
@@ -56,7 +81,12 @@ export const TrainingContextProvider: FC<TrainingProviderProps> = ({ children })
   };
 
   return (
-    <TrainingContext.Provider value={{ hasCompletedCameraCheck, markCameraCheckComplete }}>
+    <TrainingContext.Provider value={{
+        hasCompletedCameraCheck,
+        markCameraCheckComplete,
+        hasCompletedTraining,
+        markCompletedTraining: () => getHasCompletedTraining(),
+    }}>
       {children}
     </TrainingContext.Provider>
   );
