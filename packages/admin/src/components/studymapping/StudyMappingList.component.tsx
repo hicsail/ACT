@@ -25,7 +25,7 @@ export const StudyMappingList: FC = () => {
       method: 'POST',
       body: formData,
       headers: {
-        'Authorization': `Bearer ${token}`
+        Authorization: `Bearer ${token}`
       }
     });
 

@@ -4,7 +4,7 @@ import { Request } from 'express';
 
 @Injectable()
 export class AdminGuard implements CanActivate {
-  constructor (private readonly casdoorService: CasdoorService) {}
+  constructor(private readonly casdoorService: CasdoorService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
