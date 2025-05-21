@@ -15,6 +15,7 @@ import { SnackbarProvider } from './contexts/Snackbar.context';
 import { ClientProvider } from './contexts/Client.context';
 import { Task } from './pages/Task.page';
 import { TrainingContextProvider } from './contexts/Training.contenxt';
+import { PracticeTask } from './pages/Practice.page';
 
 const App: FC = () => {
   return (
@@ -33,6 +34,7 @@ const App: FC = () => {
                       <Route path="/home" element={<Home />} />
                       <Route path="/cam-check" element={<CameraCheck />} />
                       <Route path="/taskcompletion" element={<Task />} />
+                      <Route path="/practice" element={<PracticeTask />} />
                     </Routes>
                   </BrowserRouter>
                 </Container>

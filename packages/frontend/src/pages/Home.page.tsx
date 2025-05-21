@@ -3,6 +3,7 @@ import { FC } from 'react';
 import { CameraCheckActivity } from '../components/CameraCheckActivity.component';
 import { TaskList } from '../components/TaskList.component';
 import { useTraining } from '../contexts/Training.contenxt';
+import { PracticeActivity } from '../components/PracticeActivity.component';
 
 export const Home: FC = () => {
   const training = useTraining();
@@ -37,6 +38,8 @@ export const Home: FC = () => {
         <Divider variant="middle" sx={{ borderColor: 'black' }} />
 
         <CameraCheckActivity />
+
+        <PracticeActivity />
 
         {training.hasCompletedCameraCheck && <TaskList />}
       </Stack>
