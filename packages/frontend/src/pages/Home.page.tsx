@@ -41,7 +41,7 @@ export const Home: FC = () => {
 
         <PracticeActivity />
 
-        {training.hasCompletedCameraCheck && <TaskList />}
+        {training.hasCompletedCameraCheck && training.hasCompletedTraining && <TaskList />}
       </Stack>
     </>
   );
