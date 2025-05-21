@@ -214,6 +214,10 @@ export type UpdateTaskCompletionDto = {
     userId?: string;
 };
 
+export type HasComplete = {
+    complete: boolean;
+};
+
 export type WebhookPayload = {
     [key: string]: unknown;
 };
@@ -660,8 +664,10 @@ export type UsersControllerIsTrainingCompleteData = {
 };
 
 export type UsersControllerIsTrainingCompleteResponses = {
-    200: unknown;
+    default: HasComplete;
 };
+
+export type UsersControllerIsTrainingCompleteResponse = UsersControllerIsTrainingCompleteResponses[keyof UsersControllerIsTrainingCompleteResponses];
 
 export type UsersControllerMarkTrainingCompleteData = {
     body?: never;

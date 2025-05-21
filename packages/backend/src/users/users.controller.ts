@@ -2,9 +2,14 @@ import { Controller, Get, Param, Query, Response, UseGuards, Put } from '@nestjs
 import { UsersService } from './users.service';
 import { Response as Res } from 'express';
 import { PaginationDTO, makeContentRange } from 'src/pagination/pagination.dto';
-import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiProperty, ApiResponse } from '@nestjs/swagger';
 import { AdminGuard } from '../casdoor/admin.guard';
 import { CasdoorGuard } from '../casdoor/casdoor.guard';
+
+class HasComplete {
+  @ApiProperty()
+  complete: boolean;
+}
 
 @Controller('users')
 @ApiBearerAuth()
@@ -30,6 +35,7 @@ export class UsersController {
   }
 
   @Get('/training-complete/:id')
+  @ApiResponse({ type: HasComplete })
   async isTrainingComplete(@Param('id') id: string): Promise<{ complete: boolean}> {
     return {
       complete: await this.usersService.isTrainingComplete(id)
