@@ -3,12 +3,25 @@ import { FC, useState } from 'react';
 import { VideoRecord } from './VideoRecord.component';
 import { useNavigate } from 'react-router';
 import { PractiveTaskInstructionsSide } from './PracticeTaskInstructionsSide.component';
+import { useUser } from '../contexts/User.context';
+import { usersControllerMarkTrainingComplete } from '../client';
 
 export const PracticeTaskRecording: FC = () => {
   const navigate = useNavigate();
   const [instructionsOpen, setInstructionsOpen] = useState<boolean>(false);
+  const { user } = useUser();
 
-  const handleVideoComplete = async (_blobURL: string, blob: Blob) => {
+  const handleVideoComplete = async (_blobURL: string, _blob: Blob) => {
+    const trainingCompleteResult = await usersControllerMarkTrainingComplete({
+      path: {
+        id: user!.id
+      }
+    });
+
+    if (trainingCompleteResult.error) {
+      throw new Error('Failed to mark user training as complete');
+    }
+
     navigate('/home');
   };
 

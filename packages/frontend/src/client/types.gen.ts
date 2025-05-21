@@ -650,6 +650,32 @@ export type UsersControllerFindOneResponses = {
     200: unknown;
 };
 
+export type UsersControllerIsTrainingCompleteData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/users/training-complete/{id}';
+};
+
+export type UsersControllerIsTrainingCompleteResponses = {
+    200: unknown;
+};
+
+export type UsersControllerMarkTrainingCompleteData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/users/training-complete/{id}';
+};
+
+export type UsersControllerMarkTrainingCompleteResponses = {
+    200: unknown;
+};
+
 export type StudymappingControllerFindAllData = {
     body?: never;
     path?: never;
