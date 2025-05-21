@@ -53,4 +53,15 @@ export class CasdoorService {
 
     return null;
   }
+
+  async findById(id: string): Promise<User | null> {
+    const users = await this.casdoor.getUsers();
+    for (const user of users.data.data) {
+      if (user.id == id) {
+        return user;
+      }
+    }
+
+    return null;
+  }
 }

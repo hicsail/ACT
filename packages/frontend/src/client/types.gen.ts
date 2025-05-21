@@ -214,6 +214,10 @@ export type UpdateTaskCompletionDto = {
     userId?: string;
 };
 
+export type HasComplete = {
+    complete: boolean;
+};
+
 export type WebhookPayload = {
     [key: string]: unknown;
 };
@@ -647,6 +651,34 @@ export type UsersControllerFindOneData = {
 };
 
 export type UsersControllerFindOneResponses = {
+    200: unknown;
+};
+
+export type UsersControllerIsTrainingCompleteData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/users/training-complete/{id}';
+};
+
+export type UsersControllerIsTrainingCompleteResponses = {
+    default: HasComplete;
+};
+
+export type UsersControllerIsTrainingCompleteResponse = UsersControllerIsTrainingCompleteResponses[keyof UsersControllerIsTrainingCompleteResponses];
+
+export type UsersControllerMarkTrainingCompleteData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/users/training-complete/{id}';
+};
+
+export type UsersControllerMarkTrainingCompleteResponses = {
     200: unknown;
 };
 
