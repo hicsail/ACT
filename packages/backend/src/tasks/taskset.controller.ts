@@ -9,7 +9,8 @@ import {
   Response,
   Param,
   NotFoundException,
-  Put
+  Put,
+  UseGuards
 } from '@nestjs/common';
 import { TaskSetService } from './taskset.service';
 import { CreateTaskSetDto } from './dto/create-taskset.dto';
@@ -17,14 +18,19 @@ import { UpdateTaskSetDto } from './dto/update-taskset.dto';
 import { TaskSetEntity } from './entities/taskset.entity';
 import { PaginationDTO, makeContentRange } from 'src/pagination/pagination.dto';
 import { Response as Res } from 'express';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { CasdoorGuard } from '../casdoor/casdoor.guard';
+import { AdminGuard } from '../casdoor/admin.guard';
 
 @Controller('sets')
+@ApiBearerAuth()
+@UseGuards(CasdoorGuard)
 export class TaskSetController {
   constructor(private readonly taskSetService: TaskSetService) {}
 
   @Post()
   @ApiResponse({ type: TaskSetEntity })
+  @UseGuards(AdminGuard)
   create(@Body() createTaskSetDto: CreateTaskSetDto): Promise<TaskSetEntity> {
     return this.taskSetService.create(createTaskSetDto);
   }
@@ -53,6 +59,7 @@ export class TaskSetController {
 
   @Patch(':id')
   @ApiResponse({ type: TaskSetEntity })
+  @UseGuards(AdminGuard)
   async update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskSetDto): Promise<TaskSetEntity> {
     const updated = await this.taskSetService.update(id, updateTaskDto);
     if (!updated) {
@@ -62,12 +69,14 @@ export class TaskSetController {
   }
 
   @Delete(':id')
+  @UseGuards(AdminGuard)
   async remove(@Param('id') id: string): Promise<void> {
     await this.taskSetService.remove(id);
   }
 
   @Put('/active/:id')
   @ApiResponse({ type: TaskSetEntity })
+  @UseGuards(AdminGuard)
   async setActive(@Param('id') id: string): Promise<TaskSetEntity> {
     return this.taskSetService.setActive(id);
   }

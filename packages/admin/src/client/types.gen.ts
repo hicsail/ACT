@@ -45,6 +45,10 @@ export type CreateTaskDto = {
      * Order the tasks are presented to the user
      */
     order: number;
+    /**
+     * User provided ID for the task
+     */
+    descriptor: string;
 };
 
 export type TaskEntity = {
@@ -98,6 +102,10 @@ export type TaskEntity = {
      * Order the tasks are presented to the user
      */
     order: number;
+    /**
+     * User provided ID for the task
+     */
+    descriptor: string;
 };
 
 export type UpdateTaskDto = {
@@ -243,7 +251,9 @@ export type AppControllerGetHelloResponses = {
 export type CasdoorControllerHandleRedirectData = {
     body?: never;
     path?: never;
-    query?: never;
+    query: {
+        origin: string;
+    };
     url: '/casdoor/redirect';
 };
 

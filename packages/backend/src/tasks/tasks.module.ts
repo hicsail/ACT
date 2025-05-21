@@ -4,9 +4,10 @@ import { TasksController } from './tasks.controller';
 import { PrismaModule } from '../prisma/prisma.module';
 import { TaskSetController } from './taskset.controller';
 import { TaskSetService } from './taskset.service';
+import { CasdoorModule } from '../casdoor/casdoor.module';
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaModule, CasdoorModule],
   controllers: [TasksController, TaskSetController],
   providers: [TasksService, TaskSetService],
   exports: [TasksService]

@@ -2,6 +2,7 @@ import { Stack } from '@mui/material';
 import { FC, ChangeEvent } from 'react';
 import { Button, Datagrid, List, TextField, useRefresh } from 'react-admin';
 import { config } from '../../config/configuration';
+import { JWT_TOKEN_KEY } from '../../auth';
 
 export const StudyMappingList: FC = () => {
   const refresh = useRefresh();
@@ -15,9 +16,17 @@ export const StudyMappingList: FC = () => {
     const formData = new FormData();
     formData.append('file', file);
 
+    const token = localStorage.getItem(JWT_TOKEN_KEY);
+    if (!token) {
+      throw Error('Cannot upload without token');
+    }
+
     await fetch(`${config.backendURL}/studymapping/upload`, {
       method: 'POST',
-      body: formData
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     });
 
     refresh();

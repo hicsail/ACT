@@ -1,9 +1,13 @@
-import { Controller, Get, Param, Query, Response } from '@nestjs/common';
+import { Controller, Get, Param, Query, Response, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { Response as Res } from 'express';
 import { PaginationDTO, makeContentRange } from 'src/pagination/pagination.dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { AdminGuard } from 'src/casdoor/admin.guard';
 
 @Controller('users')
+@ApiBearerAuth()
+@UseGuards(AdminGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

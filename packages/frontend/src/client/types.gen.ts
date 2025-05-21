@@ -45,6 +45,10 @@ export type CreateTaskDto = {
      * Order the tasks are presented to the user
      */
     order: number;
+    /**
+     * User provided ID for the task
+     */
+    descriptor: string;
 };
 
 export type TaskEntity = {
@@ -98,6 +102,10 @@ export type TaskEntity = {
      * Order the tasks are presented to the user
      */
     order: number;
+    /**
+     * User provided ID for the task
+     */
+    descriptor: string;
 };
 
 export type UpdateTaskDto = {
@@ -166,6 +174,10 @@ export type CreateTaskCompletionDto = {
 
 export type TaskCompletionEntity = {
     /**
+     * Generated ID
+     */
+    id: string;
+    /**
      * The ID of the task associated with the completion
      */
     taskId: string;
@@ -202,6 +214,29 @@ export type UpdateTaskCompletionDto = {
     userId?: string;
 };
 
+export type WebhookPayload = {
+    [key: string]: unknown;
+};
+
+export type StudyMappingEntity = {
+    /**
+     * Placeholder ID for the admin client
+     */
+    id: string;
+    /**
+     * Email of the user
+     */
+    email: string;
+    /**
+     * Unique study ID for the user
+     */
+    studyId: string;
+    /**
+     * Region the user is in
+     */
+    region: string;
+};
+
 export type AppControllerGetHelloData = {
     body?: never;
     path?: never;
@@ -216,7 +251,9 @@ export type AppControllerGetHelloResponses = {
 export type CasdoorControllerHandleRedirectData = {
     body?: never;
     path?: never;
-    query?: never;
+    query: {
+        origin: string;
+    };
     url: '/casdoor/redirect';
 };
 
@@ -560,6 +597,95 @@ export type TaskCompletionsControllerGetVideoUploadUrlResponses = {
 };
 
 export type TaskCompletionsControllerGetVideoUploadUrlResponse = TaskCompletionsControllerGetVideoUploadUrlResponses[keyof TaskCompletionsControllerGetVideoUploadUrlResponses];
+
+export type TaskCompletionsControllerGetVideoDownloadUrlData = {
+    body?: never;
+    path?: never;
+    query: {
+        video: string;
+    };
+    url: '/taskCompletions/view-url';
+};
+
+export type TaskCompletionsControllerGetVideoDownloadUrlResponses = {
+    default: string;
+};
+
+export type TaskCompletionsControllerGetVideoDownloadUrlResponse = TaskCompletionsControllerGetVideoDownloadUrlResponses[keyof TaskCompletionsControllerGetVideoDownloadUrlResponses];
+
+export type TaskCompletionsControllerDeleteVideoData = {
+    body?: never;
+    path?: never;
+    query: {
+        video: string;
+    };
+    url: '/taskCompletions/video';
+};
+
+export type TaskCompletionsControllerDeleteVideoResponses = {
+    200: unknown;
+};
+
+export type UsersControllerFindAllData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/users';
+};
+
+export type UsersControllerFindAllResponses = {
+    200: unknown;
+};
+
+export type UsersControllerFindOneData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/users/{id}';
+};
+
+export type UsersControllerFindOneResponses = {
+    200: unknown;
+};
+
+export type StudymappingControllerFindAllData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/studymapping';
+};
+
+export type StudymappingControllerFindAllResponses = {
+    default: StudyMappingEntity;
+};
+
+export type StudymappingControllerFindAllResponse = StudymappingControllerFindAllResponses[keyof StudymappingControllerFindAllResponses];
+
+export type StudymappingControllerWebhookData = {
+    body: WebhookPayload;
+    path?: never;
+    query?: never;
+    url: '/studymapping';
+};
+
+export type StudymappingControllerWebhookResponses = {
+    201: unknown;
+};
+
+export type StudymappingControllerUploadCsvData = {
+    body: {
+        file?: Blob | File;
+    };
+    path?: never;
+    query?: never;
+    url: '/studymapping/upload';
+};
+
+export type StudymappingControllerUploadCsvResponses = {
+    201: unknown;
+};
 
 export type ClientOptions = {
     baseUrl: string;
