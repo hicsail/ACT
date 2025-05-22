@@ -1,9 +1,9 @@
 import { Divider, Stack, Typography } from '@mui/material';
 import { FC } from 'react';
-import { CameraCheckActivity } from '../components/CameraCheckActivity.component';
-import { TaskList } from '../components/TaskList.component';
+import { CameraCheckActivity } from '../components/camera-check/CameraCheckActivity.component';
+import { TaskList } from '../components/task/TaskList.component';
 import { useTraining } from '../contexts/Training.contenxt';
-import { PracticeActivity } from '../components/PracticeActivity.component';
+import { PracticeActivity } from '../components/practice/PracticeActivity.component';
 
 export const Home: FC = () => {
   const training = useTraining();

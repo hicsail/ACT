@@ -1,15 +1,15 @@
-import { Grid, Stack } from '@mui/material';
+import { Grid } from '@mui/material';
 import { FC } from 'react';
-import { VideoRecord } from './VideoRecord.component';
+import { VideoRecord } from '../VideoRecord.component';
 import { TaskInstructionsSide } from './TaskInstructionsSide.component';
 import {
   TaskCompletionEntity,
   taskCompletionsControllerGetVideoUploadUrl,
   taskCompletionsControllerUpdate,
   TaskEntity
-} from '../client';
+} from '../../client';
 import { useNavigate } from 'react-router';
-import { useUser } from '../contexts/User.context';
+import { useUser } from '../../contexts/User.context';
 
 export interface TaskRecordingProps {
   task: TaskEntity;

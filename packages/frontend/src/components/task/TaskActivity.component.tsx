@@ -1,7 +1,7 @@
-import { ActivityCard } from './ActivityCard.component';
+import { ActivityCard } from '../ActivityCard.component';
 import { FC } from 'react';
-import { TaskEntity, TaskCompletionEntity } from '../client';
-import taskPreviewImage from '../assets/TaskPreviewImage.png';
+import { TaskEntity, TaskCompletionEntity } from '../../client';
+import taskPreviewImage from '../../assets/TaskPreviewImage.png';
 import { useNavigate } from 'react-router';
 
 export interface TaskActivityProps {

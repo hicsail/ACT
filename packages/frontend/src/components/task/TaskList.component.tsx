@@ -4,7 +4,7 @@ import {
   taskCompletionsControllerGetNextIncomplete,
   TaskEntity,
   tasksControllerFindOne
-} from '../client';
+} from '../../client';
 import { TaskActivity } from './TaskActivity.component';
 
 export const TaskList: FC = () => {

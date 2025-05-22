@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
-import { PracticeTaskInstructions } from '../components/PracticeTaskInstructions.component';
-import { PracticeTaskRecording } from '../components/PracticeTaskRecording.component';
+import { PracticeTaskInstructions } from '../components/practice/PracticeTaskInstructions.component';
+import { PracticeTaskRecording } from '../components/practice/PracticeTaskRecording.component';
 
 export const PracticeTask: FC = () => {
   const [view, setView] = useState<'instructions' | 'recording'>('instructions');

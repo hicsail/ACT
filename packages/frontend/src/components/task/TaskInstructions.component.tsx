@@ -1,15 +1,19 @@
-import { Stack, Typography, List, ListItem, ListItemText } from '@mui/material';
 import { FC } from 'react';
-import { TaskEntity } from '../client';
+import { Button, List, ListItem, ListItemText, Stack, Typography } from '@mui/material';
+import { TaskEntity } from '../../client';
 
-export interface TaskInstructionsSideProps {
+export interface TaskInstructionsProps {
   task: TaskEntity;
+  onStart: () => void;
 }
 
-export const TaskInstructionsSide: FC<TaskInstructionsSideProps> = ({ task }) => {
+export const TaskInstructions: FC<TaskInstructionsProps> = ({ task, onStart }) => {
   return (
-    <Stack>
-      <Typography variant="h3">The problem you have chosen is:</Typography>
+    <Stack sx={{ padding: 10 }}>
+      <Typography variant="h1">{task.title}</Typography>
+      <Typography variant="body1">{task.description}</Typography>
+
+      <Typography variant="h3" sx={{ paddingTop: 10 }}>The problem you have chosen is:</Typography>
       <Typography variant="body1">{task.problemDescription}</Typography>
 
       <Typography variant="h3" sx={{ paddingTop: 10 }}>Your task is to do the following:</Typography>
@@ -23,6 +27,9 @@ export const TaskInstructionsSide: FC<TaskInstructionsSideProps> = ({ task }) =>
           </ListItem>
         ))}
       </List>
+      <Button variant="contained" onClick={onStart}>
+        Start Recording
+      </Button>
     </Stack>
   );
 };
