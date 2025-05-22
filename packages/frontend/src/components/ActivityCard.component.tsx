@@ -15,11 +15,11 @@ export interface ActivityCardProps {
 export const ActivityCard: FC<ActivityCardProps> = (props) => {
   return (
     <Grid container>
-      <Grid size={4}>
+      <Grid size={2}>
         <img src={props.previewImage} width="100%" />
       </Grid>
 
-      <Grid size={8}>
+      <Grid size={10}>
         <Stack spacing={2}>
           <Typography variant="h3">{props.activityTitle}</Typography>
           <Typography variant="body1">{props.activityDescription}</Typography>

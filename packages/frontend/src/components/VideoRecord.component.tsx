@@ -3,6 +3,7 @@ import { FC, useEffect, useRef, useState } from 'react';
 import { useReactMediaRecorder } from 'react-media-recorder';
 import { useSnackbar } from '../contexts/Snackbar.context';
 import { CountDownTimer, CountDownState } from './CountDownTimer.component';
+import { ResolvePermissionError } from './ResolvePermissionError.component';
 
 export interface VideoRecordProps {
   downloadRecording: boolean;
@@ -19,6 +20,7 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
   });
   const [countDownState, setCountDownState] = useState<CountDownState>('paused');
   const [blobPayload, setBlobPayload] = useState<{ blobURL: string; blob: Blob } | null>(null);
+  const [issueFound, setIssueFound] = useState<boolean>(false);
 
   const handleCompletion = (blobURL: string, blob: Blob) => {
     if (props.downloadRecording) {
@@ -86,12 +88,14 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
           'You have denied camera or microphone permissions to this site. You must enable permissions to record your video successfully',
           'error'
         );
+        setIssueFound(true);
         break;
       case 'media_in_use':
         pushSnackbarMessage(
           'Your camera or microphone is already in use. You must close other apps accessing them in order to record your video successfully',
           'error'
         );
+        setIssueFound(true);
         break;
     }
   }, [recorder.error]);
@@ -119,7 +123,9 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
           </Button>
         </Grid>
       </Grid>
-      <video src={recorder.mediaBlobUrl} controls autoPlay loop ref={videoRef} />
+
+      {issueFound == false && <video src={recorder.mediaBlobUrl} controls autoPlay loop ref={videoRef} />}
+      {issueFound && <ResolvePermissionError />}
     </Stack>
   );
 };

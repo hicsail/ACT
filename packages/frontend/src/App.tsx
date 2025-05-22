@@ -20,14 +20,14 @@ import { PracticeTask } from './pages/Practice.page';
 const App: FC = () => {
   return (
     <Theme>
-      <SnackbarProvider>
-        <CasdoorProvider>
-          <UserContextProvider>
-            <ClientProvider>
-              <TrainingContextProvider>
-                <Navigation />
-                <Container component="main">
-                  <BrowserRouter>
+      <BrowserRouter>
+        <SnackbarProvider>
+          <CasdoorProvider>
+            <UserContextProvider>
+              <ClientProvider>
+                <TrainingContextProvider>
+                  <Navigation />
+                  <Container component="main">
                     <Routes>
                       <Route index path="/" element={<Landing />} />
                       <Route path="/callback" element={<AuthCallback />} />
@@ -36,14 +36,14 @@ const App: FC = () => {
                       <Route path="/taskcompletion" element={<Task />} />
                       <Route path="/practice" element={<PracticeTask />} />
                     </Routes>
-                  </BrowserRouter>
-                </Container>
-                <Footer />
-              </TrainingContextProvider>
-            </ClientProvider>
-          </UserContextProvider>
-        </CasdoorProvider>
-      </SnackbarProvider>
+                  </Container>
+                  <Footer />
+                </TrainingContextProvider>
+              </ClientProvider>
+            </UserContextProvider>
+          </CasdoorProvider>
+        </SnackbarProvider>
+      </BrowserRouter>
     </Theme>
   );
 };

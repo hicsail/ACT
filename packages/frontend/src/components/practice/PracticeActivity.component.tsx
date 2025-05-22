@@ -1,8 +1,8 @@
-import { ActivityCard } from './ActivityCard.component';
+import { ActivityCard } from '../ActivityCard.component';
 import { FC } from 'react';
-import cameraCheckImage from '../assets/TaskPreviewImage.png';
+import cameraCheckImage from '../../assets/TaskPreviewImage.png';
 import { useNavigate } from 'react-router';
-import { useTraining } from '../contexts/Training.contenxt';
+import { useTraining } from '../../contexts/Training.contenxt';
 
 export const PracticeActivity: FC = () => {
   const navigate = useNavigate();

@@ -1,15 +1,15 @@
-import { Stack } from '@mui/material';
+import { Grid } from '@mui/material';
 import { FC } from 'react';
-import { VideoRecord } from './VideoRecord.component';
+import { VideoRecord } from '../VideoRecord.component';
 import { TaskInstructionsSide } from './TaskInstructionsSide.component';
 import {
   TaskCompletionEntity,
   taskCompletionsControllerGetVideoUploadUrl,
   taskCompletionsControllerUpdate,
   TaskEntity
-} from '../client';
+} from '../../client';
 import { useNavigate } from 'react-router';
-import { useUser } from '../contexts/User.context';
+import { useUser } from '../../contexts/User.context';
 
 export interface TaskRecordingProps {
   task: TaskEntity;
@@ -66,14 +66,17 @@ export const TaskRecording: FC<TaskRecordingProps> = ({ task }) => {
   };
 
   return (
-    <Stack direction="row">
-      <VideoRecord
-        downloadRecording={false}
-        onSubmit={(blobURL, blob) => handleVideoComplete(blobURL, blob)}
-        timeLimit={5}
-      />
-
-      <TaskInstructionsSide task={task} />
-    </Stack>
+    <Grid container direction="row" sx={{ padding: 5 }}>
+      <Grid size={6}>
+        <VideoRecord
+          downloadRecording={false}
+          onSubmit={(blobURL, blob) => handleVideoComplete(blobURL, blob)}
+          timeLimit={task.timeSeconds}
+        />
+      </Grid>
+      <Grid size={6}>
+        <TaskInstructionsSide task={task} />
+      </Grid>
+    </Grid>
   );
 };

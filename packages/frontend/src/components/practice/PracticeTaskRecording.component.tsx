@@ -1,11 +1,11 @@
 import { Button, Dialog, DialogContent, DialogTitle, Stack, Typography, DialogActions } from '@mui/material';
 import { FC, useState } from 'react';
-import { VideoRecord } from './VideoRecord.component';
+import { VideoRecord } from '../VideoRecord.component';
 import { useNavigate } from 'react-router';
 import { PractiveTaskInstructionsSide } from './PracticeTaskInstructionsSide.component';
-import { useUser } from '../contexts/User.context';
-import { usersControllerMarkTrainingComplete } from '../client';
-import { useTraining } from '../contexts/Training.contenxt';
+import { useUser } from '../../contexts/User.context';
+import { usersControllerMarkTrainingComplete } from '../../client';
+import { useTraining } from '../../contexts/Training.contenxt';
 
 export const PracticeTaskRecording: FC = () => {
   const navigate = useNavigate();

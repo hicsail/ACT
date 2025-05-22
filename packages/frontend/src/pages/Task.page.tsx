@@ -1,8 +1,8 @@
 import { FC, useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import { TaskCompletionEntity, TaskEntity } from '../client';
-import { TaskInstructions } from '../components/TaskInstructions.component';
-import { TaskRecording } from '../components/TaskRecording.component';
+import { TaskInstructions } from '../components/task/TaskInstructions.component';
+import { TaskRecording } from '../components/task/TaskRecording.component';
 
 export const Task: FC = () => {
   const { state } = useLocation();

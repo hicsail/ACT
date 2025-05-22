@@ -1,6 +1,5 @@
 import { Button, Stack, Typography } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
-import { config } from '../config/configuration';
+import { FC } from 'react';
 import { useNavigate } from 'react-router';
 import { useUser } from '../contexts/User.context';
 
@@ -29,17 +28,7 @@ export const Landing: FC = () => {
 
 // Content shown to a person that needs to login
 const LoginContent: FC = () => {
-  const [loginURL, setLoginURL] = useState<string | null>(null);
-
-  const getAuthURL = async () => {
-    const result = await fetch(`${config.backendURL}/casdoor/redirect`);
-    const body = await result.json();
-    setLoginURL(body.url);
-  };
-
-  useEffect(() => {
-    getAuthURL();
-  }, []);
+  const { loginURL } = useUser();
 
   return (
     <>
