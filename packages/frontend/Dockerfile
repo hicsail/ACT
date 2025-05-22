@@ -11,9 +11,10 @@ COPY . .
 RUN npm install
 RUN npm run build
 
-FROM nginx:1.27.4-alpine AS prod
+FROM registry.access.redhat.com/ubi7/nginx-120
 
-COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /usr/src/app/build .
+
+ADD ./nginx.conf "${NGINX_CONF_PATH}"
 
 CMD nginx -g "daemon off;"
