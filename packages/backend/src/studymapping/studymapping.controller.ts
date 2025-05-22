@@ -11,7 +11,6 @@ import { AdminGuard } from 'src/casdoor/admin.guard';
 
 @Controller('studymapping')
 @ApiBearerAuth()
-@UseGuards(CasdoorGuard)
 export class StudymappingController {
   constructor(private readonly studyMappingService: StudymappingService) {}
 
@@ -28,6 +27,7 @@ export class StudymappingController {
 
   @Get()
   @ApiResponse({ type: StudyMappingEntity })
+  @UseGuards(CasdoorGuard)
   async findAll(@Query() pagination: PaginationDTO, @Response() res: Res): Promise<any> {
     const result = await this.studyMappingService.findAll(pagination);
 
