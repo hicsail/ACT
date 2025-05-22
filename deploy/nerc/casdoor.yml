@@ -1,0 +1,66 @@
+## Service for Casdoor
+apiVersion: v1
+kind: Service
+metadata:
+  name: act-casdoor-clusterip
+spec:
+  ports:
+    - name: act-casdoor
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+  selector:
+    app: act-casdoor
+  type: ClusterIP
+
+---
+
+## Casdoor Secret
+kind: Secret
+apiVersion: v1
+metadata:
+  name: act-casdoor-creds
+
+---
+
+## Casdoor Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: act-casdoor
+  labels:
+    app: act-casdoor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: act-casdoor
+  template:
+    metadata:
+      labels:
+        app: act-casdoor
+    spec:
+      containers:
+        - resources: {}
+          name: act-casdoor
+          image: casbin/casdoor:v1.882.0
+          terminationMessagePath: /dev/termination-log
+          envFrom:
+            - secretRef:
+                name: act-casdoor-creds
+          ports:
+            - containerPort: 8000
+              protocol: TCP
+          imagePullPolicy: Always
+          terminationMessagePolicy: File
+      imagePullSecrets:
+        - name: dockerhub-image-pull-secret
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: Recreate
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
