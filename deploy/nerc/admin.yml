@@ -37,9 +37,6 @@ spec:
           name: act-admin
           image: hicsail/act-admin:main
           terminationMessagePath: /dev/termination-log
-          envFrom:
-            - secretRef:
-                name: act-admin-creds
           ports:
             - containerPort: 8080
               protocol: TCP

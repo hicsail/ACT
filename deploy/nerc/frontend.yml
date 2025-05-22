@@ -37,9 +37,6 @@ spec:
           name: act-frontend
           image: hicsail/act-frontend:main
           terminationMessagePath: /dev/termination-log
-          envFrom:
-            - secretRef:
-                name: act-frontend-creds
           ports:
             - containerPort: 8080
               protocol: TCP
