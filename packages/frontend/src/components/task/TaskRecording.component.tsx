@@ -71,7 +71,7 @@ export const TaskRecording: FC<TaskRecordingProps> = ({ task }) => {
         <VideoRecord
           downloadRecording={false}
           onSubmit={(blobURL, blob) => handleVideoComplete(blobURL, blob)}
-          timeLimit={5}
+          timeLimit={task.timeSeconds}
         />
       </Grid>
       <Grid size={6}>
