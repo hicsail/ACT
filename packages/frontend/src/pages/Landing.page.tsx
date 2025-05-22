@@ -29,17 +29,7 @@ export const Landing: FC = () => {
 
 // Content shown to a person that needs to login
 const LoginContent: FC = () => {
-  const [loginURL, setLoginURL] = useState<string | null>(null);
-
-  const getAuthURL = async () => {
-    const result = await fetch(`${config.backendURL}/casdoor/redirect`);
-    const body = await result.json();
-    setLoginURL(body.url);
-  };
-
-  useEffect(() => {
-    getAuthURL();
-  }, []);
+  const { loginURL } = useUser();
 
   return (
     <>

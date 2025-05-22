@@ -1,5 +1,6 @@
 import { createContext, FC, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
+import { config } from '../config/configuration';
 
 export const TOKEN_KEY = 'CASDOOR_JWT';
 
@@ -28,6 +29,7 @@ export interface UserContextPayload {
   user?: UserInfo;
   login: (token: string) => void;
   logout: () => void;
+  loginURL?: string;
 }
 
 const UserContext = createContext<UserContextPayload>({} as UserContextPayload);
@@ -44,6 +46,17 @@ const hasJWTExpired = (token: string): boolean => {
 export const UserContextProvider: FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<UserInfo | undefined>(undefined);
   const navigate = useNavigate();
+  const [loginURL, setLoginURL] = useState<string | undefined>(undefined);
+
+  const getAuthURL = async () => {
+    const result = await fetch(`${config.backendURL}/casdoor/redirect`);
+    const body = await result.json();
+    setLoginURL(body.url);
+  };
+
+  useEffect(() => {
+    getAuthURL();
+  }, []);
 
   // Handle if an existing JWT is found
   useEffect(() => {
@@ -68,7 +81,7 @@ export const UserContextProvider: FC<UserProviderProps> = ({ children }) => {
     navigate('/');
   };
 
-  return <UserContext.Provider value={{ user, login: handleLogin, logout: handleLogout }}>{children}</UserContext.Provider>;
+  return <UserContext.Provider value={{ user, login: handleLogin, logout: handleLogout, loginURL }}>{children}</UserContext.Provider>;
 };
 
 export const useUser = () => useContext(UserContext);

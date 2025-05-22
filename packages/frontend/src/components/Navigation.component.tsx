@@ -5,7 +5,15 @@ import { useUser } from '../contexts/User.context';
 
 export const Navigation: FC = () => {
   const navigate = useNavigate();
-  const { logout } = useUser();
+  const { user, logout, loginURL } = useUser();
+
+  const loginLogoutButtonClick = () => {
+    if (user) {
+      logout();
+    } else if(loginURL) {
+      window.location.href = loginURL;
+    }
+  };
 
   return (
     <AppBar position="static">
@@ -16,7 +24,7 @@ export const Navigation: FC = () => {
 
         <Stack direction="row" spacing={3}>
           <Button color='inherit' onClick={() => navigate('/home')}>Home</Button>
-          <Button color='inherit' onClick={() => logout()}>Logout</Button>
+          <Button color='inherit' onClick={() => loginLogoutButtonClick()}>{user ? 'Logout': 'Login'}</Button>
         </Stack>
       </Toolbar>
     </AppBar>
