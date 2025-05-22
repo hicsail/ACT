@@ -10,7 +10,7 @@ export const Navigation: FC = () => {
   const loginLogoutButtonClick = () => {
     if (user) {
       logout();
-    } else if(loginURL) {
+    } else if (loginURL) {
       window.location.href = loginURL;
     }
   };
@@ -23,8 +23,12 @@ export const Navigation: FC = () => {
         </Typography>
 
         <Stack direction="row" spacing={3}>
-          <Button color='inherit' onClick={() => navigate('/home')}>Home</Button>
-          <Button color='inherit' onClick={() => loginLogoutButtonClick()}>{user ? 'Logout': 'Login'}</Button>
+          <Button color="inherit" onClick={() => navigate('/home')}>
+            Home
+          </Button>
+          <Button color="inherit" onClick={() => loginLogoutButtonClick()}>
+            {user ? 'Logout' : 'Login'}
+          </Button>
         </Stack>
       </Toolbar>
     </AppBar>

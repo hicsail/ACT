@@ -129,5 +129,3 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
     </Stack>
   );
 };
-
-

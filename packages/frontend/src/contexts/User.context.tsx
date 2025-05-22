@@ -81,7 +81,11 @@ export const UserContextProvider: FC<UserProviderProps> = ({ children }) => {
     navigate('/');
   };
 
-  return <UserContext.Provider value={{ user, login: handleLogin, logout: handleLogout, loginURL }}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={{ user, login: handleLogin, logout: handleLogout, loginURL }}>
+      {children}
+    </UserContext.Provider>
+  );
 };
 
 export const useUser = () => useContext(UserContext);
