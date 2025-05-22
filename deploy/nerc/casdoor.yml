@@ -23,6 +23,21 @@ metadata:
 
 ---
 
+## PVC for Casdoor Logs
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: act-casdoor-logs
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+
 ## Casdoor Deployment
 apiVersion: apps/v1
 kind: Deployment
@@ -40,6 +55,10 @@ spec:
       labels:
         app: act-casdoor
     spec:
+      volumes:
+        - name: act-casdoor-logs
+          persistentVolumeClaim:
+            claimName: act-casdoor-logs
       containers:
         - resources: {}
           name: act-casdoor
@@ -52,6 +71,9 @@ spec:
             - containerPort: 8000
               protocol: TCP
           imagePullPolicy: Always
+          volumeMounts:
+            - name: act-casdoor-logs
+              mountPath: /logs
           terminationMessagePolicy: File
       imagePullSecrets:
         - name: dockerhub-image-pull-secret
