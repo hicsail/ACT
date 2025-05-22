@@ -1,0 +1,26 @@
+## Service for Backend
+apiVersion: v1
+kind: Service
+metadata:
+  name: act-backend-clusterip
+spec:
+  ports:
+    - name: act-backend
+      port: 3001
+      protocol: TCP
+      targetPort: 3001
+  selector:
+    app: act-backend
+  type: ClusterIP
+
+---
+
+## Backend Secret
+kind: Secret
+apiVersion: v1
+metadata:
+  name: act-backend-creds
+
+---
+
+## Backend Deployment
