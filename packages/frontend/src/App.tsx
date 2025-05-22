@@ -7,7 +7,6 @@ import { Container } from '@mui/material';
 import { BrowserRouter, Route, Routes } from 'react-router';
 import { Landing } from './pages/Landing.page';
 import { AuthCallback } from './pages/AuthCallback.page';
-import { CasdoorProvider } from './contexts/Casdoor.context';
 import { Home } from './pages/Home.page';
 import { UserContextProvider } from './contexts/User.context';
 import { CameraCheck } from './pages/CameraCheck.page';
@@ -22,26 +21,24 @@ const App: FC = () => {
     <Theme>
       <BrowserRouter>
         <SnackbarProvider>
-          <CasdoorProvider>
-            <UserContextProvider>
-              <ClientProvider>
-                <TrainingContextProvider>
-                  <Navigation />
-                  <Container component="main">
-                    <Routes>
-                      <Route index path="/" element={<Landing />} />
-                      <Route path="/callback" element={<AuthCallback />} />
-                      <Route path="/home" element={<Home />} />
-                      <Route path="/cam-check" element={<CameraCheck />} />
-                      <Route path="/taskcompletion" element={<Task />} />
-                      <Route path="/practice" element={<PracticeTask />} />
-                    </Routes>
-                  </Container>
-                  <Footer />
-                </TrainingContextProvider>
-              </ClientProvider>
-            </UserContextProvider>
-          </CasdoorProvider>
+          <UserContextProvider>
+            <ClientProvider>
+              <TrainingContextProvider>
+                <Navigation />
+                <Container component="main">
+                  <Routes>
+                    <Route index path="/" element={<Landing />} />
+                    <Route path="/callback" element={<AuthCallback />} />
+                    <Route path="/home" element={<Home />} />
+                    <Route path="/cam-check" element={<CameraCheck />} />
+                    <Route path="/taskcompletion" element={<Task />} />
+                    <Route path="/practice" element={<PracticeTask />} />
+                  </Routes>
+                </Container>
+                <Footer />
+              </TrainingContextProvider>
+            </ClientProvider>
+          </UserContextProvider>
         </SnackbarProvider>
       </BrowserRouter>
     </Theme>
