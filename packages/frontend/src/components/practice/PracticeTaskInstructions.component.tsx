@@ -27,20 +27,23 @@ export const PracticeTaskInstructions: FC<PracticeTaskInstructionsProps> = ({ on
         to fourths.You are going to model one-fourth with a rectangle
       </Typography>
 
-      <Typography variant="h3" sx={{ paddingTop: 10 }}>Your task is to do the following:</Typography>
+      <Typography variant="h3" sx={{ paddingTop: 10 }}>
+        Your task is to do the following:
+      </Typography>
       <Typography variant="body1">
         Model how to represent one-fourth with this rectangular shape. Use concise and precise mathematical language.
       </Typography>
 
-      <Typography variant="h3" sx={{ paddingTop: 10 }}>Note</Typography>
+      <Typography variant="h3" sx={{ paddingTop: 10 }}>
+        Note
+      </Typography>
       <List sx={{ listStyleType: 'disc' }}>
         <ListItem sx={{ display: 'list-item' }}>
           <ListItemText>You are speaking to your class the entire time.</ListItemText>
         </ListItem>
         <ListItem sx={{ display: 'list-item' }}>
           <ListItemText>
-            You may use visual (whiteboard, paper, etc.) and hold it up in
-            bold, clear view to your camera.
+            You may use visual (whiteboard, paper, etc.) and hold it up in bold, clear view to your camera.
           </ListItemText>
         </ListItem>
       </List>
