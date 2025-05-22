@@ -1,0 +1,91 @@
+## Service for MySQL
+apiVersion: v1
+kind: Service
+metadata:
+  name: act-mysql-clusterip
+spec:
+  ports:
+    - name: act-mysql
+      port: 3306
+      protocol: TCP
+      targetPort: 3306
+  selector:
+    app: act-mysql
+  type: ClusterIP
+
+---
+
+## PVC for MySQL storage
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: act-mysql-storage
+spec:
+  accessModes:
+    - ReadWriteOnce
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+
+## MySQL Secret
+kind: Secret
+apiVersion: v1
+metadata:
+  name: act-mysql-creds
+
+---
+
+## MySQL Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: act-mysql
+  labels:
+    app: act-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: act-mysql
+  template:
+    metadata:
+      labels:
+        app: act-mysql
+    spec:
+      volumes:
+        - name: act-mysql-storage
+          persistentVolumeClaim:
+            claimName: act-mysql-storage
+      containers:
+        - resources: {}
+          name: act-mysql
+          image: mysql:8.0.25
+          terminationMessagePath: /dev/termination-log
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: act-mysql-creds
+                  key: MYSQL_ROOT_PASSWORD
+          ports:
+            - containerPort: 3306
+              protocol: TCP
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: act-mysql-storage
+              mountPath: /var/lib/mysql
+          terminationMessagePolicy: File
+      imagePullSecrets:
+        - name: dockerhub-image-pull-secret
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: Recreate
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600

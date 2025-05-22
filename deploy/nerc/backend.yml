@@ -1,0 +1,80 @@
+## Service for Backend
+apiVersion: v1
+kind: Service
+metadata:
+  name: act-backend-clusterip
+spec:
+  ports:
+    - name: act-backend
+      port: 3001
+      protocol: TCP
+      targetPort: 3001
+  selector:
+    app: act-backend
+  type: ClusterIP
+
+---
+
+## Backend Secret
+kind: Secret
+apiVersion: v1
+metadata:
+  name: act-backend-creds
+
+---
+
+## Backend Config
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: act-backend-cm
+immutable: false
+data:
+  FRONTEND_AUTH_CALLBACK: 'https://act.sail.codes/callback'
+  ADMIN_AUTH_CALLBACK: 'https://act-admin.sail.codes/auth-callback'
+
+---
+
+## Backend Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: act-backend
+  labels:
+    app: act-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: act-backend
+  template:
+    metadata:
+      labels:
+        app: act-backend
+    spec:
+      containers:
+        - resources: {}
+          name: act-backend
+          image: hicsail/act-backend:main
+          terminationMessagePath: /dev/termination-log
+          envFrom:
+            - configMapRef:
+                name: act-backend-cm
+            - secretRef:
+                name: act-backend-creds
+          ports:
+            - containerPort: 3001
+              protocol: TCP
+          imagePullPolicy: Always
+          terminationMessagePolicy: File
+      imagePullSecrets:
+        - name: dockerhub-image-pull-secret
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+      schedulerName: default-scheduler
+  strategy:
+    type: Recreate
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600
