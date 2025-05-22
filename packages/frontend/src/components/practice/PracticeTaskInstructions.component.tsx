@@ -20,27 +20,41 @@ export const PracticeTaskInstructions: FC<PracticeTaskInstructionsProps> = ({ on
   const [instructionsOpen, setInstructionsOpen] = useState<boolean>(false);
 
   return (
-    <Stack>
+    <Stack sx={{ padding: 10 }}>
       <Typography variant="h1">Practice Task: Model Fractions</Typography>
       <Typography variant="body1">
         You are introducing models of fractions for your 3rd grade class. You have modeled one-half, now you are moving
         to fourths.You are going to model one-fourth with a rectangle
       </Typography>
-      <Typography variant="h3">Your task is to do the following:</Typography>
+
+      <Typography variant="h3" sx={{ paddingTop: 10 }}>
+        Your task is to do the following:
+      </Typography>
       <Typography variant="body1">
         Model how to represent one-fourth with this rectangular shape. Use concise and precise mathematical language.
       </Typography>
-      <Typography variant="h3">Note</Typography>
-      <Typography variant="body1">
-        -You are speaking to your class the entire time. -You may use visual (whiteboard, paper, etc.) and hold it up in
-        bold, clear view to your camera.
+
+      <Typography variant="h3" sx={{ paddingTop: 10 }}>
+        Note
       </Typography>
-      <Button variant="contained" onClick={onContinue}>
+      <List sx={{ listStyleType: 'disc' }}>
+        <ListItem sx={{ display: 'list-item' }}>
+          <ListItemText>You are speaking to your class the entire time.</ListItemText>
+        </ListItem>
+        <ListItem sx={{ display: 'list-item' }}>
+          <ListItemText>
+            You may use visual (whiteboard, paper, etc.) and hold it up in bold, clear view to your camera.
+          </ListItemText>
+        </ListItem>
+      </List>
+
+      <Button variant="contained" onClick={onContinue} sx={{ maxWidth: 200, marginBottom: 5 }}>
         Continue Tutorial
       </Button>
-      <Button variant="contained" onClick={() => setInstructionsOpen(!instructionsOpen)}>
+      <Button variant="contained" onClick={() => setInstructionsOpen(!instructionsOpen)} sx={{ maxWidth: 200 }}>
         Click to See Instructions
       </Button>
+
       <Dialog open={instructionsOpen}>
         <DialogTitle>Tutorial</DialogTitle>
         <DialogContent>
