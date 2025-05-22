@@ -33,11 +33,17 @@ export const PracticeTaskInstructions: FC<PracticeTaskInstructionsProps> = ({ on
       </Typography>
 
       <Typography variant="h3" sx={{ paddingTop: 10 }}>Note</Typography>
-      <Typography variant="body1">
-        -You are speaking to your class the entire time.
-        -You may use visual (whiteboard, paper, etc.) and hold it up in
-        bold, clear view to your camera.
-      </Typography>
+      <List sx={{ listStyleType: 'disc' }}>
+        <ListItem sx={{ display: 'list-item' }}>
+          <ListItemText>You are speaking to your class the entire time.</ListItemText>
+        </ListItem>
+        <ListItem sx={{ display: 'list-item' }}>
+          <ListItemText>
+            You may use visual (whiteboard, paper, etc.) and hold it up in
+            bold, clear view to your camera.
+          </ListItemText>
+        </ListItem>
+      </List>
 
       <Button variant="contained" onClick={onContinue} sx={{ maxWidth: 200, marginBottom: 5 }}>
         Continue Tutorial
