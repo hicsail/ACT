@@ -42,6 +42,7 @@ export const PracticeTaskRecording: FC = () => {
           Click to See Instructions
         </Button>
       </Stack>
+
       <Dialog open={instructionsOpen}>
         <DialogTitle>Tutorial</DialogTitle>
         <DialogContent>
@@ -52,7 +53,8 @@ export const PracticeTaskRecording: FC = () => {
             runs out as well. You cannot go back once you’ve selected “Start Recording”. The camera records
             automatically and a countdown timer begins to show you your remaining time.
           </Typography>
-          <Typography variant="body1">
+
+          <Typography variant="body1" sx={{ paddingTop: 5 }}>
             On the top of the next page you will see a “Submit Recording” button. This will stop recording your video
             and upload it automatically to the secure server. progress there as soon as the timer runs out as well. Only
             click this button once you are done with your task. The video will automatically submit once the timer runs
