@@ -13,7 +13,7 @@ RUN npm run build
 
 FROM registry.access.redhat.com/ubi7/nginx-120
 
-COPY --from=builder /usr/src/app/build .
+COPY --from=builder /usr/src/app/dist .
 
 ADD ./nginx.conf "${NGINX_CONF_PATH}"
 
