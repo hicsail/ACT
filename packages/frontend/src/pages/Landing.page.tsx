@@ -1,6 +1,5 @@
 import { Button, Stack, Typography } from '@mui/material';
-import { FC, useEffect, useState } from 'react';
-import { config } from '../config/configuration';
+import { FC } from 'react';
 import { useNavigate } from 'react-router';
 import { useUser } from '../contexts/User.context';
 
