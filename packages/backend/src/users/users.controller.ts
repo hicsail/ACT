@@ -22,7 +22,6 @@ export class UsersController {
   async findAll(@Query() pagination: PaginationDTO, @Response() res: Res) {
     // Determine content-range header
     const total = await this.usersService.count();
-    console.log(total);
     res.setHeader('Content-Range', makeContentRange('tasks', pagination, total));
 
     return res.json(await this.usersService.findAll(pagination));

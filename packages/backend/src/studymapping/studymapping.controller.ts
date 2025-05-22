@@ -54,7 +54,6 @@ export class StudymappingController {
   })
   @UseGuards(AdminGuard)
   async uploadCSV(@UploadedFile('file') file: Express.Multer.File): Promise<void> {
-    console.log(file);
     await this.studyMappingService.handleCSV(file);
   }
 }
