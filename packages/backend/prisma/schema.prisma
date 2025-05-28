@@ -37,6 +37,7 @@ model Task {
   prompts            Json
   order              Int
   descriptor         String
+  contentImage       String?
 }
 
 model TaskCompletion {

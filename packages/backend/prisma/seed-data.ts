@@ -35,7 +35,8 @@ Ava’s mom is 28 years old. Her grandma is 51 years old. How many years older i
     'Ensure that you are modeling accuracy, clarity, and precision to mathematical language.'
   ],
   order: 1,
-  descriptor: 'P1'
+  descriptor: 'P1',
+  contentImage: null
 };
 
 export const task1_2: Omit<CreateTaskDto, 'taskSetId'> = {
@@ -60,7 +61,8 @@ You are going to provide a think aloud to make sense of word problems. In your t
     'Ensure that you are modeling accuracy, clarity, and precision to mathematical language'
   ],
   order: 2,
-  descriptor: 'P2'
+  descriptor: 'P2',
+  contentImage: null
 };
 
 export const task1_3: Omit<CreateTaskDto, 'taskSetId'> = {
@@ -84,7 +86,8 @@ They are familiar with rounding to the nearest tens or hundreds place, and using
     'Ensure that you are modeling accuracy, clarity, and precision to mathematical language.'
   ],
   order: 3,
-  descriptor: 'P3'
+  descriptor: 'P3',
+  contentImage: '/task-1-3-table.png'
 };
 
 export const task2_1: Omit<CreateTaskDto, 'taskSetId'> = {
@@ -108,7 +111,8 @@ You are going to enact a think aloud for students to witness your expert thinkin
     'Ensure that you are modeling accuracy, clarity, and precision to mathematical language.'
   ],
   order: 1,
-  descriptor: 'P4'
+  descriptor: 'P4',
+  contentImage: null
 };
 
 export const task2_2: Omit<CreateTaskDto, 'taskSetId'> = {
@@ -131,7 +135,8 @@ You are going to enact a think aloud for students to witness your expert thinkin
     'Ensure that you are modeling accuracy, clarity, and precision to mathematical language.'
   ],
   order: 2,
-  descriptor: 'P5'
+  descriptor: 'P5',
+  contentImage: null
 };
 
 export const task2_3: Omit<CreateTaskDto, 'taskSetId'> = {
@@ -155,5 +160,6 @@ You are going to provide a think aloud to show how you make sense of problems th
     'Ensure that you are modeling accuracy, clarity, and precision to mathematical language.'
   ],
   order: 3,
-  descriptor: 'P6'
+  descriptor: 'P6',
+  contentImage: '/task-2-3-table.png'
 };
