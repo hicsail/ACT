@@ -49,6 +49,12 @@ export type CreateTaskDto = {
      * User provided ID for the task
      */
     descriptor: string;
+    /**
+     * Optional content image
+     */
+    contentImage: {
+        [key: string]: unknown;
+    };
 };
 
 export type TaskEntity = {
@@ -106,6 +112,10 @@ export type TaskEntity = {
      * User provided ID for the task
      */
     descriptor: string;
+    /**
+     * Optional content image
+     */
+    contentImage: string | null;
 };
 
 export type UpdateTaskDto = {
