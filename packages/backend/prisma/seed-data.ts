@@ -23,7 +23,7 @@ Your students can solve addition and subtraction problems, but the complexity of
 You are going to provide a think aloud to make sense of word problems In your think aloud you want to address how you make sense of the context, quantities, mathematical relationships in the problem and how you can use a visual to represent what is happening in the problem.
   `,
   problemDescription: `
-Ava’s mom is 28 years old. Her grandma is 51. How much older is Ava’s grandma than her mom?
+Ava’s mom is 28 years old. Her grandma is 51 years old. How many years older is Ava’s grandma than her mom?
   `,
   taskDetails: 'Provide a think aloud to make sense of word problems.',
   prompts: [
