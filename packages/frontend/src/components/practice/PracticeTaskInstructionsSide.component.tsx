@@ -1,4 +1,4 @@
-import { Stack, Typography, List, ListItemText, ListItem } from '@mui/material';
+import { Stack, Typography, List, ListItemText, ListItem, Box } from '@mui/material';
 import { FC } from 'react';
 
 export const PractiveTaskInstructionsSide: FC = () => {
@@ -13,6 +13,8 @@ export const PractiveTaskInstructionsSide: FC = () => {
       <Typography variant="body1">
         Model how to represent one-fourth with this rectangular shape. Use concise and precise mathematical language.
       </Typography>
+
+      <Box component="img" sx={{ maxWidth: 300 }} src="/practice-image.png" />
 
       <Typography variant="h3" sx={{ paddingTop: 10 }}>
         Remember to:
