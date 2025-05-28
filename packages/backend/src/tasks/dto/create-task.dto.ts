@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Task } from '@prisma/client';
-import { IsArray, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateTaskDto implements Omit<Task, 'id'> {
   @ApiProperty({ description: 'Category the task falls under' })
@@ -51,4 +51,9 @@ export class CreateTaskDto implements Omit<Task, 'id'> {
   @ApiProperty({ description: 'User provided ID for the task' })
   @IsString()
   descriptor: string;
+
+  @ApiProperty({ description: 'Optional content image' })
+  @IsString()
+  @IsOptional()
+  contentImage: string | null;
 }

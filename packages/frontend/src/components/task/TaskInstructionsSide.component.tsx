@@ -1,4 +1,4 @@
-import { Stack, Typography, List, ListItem, ListItemText } from '@mui/material';
+import { Stack, Typography, List, ListItem, ListItemText, Box } from '@mui/material';
 import { FC } from 'react';
 import { TaskEntity } from '../../client';
 
@@ -9,8 +9,10 @@ export interface TaskInstructionsSideProps {
 export const TaskInstructionsSide: FC<TaskInstructionsSideProps> = ({ task }) => {
   return (
     <Stack>
-      <Typography variant="h3">The problem you have chosen is:</Typography>
+      <Typography variant="h3">The problem is:</Typography>
       <Typography variant="body1">{task.problemDescription}</Typography>
+
+      {task.contentImage && <Box component="img" sx={{ maxWidth: 300 }} src={task.contentImage} />}
 
       <Typography variant="h3" sx={{ paddingTop: 10 }}>
         Your task is to do the following:

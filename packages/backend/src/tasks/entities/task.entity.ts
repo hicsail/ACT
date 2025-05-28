@@ -41,4 +41,7 @@ export class TaskEntity implements Task {
 
   @ApiProperty({ description: 'User provided ID for the task' })
   descriptor: string;
+
+  @ApiProperty({ description: 'Optional content image', nullable: true, type: String })
+  contentImage: string | null;
 }
