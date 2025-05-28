@@ -171,7 +171,7 @@ export class TaskCompletionsService {
     const studyID = user.affiliation ? user.affiliation : user.id!;
     const site = user.location ? user.location : 'UNKNOWN';
 
-    return `${this.taskIteration}_${site}_${studyID}_${taskDescriptor}.mp4`;
+    return `${this.taskIteration}_${site}_${studyID}_${taskDescriptor}.webm`;
   }
 
   /**
