@@ -12,14 +12,12 @@ export const Home: FC = () => {
     <>
       <Stack spacing={3} sx={{ textAlign: 'center', padding: 3 }}>
         <Typography variant="body1">
-          Thank you for supporting our research by completing these tasks! Please refer to your emailed instructions to
-          ensure you know which four tasks from the list below are required. You will not complete all of the tasks on
-          this page. You also may not be completing the tasks in numerical order.
+          Thank you for supporting our research by completing these tasks!
         </Typography>
 
         <Typography variant="body1">
           Failure to complete assigned tasks could result in delayed compensation and additional work required. If you
-          have any questions, reach out to Lindsey McLean Don't forget to use this tip sheet to supporting your tasks.
+          have any questions, reach out to teachsimlab@gmail.com Don't forget to use this tip sheet to support your tasks.
           Review this before you enter the tasks as the timer will begin immediately.
         </Typography>
 
