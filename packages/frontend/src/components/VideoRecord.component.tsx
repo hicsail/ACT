@@ -16,6 +16,10 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
   const { pushSnackbarMessage } = useSnackbar();
   const recorder = useReactMediaRecorder({
     video: true,
+    audio: true,
+    mediaRecorderOptions: {
+      mimeType: 'video/webm'
+    },
     onStop: (mediaBlobUrl, blob) => handleCompletion(mediaBlobUrl, blob)
   });
   const [countDownState, setCountDownState] = useState<CountDownState>('paused');
