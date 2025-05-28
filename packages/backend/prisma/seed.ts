@@ -10,11 +10,11 @@ const updateOrCreateSet = async (name: string, set: CreateTaskSetDto, active: bo
 
   // If already existing, update and return
   if (existing) {
-    return prisma.taskSet.update({ where: { id: existing.id }, data: set });
+    return await prisma.taskSet.update({ where: { id: existing.id }, data: set });
   }
 
   // Otherwise make a new one
-  return prisma.taskSet.create({ data: { active, ...set }});
+  return await prisma.taskSet.create({ data: { active, ...set }});
 };
 
 const updateOrCreateTask = async (descriptor: string, task: Omit<CreateTaskDto, 'taskSetId'>, taskSetId: string): Promise<Task> => {
@@ -22,11 +22,11 @@ const updateOrCreateTask = async (descriptor: string, task: Omit<CreateTaskDto, 
 
   // If already existing, update and return
   if (existing) {
-    return prisma.task.update({ where: { id: existing.id }, data: { taskSetId, ...task }});
+    return await prisma.task.update({ where: { id: existing.id }, data: { taskSetId, ...task }});
   }
 
   // Otherwise make a new one
-  return prisma.task.create({ data: { taskSetId, ...task }});
+  return await prisma.task.create({ data: { taskSetId, ...task }});
 };
 
 async function main() {
