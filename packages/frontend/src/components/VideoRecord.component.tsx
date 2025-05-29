@@ -134,10 +134,7 @@ export const VideoRecord: React.FC<VideoRecordProps> = (props) => {
         </Grid>
 
         <Grid size={6}>
-          <Button
-            variant="contained"
-            onClick={() => recording ? stopRecording() : startRecording()}
-          >
+          <Button variant="contained" onClick={() => (recording ? stopRecording() : startRecording())}>
             {recording ? 'Stop Recording' : 'Start Recording'}
           </Button>
         </Grid>
