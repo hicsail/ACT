@@ -5,6 +5,8 @@ import { useSnackbar } from '../contexts/Snackbar.context';
 import { CountDownTimer, CountDownState } from './CountDownTimer.component';
 import { ResolvePermissionError } from './ResolvePermissionError.component';
 
+const mimeType = 'video/webm; codecs="opus,vp8"';
+
 export interface VideoRecordProps {
   downloadRecording: boolean;
   onRecordingStop?: (mediaBlobUrl: string, blob: Blob) => void;
@@ -18,9 +20,12 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
     video: true,
     audio: true,
     mediaRecorderOptions: {
-      mimeType: 'video/webm'
+      mimeType
     },
-    onStop: (mediaBlobUrl, blob) => handleCompletion(mediaBlobUrl, blob)
+    onStop: (mediaBlobUrl, blob) => handleCompletion(mediaBlobUrl, blob),
+    blobPropertyBag: {
+      type: mimeType
+    }
   });
   const [countDownState, setCountDownState] = useState<CountDownState>('paused');
   const [blobPayload, setBlobPayload] = useState<{ blobURL: string; blob: Blob } | null>(null);
