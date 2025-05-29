@@ -1,7 +1,5 @@
 import { Button, Grid, Stack, Typography } from '@mui/material';
-import { FC, useEffect, useRef, useState, useCallback } from 'react';
-import { useReactMediaRecorder } from 'react-media-recorder';
-import { useSnackbar } from '../contexts/Snackbar.context';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { CountDownTimer, CountDownState } from './CountDownTimer.component';
 import { ResolvePermissionError } from './ResolvePermissionError.component';
 
