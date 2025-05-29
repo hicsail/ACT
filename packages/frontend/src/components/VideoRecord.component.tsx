@@ -19,7 +19,7 @@ export const VideoRecord: React.FC<VideoRecordProps> = (props) => {
   stateRef.current = { blobs };
   const [blobPayload, setBlobPayload] = useState<{ blobURL: string; blob: Blob } | null>(null);
   const [countDownState, setCountDownState] = useState<CountDownState>('paused');
-  const [issueFound, setIssueFound] = useState<boolean>(false);
+  const [issueFound, _setIssueFound] = useState<boolean>(false);
 
   const handleCompletion = (blobURL: string, blob: Blob) => {
     if (props.downloadRecording) {
@@ -62,7 +62,7 @@ export const VideoRecord: React.FC<VideoRecordProps> = (props) => {
 
     // Create the media recorder
     // TODO: In the future have audio be an option
-    const stream: MediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+    const stream: MediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
 
     // Setup the preview
     videoRef.current!.srcObject = stream;
