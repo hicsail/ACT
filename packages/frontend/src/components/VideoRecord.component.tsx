@@ -13,6 +13,137 @@ export interface VideoRecordProps {
 }
 
 export const VideoRecord: FC<VideoRecordProps> = (props) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const mediaRecorder = useRef<MediaRecorder>(null);
+  const [stream, setStream] = useState<MediaStream | null>(null);
+  const [blobs, setVideoBlobs] = useState<Blob[]>([]);
+  const [countDownState, setCountDownState] = useState<CountDownState>('paused');
+  const [blobPayload, setBlobPayload] = useState<{ blobURL: string; blob: Blob } | null>(null);
+  const [issueFound, setIssueFound] = useState<boolean>(false);
+  const [recording, setRecording] = useState<boolean>(false);
+
+  const getCameraPermissions = async () => {
+    if (!('MediaRecorder' in window)) {
+      // TODO: Push snackbar error
+      return;
+    }
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+      setStream(mediaStream);
+    } catch (error) {
+      // TODO: Push snackbar error
+      setIssueFound(true);
+    }
+  };
+
+  // Try to get permission
+  useEffect(() => {
+    getCameraPermissions();
+  }, []);
+
+  const startRecording = async () => {
+    // No stream yet, cannot start
+    if (!stream) {
+      return;
+    }
+
+    // Make the recorder
+    const media = new MediaRecorder(stream, { mimeType: 'video/webm' });
+    mediaRecorder.current = media;
+
+    // Setup capture of blobs
+    const localBlobs: Blob[] = [];
+    mediaRecorder.current.ondataavailable = (event) => {
+      // Ignore empty events
+      if (!event || event.data.size === 0) {
+        return;
+      }
+      localBlobs.push(event.data);
+    }
+    setVideoBlobs(localBlobs);
+
+    // Setup the preview
+    videoRef.current!.srcObject = stream;
+    videoRef.current!.play();
+
+    // Start recording
+    mediaRecorder.current.start();
+    setRecording(true);
+  };
+
+  const handleSubmit = () => {
+    if (props.onSubmit && blobPayload) {
+      props.onSubmit(blobPayload.blobURL, blobPayload.blob);
+    }
+  };
+
+  const handleCompletion = (blobURL: string, blob: Blob) => {
+    if (props.downloadRecording) {
+      const link = document.createElement('a');
+      link.href = blobURL;
+      link.download = 'teacher_tutorial.webm';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    if (props.onRecordingStop) {
+      props.onRecordingStop(blobURL, blob);
+    }
+
+    setBlobPayload({ blobURL, blob });
+
+    setCountDownState('restart');
+  };
+
+  const stopRecording = async () => {
+    // No media recorder to use
+    if (!mediaRecorder.current) {
+      return;
+    }
+
+    // Setup the stop callback
+    mediaRecorder.current.onstop = () => {
+      const videoBlob = new Blob(blobs, { type: 'video/webm' });
+      const videoURL = URL.createObjectURL(videoBlob);
+      handleCompletion(videoURL, videoBlob);
+    };
+
+    mediaRecorder.current.stop();
+    setRecording(false);
+  };
+
+  return (
+    <Stack padding={3} spacing={3}>
+      <Grid container>
+        <Grid size={6}>
+          <Typography variant="body1">Camera Status</Typography>
+        </Grid>
+
+        <Grid size={6}>
+          <CountDownTimer seconds={props.timeLimit} status={countDownState} />
+        </Grid>
+
+        <Grid size={6}>
+          <Button variant="contained" onClick={() => recording ? stopRecording() : startRecording()}>
+            {recording ? 'Stop Recording' : 'Start Recording'}
+          </Button>
+        </Grid>
+
+        <Grid size={6}>
+          <Button variant="contained" onClick={handleSubmit}>
+            Submit Recording
+          </Button>
+        </Grid>
+      </Grid>
+
+      {issueFound == false && <video src={blobPayload?.blobURL} controls autoPlay loop ref={videoRef} />}
+      {issueFound && <ResolvePermissionError />}
+    </Stack>
+  );
+};
+
+export const VideoRecordOld: FC<VideoRecordProps> = (props) => {
   const { pushSnackbarMessage } = useSnackbar();
   const recorder = useReactMediaRecorder({
     video: true,
