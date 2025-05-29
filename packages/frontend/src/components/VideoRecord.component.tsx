@@ -1,5 +1,5 @@
 import { Button, Grid, Stack, Typography } from '@mui/material';
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState, useCallback } from 'react';
 import { useReactMediaRecorder } from 'react-media-recorder';
 import { useSnackbar } from '../contexts/Snackbar.context';
 import { CountDownTimer, CountDownState } from './CountDownTimer.component';
@@ -12,70 +12,16 @@ export interface VideoRecordProps {
   timeLimit: number;
 }
 
-export const VideoRecord: FC<VideoRecordProps> = (props) => {
+export const VideoRecord: React.FC<VideoRecordProps> = (props) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const mediaRecorder = useRef<MediaRecorder>(null);
-  const [stream, setStream] = useState<MediaStream | null>(null);
-  const [blobs, setVideoBlobs] = useState<Blob[]>([]);
-  const [countDownState, setCountDownState] = useState<CountDownState>('paused');
-  const [blobPayload, setBlobPayload] = useState<{ blobURL: string; blob: Blob } | null>(null);
-  const [issueFound, setIssueFound] = useState<boolean>(false);
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null);
+  const [blobs, setBlobs] = useState<Blob[]>([]);
   const [recording, setRecording] = useState<boolean>(false);
-
-  const getCameraPermissions = async () => {
-    if (!('MediaRecorder' in window)) {
-      // TODO: Push snackbar error
-      return;
-    }
-    try {
-      const mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: true });
-      setStream(mediaStream);
-    } catch (error) {
-      // TODO: Push snackbar error
-      setIssueFound(true);
-    }
-  };
-
-  // Try to get permission
-  useEffect(() => {
-    getCameraPermissions();
-  }, []);
-
-  const startRecording = async () => {
-    // No stream yet, cannot start
-    if (!stream) {
-      return;
-    }
-
-    // Make the recorder
-    const media = new MediaRecorder(stream, { mimeType: 'video/webm' });
-    mediaRecorder.current = media;
-
-    // Setup capture of blobs
-    const localBlobs: Blob[] = [];
-    mediaRecorder.current.ondataavailable = (event) => {
-      // Ignore empty events
-      if (!event || event.data.size === 0) {
-        return;
-      }
-      localBlobs.push(event.data);
-    }
-    setVideoBlobs(localBlobs);
-
-    // Setup the preview
-    videoRef.current!.srcObject = stream;
-    videoRef.current!.play();
-
-    // Start recording
-    mediaRecorder.current.start();
-    setRecording(true);
-  };
-
-  const handleSubmit = () => {
-    if (props.onSubmit && blobPayload) {
-      props.onSubmit(blobPayload.blobURL, blobPayload.blob);
-    }
-  };
+  const stateRef = useRef<{ blobs: Blob[] }>(null);
+  stateRef.current = { blobs };
+  const [blobPayload, setBlobPayload] = useState<{ blobURL: string; blob: Blob } | null>(null);
+  const [countDownState, setCountDownState] = useState<CountDownState>('paused');
+  const [issueFound, setIssueFound] = useState<boolean>(false);
 
   const handleCompletion = (blobURL: string, blob: Blob) => {
     if (props.downloadRecording) {
@@ -96,21 +42,84 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
     setCountDownState('restart');
   };
 
-  const stopRecording = async () => {
-    // No media recorder to use
-    if (!mediaRecorder.current) {
+  // On data available, store the blob
+  const handleOnDataAvailable = useCallback(
+    (event: BlobEvent) => {
+      const newBlobs = [...stateRef.current!.blobs, event.data];
+      setBlobs(newBlobs);
+
+      // If the recording is complete, send the blob to the parent
+      if (!recording) {
+        const blob = new Blob(newBlobs, { type: 'video/webm' });
+        const blobURL = URL.createObjectURL(blob);
+        handleCompletion(blobURL, blob);
+      }
+    },
+    [setBlobs, blobs]
+  );
+
+  const startRecording = async () => {
+    // Clear the blobs
+    setBlobs([]);
+
+    // Create the media recorder
+    // TODO: In the future have audio be an option
+    const stream: MediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+
+    // Setup the preview
+    videoRef.current!.srcObject = stream;
+    videoRef.current!.play();
+
+    // Set the encoding
+    const options = { mimeType: 'video/webm' };
+
+    // Create the media recorder
+    let mediaRecorder = new MediaRecorder(stream, options);
+
+    mediaRecorder.ondataavailable = handleOnDataAvailable;
+
+    // Start recording
+    mediaRecorder.start();
+    setMediaRecorder(mediaRecorder);
+
+    setCountDownState('running');
+    setRecording(true);
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorder) {
+      mediaRecorder.stop();
+    }
+    setRecording(false);
+  };
+
+  // Handle changes to the recording status
+  useEffect(() => {
+    if (recording) {
+      setTimeout(() => {
+        stopRecording();
+      }, props.timeLimit * 1000);
+    }
+  }, [recording]);
+
+  // Control the display based on if an active blob is present
+  useEffect(() => {
+    // If there is no active blob, show the video preview
+    if (!blobPayload) {
+      videoRef.current!.style.display = 'block';
+      videoRef.current!.src = '';
       return;
     }
 
-    // Setup the stop callback
-    mediaRecorder.current.onstop = () => {
-      const videoBlob = new Blob(blobs, { type: 'video/webm' });
-      const videoURL = URL.createObjectURL(videoBlob);
-      handleCompletion(videoURL, videoBlob);
-    };
+    // Otherwise show the recording blobl
+    videoRef.current!.srcObject = null;
+    videoRef.current!.src = blobPayload.blobURL;
+  }, [blobPayload]);
 
-    mediaRecorder.current.stop();
-    setRecording(false);
+  const handleSubmit = () => {
+    if (props.onSubmit && blobPayload) {
+      props.onSubmit(blobPayload.blobURL, blobPayload.blob);
+    }
   };
 
   return (
@@ -125,7 +134,10 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
         </Grid>
 
         <Grid size={6}>
-          <Button variant="contained" onClick={() => recording ? stopRecording() : startRecording()}>
+          <Button
+            variant="contained"
+            onClick={() => recording ? stopRecording() : startRecording()}
+          >
             {recording ? 'Stop Recording' : 'Start Recording'}
           </Button>
         </Grid>
@@ -137,129 +149,7 @@ export const VideoRecord: FC<VideoRecordProps> = (props) => {
         </Grid>
       </Grid>
 
-      {issueFound == false && <video src={blobPayload?.blobURL} controls autoPlay loop ref={videoRef} />}
-      {issueFound && <ResolvePermissionError />}
-    </Stack>
-  );
-};
-
-export const VideoRecordOld: FC<VideoRecordProps> = (props) => {
-  const { pushSnackbarMessage } = useSnackbar();
-  const recorder = useReactMediaRecorder({
-    video: true,
-    audio: true,
-    mediaRecorderOptions: {
-      mimeType: 'video/webm'
-    },
-    onStop: (mediaBlobUrl, blob) => handleCompletion(mediaBlobUrl, blob)
-  });
-  const [countDownState, setCountDownState] = useState<CountDownState>('paused');
-  const [blobPayload, setBlobPayload] = useState<{ blobURL: string; blob: Blob } | null>(null);
-  const [issueFound, setIssueFound] = useState<boolean>(false);
-
-  const handleCompletion = (blobURL: string, blob: Blob) => {
-    if (props.downloadRecording) {
-      const link = document.createElement('a');
-      link.href = blobURL;
-      link.download = 'teacher_tutorial.webm';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-
-    if (props.onRecordingStop) {
-      props.onRecordingStop(blobURL, blob);
-    }
-
-    setBlobPayload({ blobURL, blob });
-
-    setCountDownState('restart');
-  };
-
-  const handleSubmit = () => {
-    if (props.onSubmit && blobPayload) {
-      props.onSubmit(blobPayload.blobURL, blobPayload.blob);
-    }
-  };
-
-  const handleRecordClick = () => {
-    if (recorder.status == 'recording') {
-      recorder.stopRecording();
-    } else {
-      recorder.startRecording();
-    }
-  };
-
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  // Handles switching between live preview and video playback
-  useEffect(() => {
-    // If in recording mode, show the user the preview
-    if (videoRef.current && recorder.previewStream && recorder.status == 'recording') {
-      videoRef.current.srcObject = recorder.previewStream;
-    }
-    // Otherwise, show the user the recording video
-    else if (videoRef.current && recorder.mediaBlobUrl) {
-      videoRef.current.src = recorder.mediaBlobUrl;
-      videoRef.current.srcObject = null;
-    }
-  }, [recorder.status, recorder.previewStream, recorder.mediaBlobUrl]);
-
-  // Handle starting the counter
-  useEffect(() => {
-    if (recorder.status == 'recording') {
-      setCountDownState('running');
-      setTimeout(() => {
-        recorder.stopRecording();
-      }, props.timeLimit * 1000);
-    }
-  }, [recorder.status]);
-
-  // Error message handling
-  useEffect(() => {
-    switch (recorder.error) {
-      case 'permission_denied':
-        pushSnackbarMessage(
-          'You have denied camera or microphone permissions to this site. You must enable permissions to record your video successfully',
-          'error'
-        );
-        setIssueFound(true);
-        break;
-      case 'media_in_use':
-        pushSnackbarMessage(
-          'Your camera or microphone is already in use. You must close other apps accessing them in order to record your video successfully',
-          'error'
-        );
-        setIssueFound(true);
-        break;
-    }
-  }, [recorder.error]);
-
-  return (
-    <Stack padding={3} spacing={3}>
-      <Grid container>
-        <Grid size={6}>
-          <Typography variant="body1">Camera Status</Typography>
-        </Grid>
-
-        <Grid size={6}>
-          <CountDownTimer seconds={props.timeLimit} status={countDownState} />
-        </Grid>
-
-        <Grid size={6}>
-          <Button variant="contained" onClick={handleRecordClick}>
-            {recorder.status == 'recording' ? 'Stop Recording' : 'Start Recording'}
-          </Button>
-        </Grid>
-
-        <Grid size={6}>
-          <Button variant="contained" onClick={handleSubmit}>
-            Submit Recording
-          </Button>
-        </Grid>
-      </Grid>
-
-      {issueFound == false && <video src={recorder.mediaBlobUrl} controls autoPlay loop ref={videoRef} />}
+      {issueFound == false && <video controls autoPlay loop ref={videoRef} />}
       {issueFound && <ResolvePermissionError />}
     </Stack>
   );
