@@ -1,0 +1,60 @@
+services:
+  act-casdoor:
+    image: casbin/casdoor:latest
+    restart: unless-stopped
+    container_name: act-casdoor
+    entrypoint: /bin/sh -c './server --createDatabase=true'
+    ports:
+      - "8000:8000"
+    depends_on:
+      act-db:
+        condition: service_healthy
+    environment:
+      RUNNING_IN_DOCKER: "true"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    env_file:
+      - ../../stack.env
+
+  act-db:
+    image: mysql:8.0.25
+    restart: unless-stopped
+    container_name: act-db
+    volumes:
+      - act-mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    env_file:
+      - ../../stack.env
+
+  act-frontend:
+    image: hicsail/act-frontend:main
+    restart: unless-stopped
+    container_name: act-frontend
+    ports:
+      - "8080:8080"
+    env_file:
+      - ../../stack.env
+
+  act-backend:
+    image: hicsail/act-backend:main
+    restart: unless-stopped
+    container_name: act-backend
+    ports:
+      - "3003:3001"
+    env_file:
+      - ../../stack.env
+
+  act-admin:
+    image: hicsail/act-admin:main
+    restart: unless-stopped
+    container_name: act-admin
+    ports:
+      - "8081:8080"
+    env_file:
+      - ../../stack.env
+
+volumes:
+  act-mysql-data:
