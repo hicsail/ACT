@@ -2,13 +2,14 @@ import { Injectable, Inject } from '@nestjs/common';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import * as events from './events';
 import { S3_PROVIDER } from '../s3/s3.provider';
-import { paginateListObjectsV2, S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import { paginateListObjectsV2, S3Client, GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 import { DownloadRequest } from '@prisma/client';
 import * as archiver from 'archiver';
-import { createWriteStream } from 'fs';
-import { fileSync } from 'tmp';
+import { createReadStream, createWriteStream } from 'fs';
+import { FileResult, fileSync } from 'tmp';
 import { basename } from 'path';
+import { stat } from 'fs/promises';
 
 @Injectable()
 export class Zipper {
@@ -27,14 +28,39 @@ export class Zipper {
   @OnEvent(events.DOWNLOAD_REQUEST_CREATED)
   async handleDownload(payload: DownloadRequest) {
     try {
-      await this.download();
+      // Make the zip
+      const file = await this.download();
+
+      // Upload the zip
+      await this.uploadZip(payload, file)
+
+      // Mark the download process as complete
+      this.eventEmitter.emit(events.DOWNLOAD_SUCCESS, payload);
     } catch(e) {
       console.error(e);
       this.eventEmitter.emit(events.DOWNLOAD_REQUEST_FAILED, payload);
     }
   }
 
-  private async download(): Promise<void> {
+  private async uploadZip(downloadRequest: DownloadRequest, file: FileResult): Promise<void> {
+    // Make the read stream
+    const stream = createReadStream(file.name);
+
+    const fileInfo = await stat(file.name);
+
+    // Make the put command
+    const putCmd = new PutObjectCommand({
+      Bucket: this.bucket,
+      Key: downloadRequest.location,
+      Body: stream,
+      ContentType: 'application/zip',
+      ContentLength: fileInfo.size
+    });
+
+    await this.s3.send(putCmd);
+  }
+
+  private async download(): Promise<FileResult> {
     // Get the objects to zip
     const objects = await this.generateListOfFiles();
 
@@ -70,7 +96,14 @@ export class Zipper {
       // Add the file to the archive
       archive.append(buffer, { name: entryName });
     }
+
+    // Wait for the archive process to finalize
     await archive.finalize();
+
+    fileStream.close();
+
+    // Return the location of the zipped file
+    return tmpFile;
   }
 
   private async generateListOfFiles(): Promise<string[]> {

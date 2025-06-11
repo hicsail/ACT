@@ -21,7 +21,7 @@ export class DownloadsService {
   async create(): Promise<DownloadRequest> {
     // Make the request
     const createdAt = new Date();
-    const request = this.prismaService.downloadRequest.create({
+    const request = await this.prismaService.downloadRequest.create({
       data: {
         createdAt,
         status: DownloadStatus.STARTING,
@@ -62,7 +62,7 @@ export class DownloadsService {
   }
 
   private getLocationString(date: Date): string {
-    return `${this.downloadLocation}/download_${date.getFullYear()}_${date.toISOString()}.zip`
+    return `${this.downloadLocation}/download_${date.getFullYear()}.zip`
   }
 
   @OnEvent(events.DOWNLOAD_SUCCESS)
@@ -75,6 +75,7 @@ export class DownloadsService {
 
   @OnEvent(events.DOWNLOAD_REQUEST_FAILED)
   async markFailed(payload: DownloadRequest) {
+    console.log(payload);
     await this.prismaService.downloadRequest.update({
       where: { id: payload.id },
       data: { status: DownloadStatus.FAILED }
