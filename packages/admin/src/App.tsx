@@ -8,6 +8,7 @@ import { SetsList } from './components/sets/SetsList.component';
 import { StudyMappingList } from './components/studymapping/StudyMappingList.component';
 import { BrowserRouter } from 'react-router-dom';
 import { authProvider, JWT_TOKEN_KEY } from './auth';
+import { DownloadsList } from './components/downloads/DownloadsLists.component';
 
 function App() {
   const httpClient = (url: string, options: fetchUtils.Options = {}) => {
@@ -29,6 +30,7 @@ function App() {
           <Resource name="tasks" list={TasksLists} />
           <Resource name="taskCompletions" list={TaskCompletionsList} />
           <Resource name="studymapping" list={StudyMappingList} />
+          <Resource name="downloads" list={DownloadsList} />
         </Admin>
       </ClientProvider>
     </BrowserRouter>
