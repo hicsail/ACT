@@ -12,6 +12,7 @@ import { UsersModule } from './users/users.module';
 import { StudymappingModule } from './studymapping/studymapping.module';
 import configuration from './config/configuration';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { DownloadsModule } from './downloads/downloads.module';
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     TaskCompletionsModule,
     S3Module,
     UsersModule,
-    StudymappingModule
+    StudymappingModule,
+    DownloadsModule
   ],
   controllers: [AppController],
   providers: [AppService]
