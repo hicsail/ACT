@@ -49,6 +49,12 @@ export type CreateTaskDto = {
      * User provided ID for the task
      */
     descriptor: string;
+    /**
+     * Optional content image
+     */
+    contentImage: {
+        [key: string]: unknown;
+    };
 };
 
 export type TaskEntity = {
@@ -106,6 +112,10 @@ export type TaskEntity = {
      * User provided ID for the task
      */
     descriptor: string;
+    /**
+     * Optional content image
+     */
+    contentImage: string | null;
 };
 
 export type UpdateTaskDto = {
@@ -214,6 +224,10 @@ export type UpdateTaskCompletionDto = {
     userId?: string;
 };
 
+export type HasComplete = {
+    complete: boolean;
+};
+
 export type WebhookPayload = {
     [key: string]: unknown;
 };
@@ -235,6 +249,25 @@ export type StudyMappingEntity = {
      * Region the user is in
      */
     region: string;
+};
+
+export type DownloadEntity = {
+    /**
+     * Unique ID of the download
+     */
+    id: string;
+    /**
+     * The status of the download
+     */
+    status: 'STARTING' | 'IN_PROGRESS' | 'COMPLETE' | 'FAILED';
+    /**
+     * Where the download is located in the download bucket
+     */
+    location: string;
+    /**
+     * When the download request was made
+     */
+    createdAt: string;
 };
 
 export type AppControllerGetHelloData = {
@@ -650,6 +683,34 @@ export type UsersControllerFindOneResponses = {
     200: unknown;
 };
 
+export type UsersControllerIsTrainingCompleteData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/users/training-complete/{id}';
+};
+
+export type UsersControllerIsTrainingCompleteResponses = {
+    default: HasComplete;
+};
+
+export type UsersControllerIsTrainingCompleteResponse = UsersControllerIsTrainingCompleteResponses[keyof UsersControllerIsTrainingCompleteResponses];
+
+export type UsersControllerMarkTrainingCompleteData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/users/training-complete/{id}';
+};
+
+export type UsersControllerMarkTrainingCompleteResponses = {
+    200: unknown;
+};
+
 export type StudymappingControllerFindAllData = {
     body?: never;
     path?: never;
@@ -686,6 +747,60 @@ export type StudymappingControllerUploadCsvData = {
 export type StudymappingControllerUploadCsvResponses = {
     201: unknown;
 };
+
+export type DownloadsControllerFindAllData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/downloads';
+};
+
+export type DownloadsControllerFindAllResponses = {
+    default: Array<DownloadEntity>;
+};
+
+export type DownloadsControllerFindAllResponse = DownloadsControllerFindAllResponses[keyof DownloadsControllerFindAllResponses];
+
+export type DownloadsControllerCreateData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/downloads';
+};
+
+export type DownloadsControllerCreateResponses = {
+    default: DownloadEntity;
+};
+
+export type DownloadsControllerCreateResponse = DownloadsControllerCreateResponses[keyof DownloadsControllerCreateResponses];
+
+export type DownloadsControllerRemoveData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/downloads/{id}';
+};
+
+export type DownloadsControllerRemoveResponses = {
+    200: unknown;
+};
+
+export type DownloadsControllerFindOneData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/downloads/{id}';
+};
+
+export type DownloadsControllerFindOneResponses = {
+    default: DownloadEntity;
+};
+
+export type DownloadsControllerFindOneResponse = DownloadsControllerFindOneResponses[keyof DownloadsControllerFindOneResponses];
 
 export type ClientOptions = {
     baseUrl: string;
