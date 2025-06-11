@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { DownloadRequest, DownloadStatus } from '@prisma/client';
 import { PaginationDTO } from '../pagination/pagination.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import * as events from './events';
 
 @Injectable()
 export class DownloadsService {
@@ -12,7 +13,7 @@ export class DownloadsService {
   constructor(
     private readonly prismaService: PrismaService,
     configService: ConfigService,
-    private readonly eventEmitter: EventEmitter2
+    private readonly eventEmitter: EventEmitter2,
   ) {
     this.downloadLocation = configService.getOrThrow<string>('s3.downloadZipsFolder');
   }
@@ -29,7 +30,7 @@ export class DownloadsService {
     });
 
     // Trigger the download progress
-    this.eventEmitter.emit('download.created', request);
+    this.eventEmitter.emit(events.DOWNLOAD_REQUEST_CREATED, request);
 
     return request;
   }
@@ -64,7 +65,20 @@ export class DownloadsService {
     return `${this.downloadLocation}/download_${date.getFullYear()}_${date.toISOString()}.zip`
   }
 
-  @OnEvent('download.created')
-  async handleDownload(payload: DownloadRequest): Promise<void> {
+  @OnEvent(events.DOWNLOAD_SUCCESS)
+  async markSuccess(payload: DownloadRequest) {
+    await this.prismaService.downloadRequest.update({
+      where: { id: payload.id },
+      data: { status: DownloadStatus.COMPLETE }
+    });
   }
+
+  @OnEvent(events.DOWNLOAD_REQUEST_FAILED)
+  async markFailed(payload: DownloadRequest) {
+    await this.prismaService.downloadRequest.update({
+      where: { id: payload.id },
+      data: { status: DownloadStatus.FAILED }
+    });
+  }
+
 }
