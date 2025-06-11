@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { DownloadRequest, DownloadStatus } from '@prisma/client';
-import { PaginationDTO } from 'src/pagination/pagination.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PaginationDTO } from '../pagination/pagination.dto';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class DownloadsService {
@@ -10,20 +11,27 @@ export class DownloadsService {
 
   constructor(
     private readonly prismaService: PrismaService,
-    configService: ConfigService
+    configService: ConfigService,
+    private readonly eventEmitter: EventEmitter2
   ) {
     this.downloadLocation = configService.getOrThrow<string>('s3.downloadZipsFolder');
   }
 
   async create(): Promise<DownloadRequest> {
+    // Make the request
     const createdAt = new Date();
-    return this.prismaService.downloadRequest.create({
+    const request = this.prismaService.downloadRequest.create({
       data: {
         createdAt,
         status: DownloadStatus.STARTING,
         location: this.getLocationString(createdAt)
       }
-    })
+    });
+
+    // Trigger the download progress
+    this.eventEmitter.emit('download.created', request);
+
+    return request;
   }
 
   findAll(pagination: PaginationDTO): Promise<DownloadRequest[]> {
@@ -54,5 +62,9 @@ export class DownloadsService {
 
   private getLocationString(date: Date): string {
     return `${this.downloadLocation}/download_${date.getFullYear()}_${date.toISOString()}.zip`
+  }
+
+  @OnEvent('download.created')
+  async handleDownload(payload: DownloadRequest): Promise<void> {
   }
 }
