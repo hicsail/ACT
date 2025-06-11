@@ -11,6 +11,7 @@ import { S3Module } from './s3/s3.module';
 import { UsersModule } from './users/users.module';
 import { StudymappingModule } from './studymapping/studymapping.module';
 import configuration from './config/configuration';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import configuration from './config/configuration';
       load: [configuration],
       isGlobal: true
     }),
+    EventEmitterModule.forRoot(),
     CasdoorModule,
     PrismaModule,
     TasksModule,
