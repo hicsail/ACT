@@ -1,4 +1,4 @@
-import { Button, Datagrid, List, TextField, useRefresh } from 'react-admin';
+import { Button, Datagrid, DateField, List, TextField, useRefresh } from 'react-admin';
 import { FC } from 'react';
 import { Stack } from '@mui/material';
 import { downloadsControllerCreate } from '../../client';
@@ -24,7 +24,9 @@ export const DownloadsList: FC = () => {
       <Button onClick={handleDownloadRequest} variant='contained' sx={{ maxWidth: 300 }}>Request Download</Button>
       <List>
         <Datagrid>
+          <TextField source='id' />
           <TextField source='status' />
+          <DateField source='createdAt' />
         </Datagrid>
       </List>
     </Stack>
