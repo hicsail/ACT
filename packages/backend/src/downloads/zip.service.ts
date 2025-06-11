@@ -1,10 +1,14 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import * as events from './events';
-import { S3_PROVIDER } from 'src/s3/s3.provider';
-import { paginateListObjectsV2, S3Client } from '@aws-sdk/client-s3';
+import { S3_PROVIDER } from '../s3/s3.provider';
+import { paginateListObjectsV2, S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 import { DownloadRequest } from '@prisma/client';
+import * as archiver from 'archiver';
+import { createWriteStream } from 'fs';
+import { fileSync } from 'tmp';
+import { basename } from 'path';
 
 @Injectable()
 export class Zipper {
@@ -30,9 +34,43 @@ export class Zipper {
     }
   }
 
-  private async download() {
+  private async download(): Promise<void> {
+    // Get the objects to zip
     const objects = await this.generateListOfFiles();
-    console.log(objects);
+
+    // Get a temporary file to store the zip
+    const tmpFile = fileSync();
+
+    // Make a file stream into the temp file
+    const fileStream = createWriteStream(tmpFile.name);
+
+    // Make the streaming archive
+    const archive = archiver.create('zip');
+    archive.pipe(fileStream);
+    archive.on('error', err => {
+      throw err;
+    });
+
+    // Loop over the objects
+    for (const key of objects) {
+      // Download the file
+      const command = new GetObjectCommand({ Bucket: this.bucket, Key: key });
+      const response = await this.s3.send(command);
+      const file = response.Body;
+      if (!file) {
+        continue;
+      }
+
+      // Make a buffer of the file
+      const buffer = Buffer.from(await file.transformToByteArray());
+
+      // Use only the base name in the zip
+      const entryName = basename(key);
+
+      // Add the file to the archive
+      archive.append(buffer, { name: entryName });
+    }
+    await archive.finalize();
   }
 
   private async generateListOfFiles(): Promise<string[]> {
