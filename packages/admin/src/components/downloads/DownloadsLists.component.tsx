@@ -2,6 +2,7 @@ import { Button, Datagrid, DateField, List, TextField, useRefresh } from 'react-
 import { FC } from 'react';
 import { Stack } from '@mui/material';
 import { downloadsControllerCreate } from '../../client';
+import { DownloadButton } from './DownloadButton.component';
 
 export const DownloadsList: FC = () => {
   const refresh = useRefresh();
@@ -22,11 +23,11 @@ export const DownloadsList: FC = () => {
   return(
     <Stack direction="column" sx={{ alignContent: 'center', alignItems: 'center' }}>
       <Button onClick={handleDownloadRequest} variant='contained' sx={{ maxWidth: 300 }}>Request Download</Button>
-      <List>
+      <List sort={{ field: 'createdAt', order: 'DESC' }}>
         <Datagrid>
-          <TextField source='id' />
           <TextField source='status' />
-          <DateField source='createdAt' />
+          <DateField source='createdAt' showTime={true} />
+          <DownloadButton source='location' />
         </Datagrid>
       </List>
     </Stack>
