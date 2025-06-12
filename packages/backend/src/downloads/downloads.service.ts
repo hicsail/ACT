@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { DownloadRequest, DownloadStatus } from '@prisma/client';
@@ -24,7 +24,7 @@ export class DownloadsService {
     const request = await this.prismaService.downloadRequest.create({
       data: {
         createdAt,
-        status: DownloadStatus.STARTING,
+        status: DownloadStatus.IN_PROGRESS,
         location: this.getLocationString(createdAt)
       }
     });

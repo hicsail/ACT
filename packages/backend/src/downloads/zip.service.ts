@@ -9,6 +9,8 @@ import * as archiver from 'archiver';
 import { createReadStream, createWriteStream } from 'fs';
 import { FileResultNoFd, fileSync } from 'tmp';
 import { basename } from 'path';
+import { Upload } from "@aws-sdk/lib-storage";
+import { unlink } from 'fs/promises';
 
 @Injectable()
 export class Zipper {
@@ -31,7 +33,7 @@ export class Zipper {
       const file = await this.download();
 
       // Upload the zip
-      await this.uploadZip(payload, file)
+      await this.uploadZip(payload, file);
 
       // Mark the download process as complete
       this.eventEmitter.emit(events.DOWNLOAD_SUCCESS, payload);
@@ -45,6 +47,7 @@ export class Zipper {
     // Make the read stream
     const stream = createReadStream(file.name);
 
+    // Need to wait for the stream to be ready
     await new Promise<string>((resolve, reject) => {
       stream.on('ready', () => {
         resolve('Success');
@@ -54,15 +57,20 @@ export class Zipper {
       })
     });
 
-    // Make the put command
-    const putCmd = new PutObjectCommand({
-      Bucket: this.bucket,
-      Key: downloadRequest.location,
-      Body: stream,
-      ContentType: 'application/zip',
+    // Make the upload
+    const upload = new Upload({
+      client: new S3Client({}),
+      params: {
+        Bucket: this.bucket,
+        Key: downloadRequest.location,
+        Body: stream,
+      },
     });
 
-    await this.s3.send(putCmd);
+    await upload.done();
+
+    // Remove the zip
+    await unlink(file.name);
   }
 
   private async download(): Promise<FileResultNoFd> {
