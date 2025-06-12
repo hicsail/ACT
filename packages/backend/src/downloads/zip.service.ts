@@ -7,9 +7,8 @@ import { ConfigService } from '@nestjs/config';
 import { DownloadRequest } from '@prisma/client';
 import * as archiver from 'archiver';
 import { createReadStream, createWriteStream } from 'fs';
-import { FileResult, fileSync } from 'tmp';
+import { FileResultNoFd, fileSync } from 'tmp';
 import { basename } from 'path';
-import { stat } from 'fs/promises';
 
 @Injectable()
 export class Zipper {
@@ -42,11 +41,18 @@ export class Zipper {
     }
   }
 
-  private async uploadZip(downloadRequest: DownloadRequest, file: FileResult): Promise<void> {
+  private async uploadZip(downloadRequest: DownloadRequest, file: FileResultNoFd): Promise<void> {
     // Make the read stream
     const stream = createReadStream(file.name);
 
-    const fileInfo = await stat(file.name);
+    await new Promise<string>((resolve, reject) => {
+      stream.on('ready', () => {
+        resolve('Success');
+      });
+      stream.on('error', () => {
+        reject();
+      })
+    });
 
     // Make the put command
     const putCmd = new PutObjectCommand({
@@ -54,18 +60,17 @@ export class Zipper {
       Key: downloadRequest.location,
       Body: stream,
       ContentType: 'application/zip',
-      ContentLength: fileInfo.size
     });
 
     await this.s3.send(putCmd);
   }
 
-  private async download(): Promise<FileResult> {
+  private async download(): Promise<FileResultNoFd> {
     // Get the objects to zip
     const objects = await this.generateListOfFiles();
 
     // Get a temporary file to store the zip
-    const tmpFile = fileSync();
+    const tmpFile = fileSync({ discardDescriptor: true });
 
     // Make a file stream into the temp file
     const fileStream = createWriteStream(tmpFile.name);

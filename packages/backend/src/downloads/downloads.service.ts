@@ -62,7 +62,7 @@ export class DownloadsService {
   }
 
   private getLocationString(date: Date): string {
-    return `${this.downloadLocation}/download_${date.getFullYear()}.zip`
+    return `${this.downloadLocation}/download_${date.toISOString()}.zip`
   }
 
   @OnEvent(events.DOWNLOAD_SUCCESS)
