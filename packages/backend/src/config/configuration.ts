@@ -18,7 +18,8 @@ export default () => ({
     secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
     region: process.env.S3_REGION || 'us-east-1',
     bucket: process.env.S3_BUCKET,
-    signedExpiration: process.env.S3_SIGNED_EXPIRATION || 5 * 60
+    signedExpiration: process.env.S3_SIGNED_EXPIRATION || 5 * 60,
+    downloadZipsFolder: process.env.S3_DOWNLOAD_FOLDER || 'downloads'
   },
   meta: {
     taskIteration: process.env.TASK_ITERATION || 'Sum25'

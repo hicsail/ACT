@@ -57,3 +57,17 @@ model StudyMapping {
   studyId            String
   region             String
 }
+
+enum DownloadStatus {
+  STARTING
+  IN_PROGRESS
+  COMPLETE
+  FAILED
+}
+
+model DownloadRequest {
+  id                 String   @id @default(uuid())
+  status             DownloadStatus
+  location           String
+  createdAt          DateTime @default(now())
+}
