@@ -13,7 +13,7 @@ export const DownloadButton: FC<{ source: string }> = ({ source }) => {
 
   const getDownloadURL = async () => {
     const urlResponse = await downloadsControllerGetDownloadUrl({
-      query: { downloadLocation: source }
+      query: { downloadLocation: record[source] }
     });
 
     if (urlResponse.error || !urlResponse.data) {
@@ -31,7 +31,7 @@ export const DownloadButton: FC<{ source: string }> = ({ source }) => {
 
   const onDownload = (url: string) => {
     const link = document.createElement('a');
-    link.download = source.split('/')[1];
+    link.download = record[source].split('/')[1];
     link.href = url;
     link.click();
   };

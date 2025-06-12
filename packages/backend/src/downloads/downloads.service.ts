@@ -6,7 +6,7 @@ import { PaginationDTO } from '../pagination/pagination.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import * as events from './events';
 import { S3_PROVIDER } from 'src/s3/s3.provider';
-import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 @Injectable()
@@ -59,7 +59,20 @@ export class DownloadsService {
   }
 
   async remove(id: string): Promise<void> {
-    // TODO: Remove the ZIP in the bucket
+    // See if a download request with the ID even exists
+    const existing = await this.findOne(id);
+    if (!existing) {
+      return;
+    }
+
+    // Delete the zip itself
+    const deleteCmd = new DeleteObjectCommand({
+      Bucket: this.bucket,
+      Key: existing.location
+    });
+    await this.s3.send(deleteCmd);
+
+    // Delete the download request object
     await this.prismaService.downloadRequest.delete({
       where: { id }
     });
