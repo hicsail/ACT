@@ -1,21 +1,29 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { DownloadRequest, DownloadStatus } from '@prisma/client';
 import { PaginationDTO } from '../pagination/pagination.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import * as events from './events';
+import { S3_PROVIDER } from 'src/s3/s3.provider';
+import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 
 @Injectable()
 export class DownloadsService {
   private readonly downloadLocation: string;
+  private readonly bucket: string;
+  private readonly expiration: number;
 
   constructor(
     private readonly prismaService: PrismaService,
     configService: ConfigService,
     private readonly eventEmitter: EventEmitter2,
+    @Inject(S3_PROVIDER) private readonly s3: S3Client
   ) {
     this.downloadLocation = configService.getOrThrow<string>('s3.downloadZipsFolder');
+    this.bucket = configService.getOrThrow<string>('s3.bucket');
+    this.expiration = configService.getOrThrow<number>('s3.signedExpiration');
   }
 
   async create(): Promise<DownloadRequest> {
@@ -65,6 +73,11 @@ export class DownloadsService {
     return `${this.downloadLocation}/download_${date.toISOString()}.zip`
   }
 
+  async getDownloadURL(location: string): Promise<string> {
+    const request = new GetObjectCommand({ Bucket: this.bucket, Key: location });
+    return getSignedUrl(this.s3, request, { expiresIn: this.expiration });
+  }
+
   @OnEvent(events.DOWNLOAD_SUCCESS)
   async markSuccess(payload: DownloadRequest) {
     await this.prismaService.downloadRequest.update({
@@ -81,5 +94,4 @@ export class DownloadsService {
       data: { status: DownloadStatus.FAILED }
     });
   }
-
 }

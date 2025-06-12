@@ -802,6 +802,21 @@ export type DownloadsControllerFindOneResponses = {
 
 export type DownloadsControllerFindOneResponse = DownloadsControllerFindOneResponses[keyof DownloadsControllerFindOneResponses];
 
+export type DownloadsControllerGetDownloadUrlData = {
+    body?: never;
+    path?: never;
+    query: {
+        downloadLocation: string;
+    };
+    url: '/downloads/download/url';
+};
+
+export type DownloadsControllerGetDownloadUrlResponses = {
+    default: string;
+};
+
+export type DownloadsControllerGetDownloadUrlResponse = DownloadsControllerGetDownloadUrlResponses[keyof DownloadsControllerGetDownloadUrlResponses];
+
 export type ClientOptions = {
     baseUrl: string;
 };

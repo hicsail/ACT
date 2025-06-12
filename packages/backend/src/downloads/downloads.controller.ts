@@ -45,4 +45,10 @@ export class DownloadsController {
   remove(@Param('id') id: string): Promise<void> {
     return this.downloadsService.remove(id);
   }
+
+  @Get('/download/url')
+  @ApiResponse({ type: String })
+  async getDownloadURL(@Query('downloadLocation') downloadLocation: string): Promise<string> {
+    return this.downloadsService.getDownloadURL(downloadLocation);
+  }
 }
