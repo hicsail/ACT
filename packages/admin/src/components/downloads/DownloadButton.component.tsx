@@ -23,18 +23,24 @@ export const DownloadButton: FC<{ source: string }> = ({ source }) => {
     }
 
     setUrl(urlResponse.data);
-  }
+  };
 
   useEffect(() => {
     getDownloadURL();
   }, []);
 
   const onDownload = (url: string) => {
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.download = source.split('/')[1];
     link.href = url;
     link.click();
   };
 
-  return url && <Button variant='contained' disabled={record['status'] != 'COMPLETE'} onClick={() => onDownload(url)}>Download</Button>
+  return (
+    url && (
+      <Button variant="contained" disabled={record['status'] != 'COMPLETE'} onClick={() => onDownload(url)}>
+        Download
+      </Button>
+    )
+  );
 };

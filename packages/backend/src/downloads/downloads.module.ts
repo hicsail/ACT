@@ -9,6 +9,6 @@ import { Zipper } from './zip.service';
 @Module({
   imports: [PrismaModule, CasdoorModule, S3Module],
   controllers: [DownloadsController],
-  providers: [DownloadsService, Zipper],
+  providers: [DownloadsService, Zipper]
 })
 export class DownloadsModule {}

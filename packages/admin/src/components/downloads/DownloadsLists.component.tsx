@@ -12,7 +12,7 @@ export const DownloadsList: FC = () => {
 
     if (downloadResponse.error || !downloadResponse.data) {
       console.error(downloadResponse.error);
-      alert('Failed to make a download request')
+      alert('Failed to make a download request');
       return;
     }
 
@@ -20,14 +20,16 @@ export const DownloadsList: FC = () => {
     refresh();
   };
 
-  return(
+  return (
     <Stack direction="column" sx={{ alignContent: 'center', alignItems: 'center' }}>
-      <Button onClick={handleDownloadRequest} variant='contained' sx={{ maxWidth: 300 }}>Request Download</Button>
+      <Button onClick={handleDownloadRequest} variant="contained" sx={{ maxWidth: 300 }}>
+        Request Download
+      </Button>
       <List sort={{ field: 'createdAt', order: 'DESC' }}>
         <Datagrid>
-          <TextField source='status' />
-          <DateField source='createdAt' showTime={true} />
-          <DownloadButton source='location' />
+          <TextField source="status" />
+          <DateField source="createdAt" showTime={true} />
+          <DownloadButton source="location" />
         </Datagrid>
       </List>
     </Stack>

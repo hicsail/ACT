@@ -70,7 +70,7 @@ export class DownloadsService {
   }
 
   private getLocationString(date: Date): string {
-    return `${this.downloadLocation}/download_${date.toISOString()}.zip`
+    return `${this.downloadLocation}/download_${date.toISOString()}.zip`;
   }
 
   async getDownloadURL(location: string): Promise<string> {

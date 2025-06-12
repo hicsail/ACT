@@ -9,7 +9,7 @@ import * as archiver from 'archiver';
 import { createReadStream, createWriteStream } from 'fs';
 import { FileResultNoFd, fileSync } from 'tmp';
 import { basename } from 'path';
-import { Upload } from "@aws-sdk/lib-storage";
+import { Upload } from '@aws-sdk/lib-storage';
 import { unlink } from 'fs/promises';
 
 @Injectable()
@@ -37,7 +37,7 @@ export class Zipper {
 
       // Mark the download process as complete
       this.eventEmitter.emit(events.DOWNLOAD_SUCCESS, payload);
-    } catch(e) {
+    } catch (e) {
       console.error(e);
       this.eventEmitter.emit(events.DOWNLOAD_REQUEST_FAILED, payload);
     }
@@ -54,7 +54,7 @@ export class Zipper {
       });
       stream.on('error', () => {
         reject();
-      })
+      });
     });
 
     // Make the upload
@@ -63,8 +63,8 @@ export class Zipper {
       params: {
         Bucket: this.bucket,
         Key: downloadRequest.location,
-        Body: stream,
-      },
+        Body: stream
+      }
     });
 
     await upload.done();
@@ -86,7 +86,7 @@ export class Zipper {
     // Make the streaming archive
     const archive = archiver.create('zip');
     archive.pipe(fileStream);
-    archive.on('error', err => {
+    archive.on('error', (err) => {
       throw err;
     });
 
@@ -120,10 +120,7 @@ export class Zipper {
   }
 
   private async generateListOfFiles(): Promise<string[]> {
-    const paginator = paginateListObjectsV2(
-      { client: this.s3, pageSize: 100 },
-      { Bucket: this.bucket }
-    );
+    const paginator = paginateListObjectsV2({ client: this.s3, pageSize: 100 }, { Bucket: this.bucket });
 
     const objects: string[] = [];
 
