@@ -1,5 +1,5 @@
-import { Grid } from '@mui/material';
-import { FC } from 'react';
+import { CircularProgress, Grid, Stack, Typography } from '@mui/material';
+import { FC, useState } from 'react';
 import { VideoRecord } from '../VideoRecord.component';
 import { TaskInstructionsSide } from './TaskInstructionsSide.component';
 import {
@@ -19,6 +19,7 @@ export interface TaskRecordingProps {
 export const TaskRecording: FC<TaskRecordingProps> = ({ task }) => {
   const navigate = useNavigate();
   const { user } = useUser();
+  const [loading, setIsLoading] = useState<boolean>(false);
 
   const handleVideoComplete = async (_blobURL: string, blob: Blob) => {
     // Get link to upload the video
@@ -68,15 +69,31 @@ export const TaskRecording: FC<TaskRecordingProps> = ({ task }) => {
   return (
     <Grid container direction="row" sx={{ padding: 5 }}>
       <Grid size={6}>
-        <VideoRecord
-          downloadRecording={false}
-          onSubmit={(blobURL, blob) => handleVideoComplete(blobURL, blob)}
-          timeLimit={task.timeSeconds}
-        />
+        {loading ? (
+          <UploadingLoader />
+        ) : (
+          <VideoRecord
+            downloadRecording={false}
+            onSubmit={(blobURL, blob) => {
+              setIsLoading(true);
+              handleVideoComplete(blobURL, blob);
+            }}
+            timeLimit={task.timeSeconds}
+          />
+        )}
       </Grid>
       <Grid size={6}>
         <TaskInstructionsSide task={task} />
       </Grid>
     </Grid>
+  );
+};
+
+const UploadingLoader: FC = () => {
+  return (
+    <Stack direction="column" alignItems="center" spacing={2}>
+      <Typography variant="body1">Uploading, do not refresh</Typography>
+      <CircularProgress />
+    </Stack>
   );
 };
